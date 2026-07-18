@@ -17,7 +17,7 @@ clear; clc;
 
 fprintf("Step 3/7: Training CNN baseline...\n");
 
-load('/MATLAB Drive/data/jet_images.mat',"jetImages","labels","idxTrain","idxVal","idxTest");
+load('../data/jet_images.mat',"jetImages","labels","idxTrain","idxVal","idxTest");
 
 XTrain = jetImages(:,:,:,idxTrain);
 XVal   = jetImages(:,:,:,idxVal);
@@ -60,8 +60,8 @@ options = trainingOptions("adam", ...
 fprintf("Training...\n");
 netCNN = trainnet(XTrain,YTrain,layers,"crossentropy",options);
 
-if ~isfolder('/MATLAB Drive/models'); mkdir('/MATLAB Drive/models'); end
-save('/MATLAB Drive/models/cnn_model.mat',"netCNN");
+if ~isfolder('../models'); mkdir('../models'); end
+save('../models/cnn_model.mat',"netCNN");
 
 fprintf("Done. Model saved to models/cnn_model.mat\n");
 fprintf("NEXT STEP: run s4_train_graphsage.m (or go straight to s5 if you already trained it)\n");

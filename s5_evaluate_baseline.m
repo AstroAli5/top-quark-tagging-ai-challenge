@@ -11,12 +11,12 @@ addpath('/MATLAB Drive/src/helpers');
 
 fprintf("Step 5/7: Evaluating both models on the clean test set...\n");
 
-resultsDir = '/MATLAB Drive/results';
+resultsDir = '../results';
 if ~isfolder(resultsDir); mkdir(resultsDir); end
 
 %% CNN evaluation
-load('/MATLAB Drive/data/jet_images.mat',"jetImages","labels","idxTest");
-load('/MATLAB Drive/models/cnn_model.mat',"netCNN");
+load('../data/jet_images.mat',"jetImages","labels","idxTest");
+load('../models/cnn_model.mat',"netCNN");
 
 XTest = jetImages(:,:,:,idxTest);
 labelsTest = labels(idxTest);
@@ -31,8 +31,8 @@ accCNN = mean(predCNN == labelsTest);
 fprintf("CNN         : accuracy %.4f, AUC %.4f\n", accCNN, aucCNN);
 
 %% GraphSAGE evaluation
-load('/MATLAB Drive/data/jet_graphs.mat',"jetNodeFeatures","jetAdjacency","labels","idxTest");
-load('/MATLAB Drive/models/graphsage_model.mat',"parameters");
+load('../data/jet_graphs.mat',"jetNodeFeatures","jetAdjacency","labels","idxTest");
+load('../models/graphsage_model.mat',"parameters");
 
 [XTestGraph,ATestGraph,numNodesTest] = preprocessGraphMiniBatch(jetNodeFeatures(idxTest),jetAdjacency(idxTest));
 probSAGE = extractdata(modelGraphSAGE(parameters,dlarray(XTestGraph),ATestGraph,numNodesTest));

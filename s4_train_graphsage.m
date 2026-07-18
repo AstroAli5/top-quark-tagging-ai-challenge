@@ -23,7 +23,7 @@ addpath('/MATLAB Drive/src/helpers');
 
 fprintf("Step 4/7: Training GraphSAGE model...\n");
 
-load('/MATLAB Drive/data/jet_graphs.mat',"jetNodeFeatures","jetAdjacency","labels","idxTrain","idxVal","idxTest");
+load('../data/jet_graphs.mat',"jetNodeFeatures","jetAdjacency","labels","idxTrain","idxVal","idxTest");
 
 numFeatures = size(jetNodeFeatures{1},2); % 4: dEta, dPhi, log(pT), log(E)
 hiddenSize = 32;
@@ -96,8 +96,8 @@ for epoch = 1:numEpochs
     end
 end
 
-if ~isfolder('/MATLAB Drive/models'); mkdir('/MATLAB Drive/models'); end
-save('/MATLAB Drive/models/graphsage_model.mat',"parameters");
+if ~isfolder('../models'); mkdir('../models'); end
+save('../models/graphsage_model.mat',"parameters");
 
 fprintf("\nDone. Model saved to models/graphsage_model.mat\n");
 fprintf("NEXT STEP: run s5_evaluate_baseline.m\n");

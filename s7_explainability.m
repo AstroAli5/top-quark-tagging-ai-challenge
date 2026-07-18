@@ -21,12 +21,12 @@ addpath('/MATLAB Drive/src/helpers');
 
 fprintf("Step 7/7: Explainability (stretch)...\n");
 
-resultsDir = '/MATLAB Drive/results';
+resultsDir = '../results';
 if ~isfolder(resultsDir); mkdir(resultsDir); end
 
 %% 1. GraphSAGE: permutation feature importance
-load('/MATLAB Drive/data/jet_graphs.mat',"jetNodeFeatures","jetAdjacency","labels","idxTest");
-load('/MATLAB Drive/models/graphsage_model.mat',"parameters");
+load('../data/jet_graphs.mat',"jetNodeFeatures","jetAdjacency","labels","idxTest");
+load('../models/graphsage_model.mat',"parameters");
 
 featureNames = ["deltaEta","deltaPhi","log(pT)","log(E)"];
 [XBase,ABase,numNodesBase] = preprocessGraphMiniBatch(jetNodeFeatures(idxTest),jetAdjacency(idxTest));
@@ -58,8 +58,8 @@ importanceTable = table(featureNames',aucDropByFeature',VariableNames={'Feature'
 writetable(importanceTable,fullfile(resultsDir,"graphsage_feature_importance.csv"));
 
 %% 2. CNN: radial occlusion
-load('/MATLAB Drive/data/jet_images.mat',"jetImages","labels","idxTest");
-load('/MATLAB Drive/models/cnn_model.mat',"netCNN");
+load('../data/jet_images.mat',"jetImages","labels","idxTest");
+load('../models/cnn_model.mat',"netCNN");
 
 XImgTest = jetImages(:,:,:,idxTest);
 labelsImgTest = labels(idxTest);

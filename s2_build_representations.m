@@ -16,7 +16,7 @@ addpath('/MATLAB Drive/src/helpers');
 
 fprintf("Step 2/7: Building jet images and jet graphs...\n");
 
-load('/MATLAB Drive/data/jets_raw.mat',"jetFourVectors","labels");
+load('../data/jets_raw.mat',"jetFourVectors","labels");
 numJets = numel(jetFourVectors);
 
 % Drop any jet with fewer than 3 particles — too little structure to
@@ -58,8 +58,8 @@ end
 %% 3. Train / validation / test split (70% / 15% / 15%), stratified is
 %     unnecessary here since the dataset is close to balanced already.
 rng(42);
-if ~isfolder('/MATLAB Drive/models'); mkdir('/MATLAB Drive/models'); end
-if ~isfolder('/MATLAB Drive/results'); mkdir('/MATLAB Drive/results'); end % fixed seed so results are reproducible run to run
+if ~isfolder('../models'); mkdir('../models'); end
+if ~isfolder('../results'); mkdir('../results'); end % fixed seed so results are reproducible run to run
 idxShuffled = randperm(numJets);
 
 nTrain = round(0.70*numJets);
@@ -72,7 +72,7 @@ idxTest  = idxShuffled(nTrain+nVal+1:end);
 fprintf("Split: %d train, %d validation, %d test.\n", numel(idxTrain), numel(idxVal), numel(idxTest));
 
 %% 4. Save both representations, split, ready for training
-modelsDir = '/MATLAB Drive/data';
+modelsDir = '../data';
 
 save(fullfile(modelsDir,"jet_images.mat"), ...
     "jetImages","labels","idxTrain","idxVal","idxTest","-v7.3");

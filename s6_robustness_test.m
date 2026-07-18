@@ -16,16 +16,16 @@ addpath('/MATLAB Drive/src/helpers');
 
 fprintf("Step 6/7: Robustness test - accuracy vs detector noise level...\n");
 
-load('/MATLAB Drive/data/jet_split.mat',"jetFourVectors","labels","idxTest");
-load('/MATLAB Drive/models/cnn_model.mat',"netCNN");
-load('/MATLAB Drive/models/graphsage_model.mat',"parameters");
+load('../data/jet_split.mat',"jetFourVectors","labels","idxTest");
+load('../models/cnn_model.mat',"netCNN");
+load('../models/graphsage_model.mat',"parameters");
 
 noiseLevels = [0, 0.02, 0.05, 0.10, 0.20, 0.35];
 testFourVectors = jetFourVectors(idxTest);
 testLabels = labels(idxTest);
 numTest = numel(testFourVectors);
 
-resultsDir = '/MATLAB Drive/results';
+resultsDir = '../results';
 if ~isfolder(resultsDir); mkdir(resultsDir); end
 
 accCNNByNoise = zeros(size(noiseLevels));
