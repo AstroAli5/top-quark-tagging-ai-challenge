@@ -88,6 +88,16 @@ log(pT) and deltaPhi showing the largest drops when shuffled. This is physically
 consistent: the azimuthal angle between particles and their transverse momenta are
 the primary discriminators of the 3-prong top decay structure.
 
+### Result plots
+
+![ROC Curve: CNN vs GraphSAGE](roc_baseline.png)
+
+![AUC and Accuracy vs Detector Noise](robustness_curves.png)
+
+![GraphSAGE Feature Importance](graphsage_feature_importance.png)
+
+![CNN Radial Occlusion](cnn_radial_occlusion.png)
+
 ---
 
 ## File structure
