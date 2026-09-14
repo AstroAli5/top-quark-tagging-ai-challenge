@@ -1,122 +1,95 @@
-# The ideas behind this project, in plain English
+# The ideas behind the project
 
-You should be able to explain every one of these in your own words — to a
-judge, in your video, or if anyone asks. That's the actual goal, not just
-having code that runs.
+## What is being classified?
 
-## 1. What is a "jet," and what are we actually classifying?
+The input is one simulated particle jet: a collection of constituent
+four-vectors, each recording energy and three momentum components.
+The target is binary: label 1 means a top-quark jet and label 0 means background.
+[ParticleNet](https://arxiv.org/abs/1902.08570) describes the particle-cloud view
+of this classification problem; the data source is the
+[Top Quark Tagging Reference Dataset](https://doi.org/10.5281/zenodo.2603256).
 
-When particles collide at high energy, some of the resulting particles
-fly outward in a tight, narrow spray called a jet. A top quark is
-unstable and decays almost instantly; if it decays hadronically and has
-enough momentum ("boosted"), all of its decay products land inside a
-single jet. The question this project answers, jet by jet: *does this
-spray of particles look like it came from a top quark decay, or from
-ordinary background QCD processes (light quarks/gluons)?* This is a
-binary classification problem: one jet in, one probability out.
+## Why two representations?
 
-Each jet is described by its constituent particles — up to 200 of them —
-each with a measured energy and momentum (E, px, py, pz). That's the raw
-input to both models.
+An image bins particles into angular cells and adds their transverse momentum.
+This pipeline then applies log compression. Binning loses within-cell positions,
+and the finite image window excludes particles outside it.
 
-## 2. Two different ways to represent the same jet
+A graph stores four features per particle and connects nearby particles.
+It retains finer position information, but its feature choice, graph construction,
+and pooling also constrain what the model can learn. A graph's performance must
+be measured; its representation alone does not prove that it is better.
 
-- **As an image (for the CNN):** bin the particles into a 2D grid based
-  on their angular position relative to the jet's central axis
-  (pseudorapidity eta and azimuthal angle phi), with each pixel holding
-  the summed momentum of particles landing there. This turns a jet into
-  something that looks like a small grayscale photo, so an ordinary image
-  classifier can be applied to it.
-- **As a graph (for GraphSAGE):** treat each particle as a graph node,
-  and connect each particle to its nearest neighbors in angular distance.
-  Unlike the image, nothing is binned or blurred together — every
-  particle keeps its own exact position and momentum, and the network
-  reasons about actual relationships between specific particles instead
-  of pixel intensities.
+Here the angular origin is a pT-weighted mean pseudorapidity and a circular mean
+azimuth. This convenient centering convention is not identical to obtaining a
+jet axis from a summed four-vector.
 
-Neither representation is strictly "correct" — they're different lossy
-compressions of the same underlying physics, which is exactly why
-comparing the two models trained on them is informative.
+## How does GraphSAGE make a prediction?
 
-## 3. What does GraphSAGE actually do, layer by layer?
+For each node, average the features of its neighbors, concatenate that average
+with the node's own features, and apply learned weights, ReLU, and L2
+normalization. Repeat three times. Average the resulting node embeddings within
+each jet and apply a sigmoid classifier.
 
-GraphSAGE builds up each particle's representation by repeatedly looking
-at its neighbors:
+The basic aggregation idea comes from
+[Hamilton, Ying, and Leskovec](https://arxiv.org/abs/1706.02216).
+This implementation uses all neighbors in its fixed k-nearest-neighbor graph.
+The sparse adjacency is block diagonal during batching, so messages cannot cross
+from one jet into another. Pooling uses each jet's node count to retain that boundary.
 
-1. For every particle, average the feature vectors of its connected
-   neighbors.
-2. Concatenate that neighbor-average with the particle's own current
-   feature vector.
-3. Pass the concatenated vector through a learned linear layer and a
-   ReLU nonlinearity to get the particle's *updated* feature vector.
+## Why does the CNN need softmax?
 
-Stack this 3 times, and a particle's final representation has been
-shaped by information from neighbors-of-neighbors-of-neighbors — a
-progressively wider view of the jet's structure. Finally, **average every
-particle's final representation together** to get one vector describing
-the whole jet (this step is called a "readout" or "pooling" operation),
-and pass that through one more small layer to get a single top-quark
-probability.
+Its final two raw outputs are logits, which are not probabilities.
+Softmax turns them into nonnegative class scores that sum to one.
+The saved category order identifies which column represents signal.
+Inference explicitly requests batch-by-class output, rather than guessing the
+array layout. See MathWorks'
+[training example](https://www.mathworks.com/help/deeplearning/ref/trainnet.html)
+and [prediction documentation](https://www.mathworks.com/help/deeplearning/ref/minibatchpredict.html).
 
-This project uses GraphSAGE's *mean* aggregator — the simplest of a
-handful of options in the original paper (Hamilton, Ying & Leskovec,
-2017) — specifically because it's easy to reason about and to explain:
-"a particle's new representation blends what it already knew with the
-average of what its neighbors knew."
+## Why report accuracy and AUC?
 
-## 4. Why compare against a CNN at all?
+Accuracy measures decisions at a specified threshold; this project uses
+P(signal) >= 0.5. AUC instead measures ranking across thresholds.
+The empirical AUC equals the fraction of signal/background pairs where signal
+gets the higher score, plus half credit for ties. Thus every score being equal
+must give AUC 0.5, independent of the order of labels.
 
-Because a number in isolation ("GraphSAGE gets 93% accuracy") is much
-less informative than a number in context ("GraphSAGE and the CNN get
-similar accuracy on clean data, but GraphSAGE holds up better under
-noise"). The CNN is also simpler and much better understood, which makes
-it a fair, credible reference point — if GraphSAGE can't beat or at least
-match it, that's important to report honestly, not hide.
+The [ROC implementation](computeROC.m) groups equal scores before adding a curve
+point. It rejects a one-class evaluation because its ROC is undefined.
 
-## 5. Why inject artificial detector noise at all — isn't the data already realistic?
+## What does the noise experiment establish?
 
-The training data is Monte Carlo *simulation*: PYTHIA8 generates the
-underlying physics, and Delphes simulates an idealized detector response.
-Real detectors have imperfections beyond what any fast simulation
-captures, and those imperfections can change over a detector's lifetime,
-differ between detector regions, and so on. A model that only ever sees
-clean simulated data has never had to prove it can cope with any of that.
-Injecting controlled, synthetic noise and watching what happens to
-accuracy is a simple, honest way to ask "how much would this degrade in
-a less-than-ideal measurement, and does that failure happen gracefully or
-suddenly?" — a question the reference material this project builds on
-never asks.
+Each momentum component receives independent multiplicative Gaussian smearing.
+Energy is recomputed from the smeared momentum and a nonnegative original
+mass-squared estimate. Both models see the same perturbed particles, and both
+representations are rebuilt.
 
-The noise model here (independently scaling each momentum component by a
-random factor, then recomputing energy to keep the particle physical) is
-a deliberate simplification, not a real detector simulation — real
-resolution effects depend on particle energy, type, and detector region
-in ways this doesn't capture. That's stated plainly in the README rather
-than dressed up as more rigorous than it is.
+This checks sensitivity to a particular mathematical perturbation.
+It does not model all detector effects: calibration, momentum, angle, particle
+type, and detector region can matter in ways this simple model omits.
+At large smearing, component sign changes can occur. The experiment is not a
+detector validation or a deployment claim.
 
-## 6. What does AUC mean, and why use it instead of just accuracy?
+## What can explainability tell us?
 
-Accuracy depends on a single decision threshold (here, 0.5), which can
-be misleading if the two classes aren't perfectly balanced or if you
-care about a specific operating point (e.g., "how much background can we
-reject while keeping 50% of the signal?" — a standard way results are
-reported in this field). AUC (area under the ROC curve) summarizes
-performance across *every possible threshold* at once: it's the
-probability that the model ranks a randomly chosen signal jet above a
-randomly chosen background jet. An AUC of 1.0 is a perfect ranking; 0.5
-is random guessing. Reporting both accuracy and AUC gives a fuller,
-harder-to-cherry-pick picture than either alone.
+For GraphSAGE, shuffle one feature across test-set nodes while keeping edges fixed.
+AUC change measures reliance under that intervention. Correlated features may
+compensate for one another, and shuffled angles can disagree with the stored graph.
 
-## 7. What does "permutation feature importance" actually show?
+For the CNN, remove pixels outside a circle centered on the image.
+Radius fractions are measured relative to the center-to-corner distance;
+they are not fractions of area or retained momentum.
 
-Take one input feature (say, deltaEta) and shuffle its values randomly
-across every jet in the test set, while leaving every other feature
-untouched. This destroys any real relationship between that feature and
-the outcome, while keeping the feature's overall distribution the same.
-Re-run the trained model and see how much AUC drops. A feature the model
-depends on heavily will cause a big drop when shuffled; a feature the
-model barely uses will barely matter. It's a simple, model-agnostic way
-to get a rough sense of "what is this network actually paying attention
-to?" without needing to open up its internals — the trade-off is that it
-only tells you about individual features in isolation, not about
-interactions between them.
+Neither experiment identifies a causal physical mechanism. One permutation also
+does not provide an uncertainty estimate. Repeat perturbations and training runs
+before interpreting small differences.
+
+## When is a result credible?
+
+Both models must use the same held-out jets, predictions must have the right
+class mapping, and no test information may guide training or checkpoint selection.
+Preserve source checksums, splits, configuration, code revision, and predictions.
+A synthetic integration test checks software execution; only a real-data run can
+answer the research question. The [README](README.md#results-status) distinguishes
+archived numbers from results that still need to be measured.

@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite this repository and the original dataset and methods listed in the README."
+title: "Top Quark Tagging: CNN and GraphSAGE Under Synthetic Detector Noise"
+type: software
+authors:
+  - given-names: Ali
+    family-names: Mohamed
+repository-code: "https://github.com/AstroAli5/top-quark-tagging-ai-challenge"
+url: "https://github.com/AstroAli5/top-quark-tagging-ai-challenge"
+license: MIT

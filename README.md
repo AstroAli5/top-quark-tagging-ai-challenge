@@ -1,200 +1,233 @@
-# Trustworthy Top Quark Tagging: Robustness of CNN vs. GraphSAGE Under Detector Noise
+# Top Quark Tagging: CNN and GraphSAGE Under Synthetic Detector Noise
 
-A MATLAB deep-learning project submitted to the MathWorks Challenge Project Hub,
-Project #238 — "Top Quark Detection with Deep Learning and Big Data."
+[![Tests](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml/badge.svg)](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml)
 
-**The question this project answers:** Two deep learning architectures — a CNN on
-jet images, and a GraphSAGE graph neural network on jet particle graphs — can both
-classify top-quark jets from Monte Carlo simulation. But real particle detectors are
-never perfectly precise. Does either model's performance hold up when input
-measurements get noisier, and does one degrade more gracefully than the other?
+A MATLAB research project by **Ali Mohamed**, developed for MathWorks
+[Challenge Project #238](https://github.com/mathworks/MATLAB-Simulink-Challenge-Project-Hub/discussions/74).
 
----
+**Research question:** how does classification performance change when the same
+held-out jets are represented as images or particle graphs and their measured
+momenta are perturbed?
 
-## Why this matters in the real world
+The repository implements data preparation, training, clean evaluation, a
+controlled robustness experiment, and two sensitivity analyses. **The corrected
+pipeline needs a fresh real-data training run before its scientific conclusions
+can be reported.** Existing outputs are preserved as historical artifacts; see
+[Results status](#results-status).
 
-After the high-luminosity upgrade of CERN's Large Hadron Collider, detectors will
-generate petabytes of collision data every day. AI-based jet taggers like this one
-are literally what decides, in real time, which collision events get kept and which
-get discarded — more than 80% of all data is thrown away at the trigger level.
-A tagger that fails silently when detector calibration drifts or sensor resolution
-degrades could bias an entire physics analysis. Understanding how robust a model is
-under realistic measurement imperfections is therefore not an academic question —
-it is a deployment requirement. This project is the first systematic robustness
-study of CNN vs. GraphSAGE architectures for top quark tagging under detector noise.
+## What the project does
 
----
+| Stage | Entry point | Output |
+| --- | --- | --- |
+| 1 | `s1_prepare_data` | Validated constituent four-vectors and source metadata |
+| 2 | `s2_build_representations` | Images, sparse graphs, one shared stratified split |
+| 3 | `s3_train_cnn` | Compact CNN with softmax probabilities and saved class order |
+| 4 | `s4_train_graphsage` | Three GraphSAGE layers with a sigmoid classifier |
+| 5 | `s5_evaluate_baseline` | Accuracy, ROC/AUC, and per-jet probabilities |
+| 6 | `s6_robustness_test` | Paired noise experiment using the same perturbed jets |
+| 7 | `s7_explainability` | Feature-permutation and radial-occlusion CSVs and plots |
 
-## What's original here (vs. the reference material)
-
-The CNN and GraphSAGE architectures build on the techniques in MathWorks' own
-File Exchange demo "GraphSAGE Classifier for Top Quark Tagging" (Colin Crovella,
-2025) and MathWorks' documented graph-neural-network examples. On top of that
-foundation, this project adds:
-
-1. **Systematic robustness study** (`s6_robustness_test.m`) — both models, trained
-   once on clean Monte Carlo data, are re-evaluated on the same test jets with
-   synthetic detector noise injected at six levels (0% to 35% fractional momentum
-   smearing). This is the main original contribution.
-
-2. **AUC-based evaluation** (`s5_evaluate_baseline.m`) — accuracy alone depends on
-   an arbitrary threshold; AUC is the standard metric in jet-tagging literature and
-   is what makes the robustness curves in step 6 physically meaningful.
-
-3. **Lightweight explainability** (`s7_explainability.m`) — permutation feature
-   importance for GraphSAGE and radial occlusion for the CNN, revealing which
-   physical features each model relies on most.
-
-4. **GraphSAGE as a direct comparison point** — the graph-based model treats each
-   particle as a node connected to its nearest angular neighbours, preserving exact
-   particle positions rather than binning them into pixels like the CNN does. Running
-   both on identical data makes the robustness comparison meaningful.
-
-*Note on AI assistance: this project was built with the help of Claude (Anthropic)
-as a coding and research assistant, in accordance with the MathWorks Generative AI
-Guidelines. Every design decision, result, and interpretation has been verified
-by running the code and examining the outputs.*
-
----
-
-## Results
-
-Trained on 50,000 jets from the Top Quark Tagging Reference Dataset
-(Kasieczka et al., 2019), evaluated on a held-out test set of 7,500 jets.
-
-| Metric | CNN | GraphSAGE |
-|---|---|---|
-| Accuracy (clean test set) | 51.5% | 83.7% |
-| AUC (clean test set) | 0.866 | 0.908 |
-| AUC at 10% detector noise | 0.856 | 0.893 |
-| AUC at 35% detector noise | 0.736 | 0.771 |
-
-**What these results show:**
-
-GraphSAGE substantially outperforms the CNN on accuracy (83.7% vs 51.5%), confirming
-that reasoning directly over particle relationships — rather than binning particles
-into pixels — captures the jet's 3-prong top-quark decay structure more effectively.
-
-On the robustness study, both models degrade under noise but neither collapses
-catastrophically. GraphSAGE maintains higher absolute AUC at every noise level and
-degrades slightly more gracefully up to 20% noise, suggesting the graph representation
-is more tolerant of individual particle measurement errors than the image
-representation — physically intuitive, since a single smeared particle affects only
-its local graph neighbourhood rather than an entire pixel region.
-
-The explainability analysis (GraphSAGE permutation importance) shows all four input
-features — deltaEta, deltaPhi, log(pT), log(E) — contribute meaningfully, with
-log(pT) and deltaPhi showing the largest drops when shuffled. This is physically
-consistent: the azimuthal angle between particles and their transverse momenta are
-the primary discriminators of the 3-prong top decay structure.
-
-### Result plots
-
-![ROC Curve: CNN vs GraphSAGE](roc_baseline.png)
-
-![AUC and Accuracy vs Detector Noise](robustness_curves.png)
-
-![GraphSAGE Feature Importance](graphsage_feature_importance.png)
-
-![CNN Radial Occlusion](cnn_radial_occlusion.png)
-
----
-
-## File structure
-
-All scripts are in the root of this repository. Helper functions are in the
-`helpers/` subfolder (to be created locally — see setup below).
-
-| File | Purpose |
-|---|---|
-| `run_all.m` | Single entry point — runs the full pipeline |
-| `s1_prepare_data.m` | Load and preprocess the dataset |
-| `s2_build_representations.m` | Build jet images (CNN) and jet graphs (GraphSAGE) |
-| `s3_train_cnn.m` | Train the CNN baseline |
-| `s4_train_graphsage.m` | Train the GraphSAGE model |
-| `s5_evaluate_baseline.m` | Accuracy / AUC / ROC on clean test set |
-| `s6_robustness_test.m` | **Original contribution** — AUC vs detector noise |
-| `s7_explainability.m` | Feature importance and occlusion analysis |
-| `buildJetImage.m` | Converts particle four-vectors to a 32×32 jet image |
-| `buildJetGraph.m` | Converts particles to a k-NN graph (k=6 in eta-phi) |
-| `graphSAGELayer.m` | One GraphSAGE mean-aggregator layer |
-| `globalMeanPool.m` | Graph-level readout (average node features per jet) |
-| `modelGraphSAGE.m` | Full GraphSAGE forward pass |
-| `modelLossGraphSAGE.m` | Loss + gradients for custom training loop |
-| `preprocessGraphMiniBatch.m` | Block-diagonal graph batching |
-| `injectDetectorNoise.m` | Synthetic detector noise injection |
-| `computeROC.m` | ROC curve and AUC (no toolbox required) |
-| `initializeGlorot.m` | Glorot weight initialisation |
-| `CONCEPTS.md` | Plain-English explanation of every idea used |
-
----
+All MATLAB files are in the repository root. There is no need to move helpers
+into another folder or edit an absolute MATLAB Drive path.
 
 ## Requirements
 
-- MATLAB R2024a or later
-- **Deep Learning Toolbox** (required)
-- No GPU required (helpful for speed, not necessary)
-- No Statistics and Machine Learning Toolbox needed — ROC/AUC computed in `computeROC.m`
+- MATLAB **R2024a or later** and **Deep Learning Toolbox**.
+- CPU execution is the default. GraphSAGE uses double-precision sparse CPU
+  batches; a GPU and Parallel Computing Toolbox are not required.
+- Python 3.11 and [requirements.txt](requirements.txt) for one-time data conversion.
+- Enough memory and disk for the chosen subset. Images and per-jet representations
+  are held in memory; graph inference is batched. Start with a smaller subset on
+  a laptop.
 
----
+The CNN uses MathWorks'
+[`trainnet`](https://www.mathworks.com/help/deeplearning/ref/trainnet.html) and
+[`minibatchpredict`](https://www.mathworks.com/help/deeplearning/ref/minibatchpredict.html).
+ROC/AUC is implemented locally; Statistics and Machine Learning Toolbox is not required.
 
-## How to run
+## Run the project
 
-### Step 1 — Get the dataset
+### 1. Clone and prepare the data
 
-The Top Quark Tagging Reference Dataset (Kasieczka et al., 2019) is available at:
-[https://doi.org/10.5281/zenodo.2603256](https://doi.org/10.5281/zenodo.2603256)
-
-Download `test.h5`. Because this file is ~374 MB (pandas HDF5 format), convert
-it to a MATLAB-readable `.mat` file using the provided Google Colab notebook
-or this one-time Python snippet:
-
-```python
-import pandas as pd, scipy.io, numpy as np
-df = pd.read_hdf('test.h5', key='/table', stop=50000)
-cols = [f'{c}_{i}' for i in range(200) for c in ['E','PX','PY','PZ']]
-scipy.io.savemat('jets_real_50k.mat', {
-    'particleData': df[cols].values.astype(np.float32),
-    'labels': df['is_signal_new'].values.astype(np.float32)
-})
+```bash
+git clone https://github.com/AstroAli5/top-quark-tagging-ai-challenge.git
+cd top-quark-tagging-ai-challenge
+python -m pip install -r requirements.txt
 ```
 
-Place `jets_real_50k.mat` in a `data/` folder next to the scripts.
+Download `train.h5` from the
+[Top Quark Tagging Reference Dataset](https://doi.org/10.5281/zenodo.2603256)
+and place it in `data/`. Then:
 
-### Step 2 — Run in MATLAB
+```bash
+python scripts/convert_dataset.py --input data/train.h5 --output data/jets_real_50k.mat --max-jets 50000
+```
 
-Set MATLAB's current folder to the project root, then:
+The converter selects the first requested rows in source order, explicitly orders
+the 800 columns as `E_0, PX_0, PY_0, PZ_0, ..., PZ_199`, checks finite values and
+binary labels, and saves column-vector labels. The MAT file includes the source
+SHA-256, row-selection description, and conversion package versions. Existing
+output files require `--force` to replace.
+
+Conversion uses
+[pandas HDF reading](https://pandas.pydata.org/docs/reference/api/pandas.read_hdf.html)
+and [SciPy MAT export](https://docs.scipy.org/doc/scipy/reference/generated/scipy.io.savemat.html).
+An existing correctly formatted `jets_real_50k.mat` also works, although older files
+may lack source provenance.
+
+**Evaluation protocol:** this compact experiment makes its own 70%/15%/15%
+train/validation/test split within the selected input subset. With 50,000 usable
+jets, approximately **35,000 train the models**, rather than all 50,000.
+Do not describe this internal holdout as evaluation on the dataset's official test
+partition. Earlier instructions used `test.h5` as the input and then split it;
+such runs are not comparable to the official benchmark protocol. Use the source
+training file for new internal-holdout experiments.
+
+### 2. Run in MATLAB
+
+Open the cloned folder in MATLAB:
 
 ```matlab
 run_all
 ```
 
-Or run each step individually in order: `s1` → `s2` → `s3` → `s4` → `s5` → `s6` → `s7`.
+The pipeline creates `data/`, `models/`, and `results/` under the project root
+and saves plots without opening training windows. It does not change the current
+folder or clear the caller's workspace.
 
-Results (CSVs and plots) are saved to a `results/` folder automatically.
+To customize a run:
 
----
+```matlab
+cfg = projectConfig;
+cfg.cnnEpochs = 15;
+cfg.graphEpochs = 3;
+cfg.graphBatchSize = 32; % reduce the graph working set
+run_all(cfg)
+```
 
-## Attribution
+The seven stages can also be called individually with the same configuration:
 
-- **Dataset:** G. Kasieczka, T. Plehn, J. Thompson, M. Russel, "Top Quark Tagging
-  Reference Dataset," [Zenodo, 2019](https://doi.org/10.5281/zenodo.2603256), CC-BY 4.0.
-- **GraphSAGE algorithm:** W. Hamilton, R. Ying, J. Leskovec, "Inductive Representation
-  Learning on Large Graphs," NeurIPS 2017.
-- **Jet-graph construction** (k-NN in eta-phi): H. Qu and L. Gouskos, "ParticleNet:
-  Jet Tagging via Particle Clouds," Phys. Rev. D 101 (2020).
-- **GraphSAGE training loop patterns** follow MathWorks' documented examples:
+```matlab
+cfg = projectConfig;
+s5_evaluate_baseline(cfg) % requires matching prepared data and trained models
+s6_robustness_test(cfg)
+s7_explainability(cfg)
+```
+
+Every fresh step-1 import receives an ID. Step 2 binds it to the split seed,
+image size, and graph-neighbor count. Models and representations must share this
+dataset ID, so old checkpoints cannot silently be evaluated against a different
+split or representation. After changing input data, rebuild and retrain with `run_all`.
+Existing generated files in the selected output directories are overwritten.
+
+## Experiment design and limits
+
+The CNN receives 32-by-32 images of summed transverse momentum, log-compressed
+after binning around a pT-weighted angular center. GraphSAGE receives
+`deltaEta, deltaPhi, log(pT), log(E)` for each constituent, with a symmetrized
+six-nearest-neighbor graph in eta/phi. Three neighbor-mean layers use ReLU and
+nodewise L2 normalization, followed by mean pooling and a binary classifier.
+This is a small GraphSAGE baseline, **not ParticleNet**.
+
+Both models use identical jets and splits, fixed random seeds, and validation
+loss to select checkpoints. Their default training budgets differ (15 CNN epochs,
+3 GraphSAGE epochs), so this is not an equal-compute architecture benchmark.
+
+For each noise level, every momentum component is independently multiplied by
+`1 + sigma * Z`, with standard-normal `Z`. Energy is recomputed using a
+nonnegative estimate of the original squared mass. Zero noise leaves inputs
+unchanged. The same random draws are scaled across nonzero noise levels and both
+models receive the same noisy jets; graphs and images are rebuilt each time.
+
+This is a **synthetic stress test**, not a calibrated detector-resolution model.
+It does not establish detector deployment readiness. Results from one training
+seed and one noise realization do not establish statistical significance or a
+universal architecture ranking. Multiple seeds, uncertainty estimates, a tuned
+CNN baseline, and official dataset partitions are needed for stronger claims.
+
+Feature permutation keeps graph edges fixed while shuffling a node-feature
+column. This can create inconsistent feature/geometry combinations. Radial
+occlusion masks outer image pixels. Both measure perturbation sensitivity, not
+causal importance or proof that a network learned a particular decay structure.
+See [CONCEPTS.md](CONCEPTS.md) for the intuition.
+
+## Results status
+
+The committed historical CSVs contain the following values:
+
+| Historical metric | CNN | GraphSAGE |
+| --- | ---: | ---: |
+| Clean accuracy | 50.29% | 83.57% |
+| Clean AUC | 0.1961 | 0.9088 |
+| AUC at 10% synthetic smearing | 0.1904 | 0.8971 |
+| AUC at 35% synthetic smearing | 0.2562 | 0.7693 |
+
+Sources: [baseline_comparison.csv](baseline_comparison.csv) and
+[robustness_results.csv](robustness_results.csv). These files have been preserved
+unchanged. The earlier README's CNN AUC of 0.866 and several other numbers did not
+match them.
+
+**These are not validated results for the corrected code.** The old CNN lacked
+a softmax output layer, inference did not explicitly control class/layout mapping,
+and ROC handling could depend on label order when scores were tied.
+Those defects are now addressed; corrected metrics require retraining and
+reevaluation. A reversed score or a manually edited CSV is not a substitute.
+
+The original [ROC](roc_baseline.png), [robustness](robustness_curves.png),
+[feature importance](graphsage_feature_importance.png), and
+[occlusion](cnn_radial_occlusion.png) images are historical too. They are not
+presented as evidence for the corrected pipeline.
+
+Fresh outputs are written to `results/`:
+
+- `baseline_comparison.csv`, `baseline_predictions.mat`, and `roc_baseline.png`
+- `robustness_results.csv` and `robustness_curves.png`
+- `graphsage_feature_importance.csv` and its PNG
+- `cnn_radial_occlusion.csv` and its PNG
+- `run_metadata.json` and `run_metadata.mat`: configuration, environment, dataset
+  provenance, and actual split counts
+
+Keep a complete set from the same run, along with the code commit used to produce
+it. Large data, checkpoints, and generated output directories are ignored by Git.
+
+## Tests
+
+```bash
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+```matlab
+results = runtests('tests');
+assertSuccess(results);
+```
+
+The GitHub [test workflow](.github/workflows/tests.yml) runs conversion tests and
+MATLAB R2024a tests, including a 40-jet synthetic run through all seven stages.
+Checks cover tied-score AUC, wrapped angles, mass preservation, disjoint splits,
+graph gradients, inference batch boundaries, and agreement between the clean
+baseline and zero-noise evaluation. Synthetic metrics are not physics results.
+
+## References and attribution
+
+- Kasieczka et al., [Top Quark Tagging Reference Dataset](https://doi.org/10.5281/zenodo.2603256).
+  Follow the dataset's own license and attribution terms; it is not bundled here.
+- Hamilton, Ying, and Leskovec,
+  [Inductive Representation Learning on Large Graphs](https://arxiv.org/abs/1706.02216), NeurIPS 2017.
+- Qu and Gouskos, [ParticleNet: Jet Tagging via Particle Clouds](https://arxiv.org/abs/1902.08570),
+  Physical Review D 101 (2020), for particle-cloud context.
+- Colin Crovella,
+  [GraphSAGE Classifier for Top Quark Tagging](https://www.mathworks.com/matlabcentral/fileexchange/181442-graphsage-classifier-for-top-quark-tagging),
+  the reference demo that inspired this comparison.
+- MathWorks,
   [Node Classification Using GCN](https://www.mathworks.com/help/deeplearning/ug/node-classification-using-graph-convolutional-network.html)
-  and [Multilabel Graph Classification Using GAT](https://www.mathworks.com/help/deeplearning/ug/multilabel-graph-classification-using-graph-attention-networks.html).
-- **Reference implementation:** GraphSAGE Classifier for Top Quark Tagging,
-  Colin Crovella, MATLAB Central File Exchange (2025).
+  and
+  [Multilabel Graph Classification Using GAT](https://www.mathworks.com/help/deeplearning/ug/multilabel-graph-classification-using-graph-attention-networks.html),
+  for sparse batching and custom-loop patterns.
 
----
+**AI assistance:** Claude assisted earlier development; OpenAI Codex assisted the
+repository audit, corrections, documentation, and tests. Automated checks validate
+software behavior, not the scientific claims. The author should review and
+understand the implementation and verify real-data outputs before submission.
 
-## License
-
-MIT — see [LICENSE](LICENSE).
-
-## Author
-
-Ali Mohamed — MathWorks Challenge Project Hub, Project #238, 2026.
+[Submission checklist](SUBMISSION_CHECKLIST.md) · [MIT license](LICENSE) ·
+[Citation metadata](CITATION.cff)

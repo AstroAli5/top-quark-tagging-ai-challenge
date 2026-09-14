@@ -10,7 +10,7 @@ function Y = modelGraphSAGE(parameters,X,A,numNodesPerGraph)
 %
 %   X                - [totalNodes x numFeatures] stacked node features
 %   A                - [totalNodes x totalNodes] block-diagonal adjacency
-%                      matrix (see helpers/buildJetGraph.m and the
+%                      matrix (see buildJetGraph.m and the
 %                      mini-batch preprocessing in s4_train_graphsage.m)
 %   NUMNODESPERGRAPH  - number of particles in each jet in the mini-batch
 

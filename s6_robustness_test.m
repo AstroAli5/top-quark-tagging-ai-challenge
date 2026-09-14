@@ -1,31 +1,22 @@
-% s6_robustness_test.m
-% -------------------------------------------------------------------------
-% STEP 6 of 7 — MAIN ORIGINAL CONTRIBUTION.
-%
-% Both models are trained once on clean simulated data (s3, s4). Real
-% detectors are never perfectly precise. This script asks the question
-% the reference material never checks: how much does each model's
-% performance degrade as measurements get noisier, and does the CNN or
-% GraphSAGE degrade more gracefully?
-%
-% Toolboxes required: Deep Learning Toolbox.
-% -------------------------------------------------------------------------
-
-clear; clc;
-addpath('/MATLAB Drive/src/helpers');
-
-fprintf("Step 6/7: Robustness test - accuracy vs detector noise level...\n");
-
-load('../data/jet_split.mat',"jetFourVectors","labels","idxTest");
-load('../models/cnn_model.mat',"netCNN");
-load('../models/graphsage_model.mat',"parameters");
-
-noiseLevels = [0, 0.02, 0.05, 0.10, 0.20, 0.35];
+function s6_robustness_test(cfg)
+%S6_ROBUSTNESS_TEST Paired synthetic smearing; both models see identical jets.
+if nargin < 1, cfg = projectConfig; end
+fprintf('Step 6/7: Testing sensitivity to synthetic momentum smearing...\n');
+split = load(fullfile(cfg.dataDir,'jet_split.mat'));
+cnn = load(fullfile(cfg.modelsDir,'cnn_model.mat'));
+sage = load(fullfile(cfg.modelsDir,'graphsage_model.mat'));
+verifyDatasetIds(split,cnn,sage);
+jetFourVectors = split.jetFourVectors;
+labels = split.labels;
+idxTest = split.idxTest;
+imageSize = split.cfg.imageSize;
+kNeighbors = split.cfg.kNeighbors;
+noiseLevels = cfg.noiseLevels;
 testFourVectors = jetFourVectors(idxTest);
 testLabels = labels(idxTest);
 numTest = numel(testFourVectors);
 
-resultsDir = '../results';
+resultsDir = cfg.resultsDir;
 if ~isfolder(resultsDir); mkdir(resultsDir); end
 
 accCNNByNoise = zeros(size(noiseLevels));
@@ -33,34 +24,33 @@ aucCNNByNoise = zeros(size(noiseLevels));
 accSAGEByNoise = zeros(size(noiseLevels));
 aucSAGEByNoise = zeros(size(noiseLevels));
 
-rng(7); % fixed seed so noise levels are comparable run to run
+% Reset per level: the same standard-normal draws are scaled at each level.
 
 for n = 1:numel(noiseLevels)
     noiseLevel = noiseLevels(n);
+    rng(cfg.noiseSeed,'twister');
     fprintf("Noise level %.2f...\n", noiseLevel);
 
-    noisyImages = zeros(32,32,1,numTest,"single");
+    noisyImages = zeros(imageSize,imageSize,1,numTest,"single");
     noisyNodeFeatures = cell(numTest,1);
     noisyAdjacency = cell(numTest,1);
 
     for j = 1:numTest
         noisyFV = injectDetectorNoise(testFourVectors{j},noiseLevel);
-        noisyImages(:,:,1,j) = single(buildJetImage(noisyFV,32));
-        [nf,adj] = buildJetGraph(noisyFV,6);
+        noisyImages(:,:,1,j) = single(buildJetImage(noisyFV,imageSize));
+        [nf,adj] = buildJetGraph(noisyFV,kNeighbors);
         noisyNodeFeatures{j} = single(nf);
-        noisyAdjacency{j} = adj;
+        noisyAdjacency{j} = sparse(adj);
     end
 
     % --- CNN ---
-    scoresCNN = predict(netCNN,noisyImages);
-    probCNN = scoresCNN(:,2);
+    probCNN = predictCNN(cnn.netCNN,noisyImages,cnn.classNames,cfg.cnnBatchSize);
     predCNN = double(probCNN >= 0.5);
     accCNNByNoise(n) = mean(predCNN == testLabels);
     [~,~,aucCNNByNoise(n)] = computeROC(probCNN,testLabels);
 
     % --- GraphSAGE ---
-    [XGraph,AGraph,numNodesGraph] = preprocessGraphMiniBatch(noisyNodeFeatures,noisyAdjacency);
-    probSAGE = extractdata(modelGraphSAGE(parameters,dlarray(XGraph),AGraph,numNodesGraph));
+    probSAGE = predictGraphSAGE(sage.parameters,noisyNodeFeatures,noisyAdjacency,cfg.graphBatchSize);
     predSAGE = double(probSAGE >= 0.5);
     accSAGEByNoise(n) = mean(predSAGE == testLabels);
     [~,~,aucSAGEByNoise(n)] = computeROC(probSAGE,testLabels);
@@ -76,24 +66,25 @@ writetable(robustnessTable,fullfile(resultsDir,"robustness_results.csv"));
 disp(robustnessTable);
 
 %% Plot degradation curves
-figure;
+fig = figure('Visible','off');
+cleanup = onCleanup(@() close(fig));
 tiledlayout(1,2);
 
 nexttile;
 plot(noiseLevels,accCNNByNoise,"-o",LineWidth=1.5); hold on;
 plot(noiseLevels,accSAGEByNoise,"-o",LineWidth=1.5);
-xlabel("Detector noise level (fractional)"); ylabel("Accuracy");
+xlabel("Synthetic component smearing (fractional)"); ylabel("Accuracy");
 legend("CNN","GraphSAGE",Location="southwest");
-title("Accuracy vs detector noise"); grid on;
+title("Accuracy vs synthetic smearing"); grid on;
 
 nexttile;
 plot(noiseLevels,aucCNNByNoise,"-o",LineWidth=1.5); hold on;
 plot(noiseLevels,aucSAGEByNoise,"-o",LineWidth=1.5);
-xlabel("Detector noise level (fractional)"); ylabel("AUC");
+xlabel("Synthetic component smearing (fractional)"); ylabel("AUC");
 legend("CNN","GraphSAGE",Location="southwest");
-title("AUC vs detector noise"); grid on;
+title("AUC vs synthetic smearing"); grid on;
 
-saveas(gcf,fullfile(resultsDir,"robustness_curves.png"));
+saveas(fig,fullfile(resultsDir,"robustness_curves.png"));
 
 fprintf("\nSaved results/robustness_results.csv and results/robustness_curves.png\n");
-fprintf("NEXT STEP: run s7_explainability.m (stretch goal), then write up your results.\n");
+end

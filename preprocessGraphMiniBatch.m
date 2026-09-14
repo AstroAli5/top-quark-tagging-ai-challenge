@@ -1,43 +1,30 @@
 function [features,adjacency,numNodes,target] = preprocessGraphMiniBatch(featureData,adjacencyData,targetData)
-%PREPROCESSGRAPHMINIBATCH Merge a mini-batch of separate jet graphs into
-%one combined block-diagonal graph for training.
-%
-%   [FEATURES,ADJACENCY,NUMNODES,TARGET] = PREPROCESSGRAPHMINIBATCH(FEATUREDATA,ADJACENCYDATA,TARGETDATA)
-%
-%   FEATUREDATA, ADJACENCYDATA - cell arrays, one cell per jet in the
-%       mini-batch. Each jet can have a different number of particles —
-%       no padding is needed, since every jet is already stored at its
-%       own natural size (unlike a fixed-size image).
-%   TARGETDATA - cell array or vector of 0/1 labels, one per jet
-%       (optional — omit to preprocess data for prediction only).
-%
-%   Follows the same block-diagonal-adjacency merging pattern MathWorks
-%   uses in its documented "Multilabel Graph Classification Using GAT"
-%   example, adapted for variable-size (rather than zero-padded) graphs
-%   and without adding self-loops (this project's GraphSAGE layer keeps
-%   self and neighbor information separate — see helpers/graphSAGELayer.m).
-
-    numGraphs = numel(featureData);
-    features = [];
-    adjacency = sparse([]);
-    numNodes = zeros(numGraphs,1);
-
-    for i = 1:numGraphs
-        thisFeatures = featureData{i};
-        thisAdjacency = adjacencyData{i};
-
-        numNodes(i) = size(thisFeatures,1);
-        features = [features; thisFeatures]; %#ok<AGROW>
-        adjacency = blkdiag(adjacency,thisAdjacency);
+%PREPROCESSGRAPHMINIBATCH Stack graphs as a sparse block-diagonal batch.
+%   Double CPU arrays match sparse adjacency and GraphSAGE parameters.
+    if isempty(featureData) || numel(featureData) ~= numel(adjacencyData)
+        error('topquark:InvalidBatch','Supply matching nonempty graph cells.');
     end
-
-    if nargin > 2 && ~isempty(targetData)
-        if iscell(targetData)
-            target = cell2mat(targetData(:));
-        else
-            target = targetData(:);
+    numGraphs = numel(featureData);
+    numNodes = cellfun(@(x) size(x,1),featureData(:));
+    if any(numNodes == 0)
+        error('topquark:EmptyGraph','A batch cannot contain an empty graph.');
+    end
+    blocks = cell(numGraphs,1);
+    for i = 1:numGraphs
+        validateattributes(featureData{i},{'numeric'},{'2d','real','finite'});
+        if ~isequal(size(adjacencyData{i}),[numNodes(i) numNodes(i)])
+            error('topquark:InvalidAdjacency','Adjacency must match the node count.');
         end
-    else
-        target = [];
+        blocks{i} = sparse(double(adjacencyData{i}));
+    end
+    features = double(vertcat(featureData{:}));
+    adjacency = blkdiag(blocks{:});
+    target = [];
+    if nargin > 2 && ~isempty(targetData)
+        if iscell(targetData), targetData = cell2mat(targetData(:)); end
+        target = double(targetData(:));
+        if numel(target) ~= numGraphs || any(target ~= 0 & target ~= 1)
+            error('topquark:InvalidLabels','Supply one binary target per graph.');
+        end
     end
 end

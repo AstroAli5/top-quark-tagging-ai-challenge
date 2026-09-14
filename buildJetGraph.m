@@ -19,6 +19,13 @@ function [nodeFeatures,adjacency] = buildJetGraph(fourVectors,k)
     if nargin < 2
         k = 6;
     end
+    validateattributes(k,{'numeric'},{'scalar','integer','nonnegative'});
+
+    validateattributes(fourVectors,{'numeric'},{'2d','real','finite','nonempty','ncols',4});
+    fourVectors = double(fourVectors);
+    if any(fourVectors(:,1) <= 0 | hypot(fourVectors(:,2),fourVectors(:,3)) <= 0)
+        error('topquark:InvalidParticles','Remove padding and require positive energy and pT.');
+    end
 
     E  = fourVectors(:,1);
     px = fourVectors(:,2);
@@ -26,9 +33,8 @@ function [nodeFeatures,adjacency] = buildJetGraph(fourVectors,k)
     pz = fourVectors(:,4);
 
     pT  = sqrt(px.^2 + py.^2);
-    p   = sqrt(px.^2 + py.^2 + pz.^2);
     phi = atan2(py,px);
-    eta = 0.5*log((p + pz + eps)./(p - pz + eps));
+    eta = asinh(pz./pT);
 
     % Jet axis: the pT-weighted average direction of all particles in it.
     jetEta = sum(pT.*eta)/sum(pT);
