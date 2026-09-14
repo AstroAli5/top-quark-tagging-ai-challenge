@@ -114,9 +114,10 @@ s6_robustness_test(cfg)
 s7_explainability(cfg)
 ```
 
-Every fresh step-1 import receives a dataset ID. The models and representations
-must share that ID, so old checkpoints cannot silently be evaluated against a
-different split. After changing input data, rebuild and retrain with `run_all`.
+Every fresh step-1 import receives an ID. Step 2 binds it to the split seed,
+image size, and graph-neighbor count. Models and representations must share this
+dataset ID, so old checkpoints cannot silently be evaluated against a different
+split or representation. After changing input data, rebuild and retrain with `run_all`.
 Existing generated files in the selected output directories are overwritten.
 
 ## Experiment design and limits

@@ -7,7 +7,9 @@ function s2_build_representations(cfg)
     jetFourVectors = raw.jetFourVectors(validJets);
     labels = raw.labels(validJets);
     sourceRows = find(validJets);
-    datasetId = raw.datasetId;
+    % Bind checkpoints to the split and representation settings as well as the import.
+    datasetId = sprintf('%s-s%d-i%d-k%d',raw.datasetId, ...
+        cfg.splitSeed,cfg.imageSize,cfg.kNeighbors);
     sourceInfo = raw.sourceInfo;
     sourceInfo.droppedJets = sum(~validJets);
     numJets = numel(labels);

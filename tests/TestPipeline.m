@@ -61,6 +61,10 @@ function testAllSevenStagesFromAnotherDirectory(testCase)
         verifyNotEmpty(testCase,info);
         verifyGreaterThan(testCase,info.bytes,0);
     end
+    % Rebuilding a different split must invalidate the old checkpoints.
+    cfg.splitSeed = cfg.splitSeed+1;
+    s2_build_representations(cfg);
+    verifyError(testCase,@() s5_evaluate_baseline(cfg),'topquark:DatasetMismatch');
 end
 
 function restoreAndRemove(original,folder)
