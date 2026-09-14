@@ -19,14 +19,19 @@ function image = buildJetImage(fourVectors,imageSize,etaRange,phiRange)
     if nargin < 3, etaRange = 1.2; end
     if nargin < 4, phiRange = 1.2; end
 
+    validateattributes(fourVectors,{'numeric'},{'2d','real','finite','nonempty','ncols',4});
+    fourVectors = double(fourVectors);
+    if any(fourVectors(:,1) <= 0 | hypot(fourVectors(:,2),fourVectors(:,3)) <= 0)
+        error('topquark:InvalidParticles','Remove padding and require positive energy and pT.');
+    end
+
     px = fourVectors(:,2);
     py = fourVectors(:,3);
     pz = fourVectors(:,4);
 
     pT  = sqrt(px.^2 + py.^2);
-    p   = sqrt(px.^2 + py.^2 + pz.^2);
     phi = atan2(py,px);
-    eta = 0.5*log((p + pz + eps)./(p - pz + eps));
+    eta = asinh(pz./pT);
 
     jetEta = sum(pT.*eta)/sum(pT);
     jetPhi = atan2(sum(pT.*sin(phi)),sum(pT.*cos(phi)));

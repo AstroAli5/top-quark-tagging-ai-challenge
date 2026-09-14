@@ -20,6 +20,7 @@ function noisyFourVectors = injectDetectorNoise(fourVectors,noiseLevel)
 %   (keeps the original mass fixed: E^2 - |p|^2 = m^2). NOISELEVEL = 0
 %   returns the input completely unchanged.
 
+    validateattributes(noiseLevel,{'numeric'},{'scalar','real','finite','nonnegative'});
     if noiseLevel == 0
         noisyFourVectors = fourVectors;
         return;

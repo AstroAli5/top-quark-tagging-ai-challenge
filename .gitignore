@@ -1,0 +1,12 @@
+# Large input, prepared datasets, checkpoints, and fresh run products
+/data/
+/models/
+/results/
+*.h5
+*.mat
+*.asv
+*.m~
+__pycache__/
+*.py[cod]
+.venv/
+/test-results/

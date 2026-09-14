@@ -27,9 +27,8 @@ function Znext = graphSAGELayer(Z,A,weights)
     % Row-normalize the adjacency matrix so each node's neighbor features
     % are AVERAGED, not summed (guard against isolated nodes with no
     % neighbors by flooring the degree at 1).
-    degree = sum(A,2);
-    degree = max(degree,1);
-    AMean = A ./ degree;
+    degree = max(full(sum(A,2)),1);
+    AMean = spdiags(1./degree,0,size(A,1),size(A,1)) * A;
 
     neighborAgg = AMean * Z;
 
@@ -38,6 +37,6 @@ function Znext = graphSAGELayer(Z,A,weights)
 
     % L2-normalize each node's feature vector, as in the original
     % GraphSAGE paper.
-    rowNorm = sqrt(sum(Znext.^2,2)) + 1e-8;
+    rowNorm = sqrt(sum(Znext.^2,2) + 1e-8);
     Znext = Znext ./ rowNorm;
 end
