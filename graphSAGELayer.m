@@ -30,6 +30,9 @@ function Znext = graphSAGELayer(Z,A,weights)
     degree = max(full(sum(A,2)),1);
     AMean = spdiags(1./degree,0,size(A,1),size(A,1)) * A;
 
+    % MATLAB R2024a dispatches a sparse 1-by-1 multiply as scalar
+    % multiplication, which dlarray rejects. Densify only this scalar.
+    if isscalar(AMean), AMean = full(AMean); end
     neighborAgg = AMean * Z;
 
     combined = [Z, neighborAgg];
