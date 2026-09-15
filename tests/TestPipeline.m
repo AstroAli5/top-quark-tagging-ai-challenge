@@ -22,6 +22,10 @@ function testAllSevenStagesFromAnotherDirectory(testCase)
     cfg.hiddenSize = 8;
     cfg.noiseLevels = [0 0.1];
     cfg.radiusFractions = [1 0.5];
+    cfg.winnerEpochs = 1;
+    cfg.winnerWidths = [8 16];
+    cfg.winnerGroups = 2;
+    cfg.winnerBatchSize = 7;
     rng(2026);
     labels = repmat([0;1],20,1);
     particleData = zeros(40,800,'single');
@@ -61,10 +65,25 @@ function testAllSevenStagesFromAnotherDirectory(testCase)
         verifyNotEmpty(testCase,info);
         verifyGreaterThan(testCase,info.bytes,0);
     end
+    run_winner_comparison(cfg);
+    comparison = readtable(fullfile(cfg.resultsDir,'winner_comparison.csv'));
+    threeNoise = readtable(fullfile(cfg.resultsDir,'winner_robustness.csv'));
+    verifyEqual(testCase,comparison{1:2,2:3},baseline{:,2:3},'AbsTol',1e-10);
+    verifyEqual(testCase,threeNoise{:,2:5},robustness{:,2:5},'AbsTol',1e-10);
+    verifyEqual(testCase,threeNoise{1,6:7},comparison{3,2:3},'AbsTol',1e-10);
+    winner = load(fullfile(cfg.modelsDir,'winner_reference.mat'));
+    split = load(fullfile(cfg.dataDir,'jet_split.mat'));
+    verifyEqual(testCase,winner.normalization.trainingJets,numel(split.idxTrain));
+    testJets = split.jetFourVectors(split.idxTest);
+    p = predictWinnerReference(winner,testJets,7);
+    verifyEqual(testCase,p,predictWinnerReference(winner,testJets,1),'AbsTol',1e-5);
+    winner.classNames = {'1';'0'};
+    verifyEqual(testCase,predictWinnerReference(winner,testJets,7),1-p,'AbsTol',1e-6);
     % Rebuilding a different split must invalidate the old checkpoints.
     cfg.splitSeed = cfg.splitSeed+1;
     s2_build_representations(cfg);
     verifyError(testCase,@() s5_evaluate_baseline(cfg),'topquark:DatasetMismatch');
+    verifyError(testCase,@() evaluate_winner_comparison(cfg),'topquark:DatasetMismatch');
 end
 
 function restoreAndRemove(original,folder)
