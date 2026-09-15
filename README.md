@@ -26,9 +26,20 @@ can be reported.** Existing outputs are preserved as historical artifacts; see
 | 5 | `s5_evaluate_baseline` | Accuracy, ROC/AUC, and per-jet probabilities |
 | 6 | `s6_robustness_test` | Paired noise experiment using the same perturbed jets |
 | 7 | `s7_explainability` | Feature-permutation and radial-occlusion CSVs and plots |
+| Optional comparison | `run_winner_comparison` | Independently implemented ResNeXt-SE reference, three-model ROC and paired noise curves |
 
 All MATLAB files are in the repository root. There is no need to move helpers
 into another folder or edit an absolute MATLAB Drive path.
+
+The new [2025 winner comparison](WINNER_COMPARISON.md) adds aligned 12-channel
+images, radial features, grouped residual convolutions, and channel attention,
+with credit to Adit Shah's winning project. It uses the existing shared split
+and learns normalization only from training jets. The winner's reported score
+is not presented as a result of this repository.
+
+See [execution options](PLATFORMS.md) for MATLAB, the
+[Colab data-preparation notebook](https://colab.research.google.com/github/AstroAli5/top-quark-tagging-ai-challenge/blob/main/notebooks/prepare_data_colab.ipynb),
+and the role of Qiskit.
 
 ## Requirements
 
@@ -104,6 +115,16 @@ cfg.graphEpochs = 3;
 cfg.graphBatchSize = 32; % reduce the graph working set
 run_all(cfg)
 ```
+
+After the baseline pipeline finishes, add the third model with:
+
+```matlab
+run_winner_comparison(cfg)
+```
+
+For a bounded run on 2,000 real jets with three training epochs per model,
+follow the [small benchmark instructions](WINNER_COMPARISON.md#run-all-three-models)
+or run the manual [GitHub workflow](.github/workflows/benchmark.yml).
 
 The seven stages can also be called individually with the same configuration:
 

@@ -32,6 +32,9 @@ function [image,radial] = buildWinnerJetFeatures(fourVectors,cfg)
         y = -sin(angle)*x + cos(angle)*y;
         x = rotatedX;
     end
+    % The alignment anchors lie exactly on the horizontal axis. Suppress
+    % round-off before deciding which half-plane has more energy.
+    y(1:min(2,numel(y))) = 0;
     if sum(fv(y < 0,1)) > sum(fv(y > 0,1)), y = -y; end
     edges = linspace(-cfg.winnerExtent,cfg.winnerExtent,n+1);
     col = discretize(x,edges); row = discretize(y,edges);
