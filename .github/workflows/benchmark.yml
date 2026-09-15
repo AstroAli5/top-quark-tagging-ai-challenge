@@ -1,0 +1,54 @@
+name: Small real-data benchmark
+
+on:
+  workflow_dispatch:
+  # One bounded validation run while introducing this workflow.
+  push:
+    branches: ['codex/winner-inspired-comparison']
+    paths: ['.github/workflows/benchmark.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+      - run: python -m pip install -r requirements.txt
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox
+      - uses: matlab-actions/run-tests@v3
+        with:
+          source-folder: .
+          select-by-folder: tests
+          test-results-junit: test-results/matlab.xml
+      - name: Download and verify official training file
+        run: python scripts/download_dataset.py
+      - name: Convert bounded subset
+        run: python scripts/convert_dataset.py --input data/train.h5 --output data/jets_real_2000.mat --max-jets 2000
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: run_small_benchmark
+      - name: Record code version
+        if: always()
+        run: |
+          mkdir -p results
+          git rev-parse HEAD > results/code_commit.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: small-real-data-benchmark
+          path: |
+            results/
+            models/
+            test-results/
+          retention-days: 30
+          if-no-files-found: warn

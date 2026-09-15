@@ -26,4 +26,14 @@ function cfg = projectConfig(outputRoot)
     cfg.radiusFractions = [1 0.75 0.5 0.35 0.2];
     % CPU avoids mixed sparse-CPU / GPU operations and needs no GPU toolbox.
     cfg.executionEnvironment = 'cpu';
+    % Independent, compact reference inspired by the 2025 winning project.
+    cfg.winnerImageSize = 37;
+    cfg.winnerExtent = 1.6;
+    cfg.winnerMaxParticles = 35;
+    cfg.winnerWidths = [32 64 128];
+    cfg.winnerGroups = 4;
+    cfg.winnerSeed = 103;
+    cfg.winnerEpochs = 12;
+    cfg.winnerBatchSize = 64;
+    cfg.winnerLearnRate = 5e-3;
 end
