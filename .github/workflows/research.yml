@@ -1,4 +1,5 @@
 name: Official-partition research study
+# Implementation functions live only in src/ so root commands resolve them correctly.
 on:
   workflow_dispatch:
   push:

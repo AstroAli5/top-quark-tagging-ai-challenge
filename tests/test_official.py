@@ -14,6 +14,11 @@ from summarize_experiment import auc_influences
 
 
 class OfficialPartitions(unittest.TestCase):
+    def test_root_commands_cannot_shadow_implementation(self):
+        root = Path(__file__).resolve().parents[1]
+        duplicates = [p.name for p in (root/'src').rglob('*.m') if (root/p.name).exists()]
+        self.assertEqual(duplicates, [], 'MATLAB searches the current folder before its path')
+
     def test_auc_uncertainty_uses_tie_aware_pairwise_placements(self):
         labels=np.array([0,1,0,1,1,0])
         scores=np.array([.1,.3,.3,.8,.8,.8])
