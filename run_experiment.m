@@ -15,6 +15,7 @@ function run_experiment(seed,officialDir,outputRoot,overrides)
     cfg.cnnBatchSize = 64; cfg.graphBatchSize = 32; cfg.winnerBatchSize = 64;
     cfg.noiseLevels = [0 0.05 0.10 0.20 0.35];
     cfg.noiseSeeds = [7 17 27]; cfg.noiseTestJets = 10000;
+    cfg.experimentModels = {'CNN','GraphSAGE','ResNeXt-SE reference'};
     for name = reshape(fieldnames(overrides),1,[])
         cfg.(name{1}) = overrides.(name{1});
     end
@@ -32,10 +33,16 @@ function run_experiment(seed,officialDir,outputRoot,overrides)
         error('topquark:InvalidPartition','Official fitting counts changed; inspect excluded jets before reporting.');
     end
     clear split;
-    times = zeros(1,3);
-    timer = tic; s3_train_cnn(cfg); times(1) = toc(timer);
-    timer = tic; s4_train_graphsage(cfg); times(2) = toc(timer);
-    timer = tic; train_winner_reference(cfg); times(3) = toc(timer);
+    names = string(cfg.experimentModels);
+    available = ["CNN","GraphSAGE","ResNeXt-SE reference"];
+    assert(~isempty(names) && isequal(names,available(ismember(available,names))), ...
+        'Select unique models in CNN, GraphSAGE, reference order.');
+    trainers = {@s3_train_cnn,@s4_train_graphsage,@train_winner_reference};
+    times = zeros(1,numel(names));
+    for j = 1:numel(names)
+        timer = tic; trainers{find(available == names(j),1)}(cfg); times(j) = toc(timer);
+        save(fullfile(cfg.modelsDir,'training_progress.mat'),'names','times');
+    end
     evaluateOfficialTest(cfg,officialDir,manifest,seed,times);
     fprintf('Official experiment seed %d completed in %.1f seconds.\n',seed,toc(started));
 end

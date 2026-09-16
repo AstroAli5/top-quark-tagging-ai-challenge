@@ -1,12 +1,20 @@
 name: Official-partition research study
-# Implementation functions live only in src/ so root commands resolve them correctly.
 on:
   workflow_dispatch:
+    inputs:
+      recover_initial_run:
+        description: Reuse the completed core checkpoints and original prepared artifact from run 35042290356
+        type: boolean
+        default: false
   push:
     branches: ['codex/research-release']
     paths: ['.github/workflows/research.yml']
 permissions:
   contents: read
+  actions: read
+env:
+  # The release-branch push performs this one-time recovery; manual runs start fresh by default.
+  RECOVER_INITIAL: ${{ github.event_name == 'push' || inputs.recover_initial_run }}
 jobs:
   validate:
     runs-on: ubuntu-22.04
@@ -35,23 +43,74 @@ jobs:
         with:
           python-version: '3.11'
       - run: python -m pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        if: env.RECOVER_INITIAL == 'true'
+        with:
+          name: official-prepared-data
+          path: data/official/
+          run-id: 35042290356
+          github-token: ${{ github.token }}
       - uses: actions/cache@v4
+        if: env.RECOVER_INITIAL != 'true'
         with:
           path: data/*.h5
           key: zenodo-2603256-official-v1
       - run: python scripts/prepare_official.py
+        if: env.RECOVER_INITIAL != 'true'
+      - run: python scripts/verify_prepared.py
       - uses: actions/upload-artifact@v4
         with:
           name: official-prepared-data
           path: data/official/
-          retention-days: 7
-  experiment:
+          retention-days: 30
+  core:
     needs: [validate, prepare]
     runs-on: ubuntu-22.04
-    timeout-minutes: 180
+    timeout-minutes: 90
     strategy:
       fail-fast: false
-      max-parallel: 3
+      matrix:
+        seed: [101, 202, 303]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: official-prepared-data
+          path: data/official/
+      - uses: actions/download-artifact@v4
+        if: env.RECOVER_INITIAL == 'true'
+        with:
+          name: research-seed-${{ matrix.seed }}
+          path: runs/core_${{ matrix.seed }}/
+          run-id: 35042290356
+          github-token: ${{ github.token }}
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: >-
+            setupProject;
+            if strcmp(getenv('RECOVER_INITIAL'),'true'),
+            recoverInitialCore(${{ matrix.seed }});
+            else,
+            run_experiment(${{ matrix.seed }},'data/official','runs/core_${{ matrix.seed }}',struct('experimentModels',{{'CNN','GraphSAGE'}}));
+            end
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: research-core-seed-${{ matrix.seed }}
+          path: |
+            runs/core_${{ matrix.seed }}/results/
+            runs/core_${{ matrix.seed }}/models/
+          retention-days: 90
+  reference:
+    needs: [validate, prepare]
+    runs-on: ubuntu-22.04
+    timeout-minutes: 360
+    strategy:
+      fail-fast: false
       matrix:
         seed: [101, 202, 303]
     steps:
@@ -66,17 +125,17 @@ jobs:
           products: Deep_Learning_Toolbox
       - uses: matlab-actions/run-command@v2
         with:
-          command: run_experiment(${{ matrix.seed }})
+          command: run_experiment(${{ matrix.seed }},'data/official','runs/reference_${{ matrix.seed }}',struct('experimentModels',{{'ResNeXt-SE reference'}}))
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: research-seed-${{ matrix.seed }}
+          name: research-reference-seed-${{ matrix.seed }}
           path: |
-            runs/seed_${{ matrix.seed }}/results/
-            runs/seed_${{ matrix.seed }}/models/
+            runs/reference_${{ matrix.seed }}/results/
+            runs/reference_${{ matrix.seed }}/models/
           retention-days: 90
-  summarize:
-    needs: experiment
+  summarize-core:
+    needs: core
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -86,9 +145,29 @@ jobs:
       - run: python -m pip install -r requirements.txt matplotlib
       - uses: actions/download-artifact@v4
         with:
-          pattern: research-seed-*
+          pattern: research-core-seed-*
           path: downloads/
-      - run: python scripts/summarize_experiment.py --input downloads --output study-results
+      - run: python scripts/summarize_experiment.py --input downloads --output core-results
+      - uses: actions/upload-artifact@v4
+        with:
+          name: core-summary
+          path: core-results/
+          retention-days: 90
+  summarize:
+    needs: [core, reference]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt matplotlib
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: research-*-seed-*
+          path: downloads/
+      - run: python scripts/combine_study_runs.py --input downloads --output combined
+      - run: python scripts/summarize_experiment.py --input combined --output study-results
       - uses: actions/upload-artifact@v4
         with:
           name: research-summary

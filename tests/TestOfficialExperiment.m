@@ -52,6 +52,16 @@ function testOfficialPartitionsAndSavedPredictions(testCase)
         verifyEqual(testCase,noisy.noisePredictions(:,:,1,r),single(clean.probabilities(1:14,:)));
     end
     verifyFalse(testCase,isequal(noisy.noisePredictions(:,:,2,1),noisy.noisePredictions(:,:,2,2)));
+    trained = load(fullfile(output,'models','cnn_model.mat'),'cfg');
+    cfg = trained.cfg;
+    for selected = {{'CNN','GraphSAGE'},{'ResNeXt-SE reference'}}
+        cfg.experimentModels = selected{1};
+        cfg.resultsDir = tempname(folder);
+        evaluateOfficialTest(cfg,official,manifest,101,zeros(1,numel(selected{1})));
+        separate = load(fullfile(cfg.resultsDir,'clean_predictions.mat'));
+        columns = ismember(["CNN","GraphSAGE","ResNeXt-SE reference"],string(selected{1}));
+        verifyEqual(testCase,separate.probabilities,clean.probabilities(:,columns));
+    end
     verifyError(testCase,@() run_experiment(101,official,output,overrides),'topquark:ExistingRun');
 end
 

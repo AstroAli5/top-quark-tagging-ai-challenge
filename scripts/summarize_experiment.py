@@ -1,13 +1,14 @@
 """Summarize fixed-model test uncertainty separately from training-seed variation."""
 from __future__ import annotations
 import argparse
+import hashlib
 import itertools
 import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat
-from scipy.stats import norm, t
+from scipy.stats import t
 
 MODELS=['CNN','GraphSAGE','ResNeXt-SE reference']
 
@@ -34,28 +35,93 @@ def seed_interval(values):
     return mean,sd,mean-half,mean+half
 
 
+def verify_saved_run(clean, noisy, metadata, predictions, noise, models=MODELS):
+    """Check coverage and paired noise, allowing only saved-score rounding error."""
+    seed = int(metadata['trainingSeed'])
+    size = metadata['manifest']['test_count']
+    labels = predictions['labels'].ravel()
+    scores = predictions['probabilities']
+    if (len(labels) != size or scores.shape != (size, len(models))
+            or not np.array_equal(predictions['rows'].ravel(), np.arange(size))
+            or size != metadata['manifest']['sources']['test']['available_rows']):
+        raise ValueError('Saved predictions do not cover every official test row')
+    if (int(predictions['seed'].item()) != seed or set(clean.Seed) != {seed}
+            or set(noisy.Seed) != {seed} or len(clean) != len(models)
+            or set(clean.Model) != set(models) or not (clean.TestJets == size).all()):
+        raise ValueError('Prediction seed or clean metric rows disagree')
+    cfg = metadata['configuration']
+    levels = np.asarray(cfg['noiseLevels']); seeds = np.asarray(cfg['noiseSeeds'])
+    count = min(cfg['noiseTestJets'], size)
+    saved = noise['noisePredictions']
+    if (saved.shape != (count, len(models), len(levels), len(seeds))
+            or not np.array_equal(noise['noiseLabels'].ravel(), labels[:count])
+            or not np.array_equal(noise['noiseLevels'].ravel(), levels)
+            or not np.array_equal(noise['noiseSeeds'].ravel(), seeds)
+            or int(noise['seed'].item()) != seed):
+        raise ValueError('Noise predictions do not match their declared sample')
+    if (not np.isfinite(scores).all() or not np.isfinite(saved).all()
+            or (scores < 0).any() or (scores > 1).any()
+            or (saved < 0).any() or (saved > 1).any()):
+        raise ValueError('Invalid saved probabilities')
+    expected = {(float(level), int(draw), model) for level in levels for draw in seeds for model in models}
+    actual = set(zip(noisy.Sigma, noisy.NoiseSeed, noisy.Model))
+    if len(noisy) != len(expected) or actual != expected or not (noisy.TestJets == count).all():
+        raise ValueError('Noise metric rows are missing or duplicated')
+    y = labels[:count].astype(bool)
+    largest_difference = 0.
+    for l, level in enumerate(levels):
+        for r, draw in enumerate(seeds):
+            if level == 0 and not np.array_equal(saved[:, :, l, r], scores[:count].astype(saved.dtype)):
+                raise ValueError('Zero-noise predictions differ from the same clean jets')
+            for j, model in enumerate(models):
+                p = saved[:, j, l, r]
+                row = noisy[(noisy.Sigma == level) & (noisy.NoiseSeed == draw) & (noisy.Model == model)].iloc[0]
+                # MATLAB saves noise scores as float32. Bracket the original
+                # score by adjacent representable values instead of imposing
+                # an arbitrary AUC tolerance near ties or the 0.5 threshold.
+                low = np.nextafter(p, -np.inf).astype(float)
+                high = np.nextafter(p, np.inf).astype(float)
+                accuracy_low = np.mean(np.where(y, low >= .5, high < .5))
+                accuracy_high = np.mean(np.where(y, high >= .5, low < .5))
+                def pair_auc(positive, negative):
+                    negative = np.sort(negative)
+                    return float(np.mean((np.searchsorted(negative, positive, 'left')
+                        + np.searchsorted(negative, positive, 'right')) / (2 * len(negative))))
+                auc_low = pair_auc(low[y], high[~y]); auc_high = pair_auc(high[y], low[~y])
+                if (not accuracy_low - 1e-10 <= row.Accuracy <= accuracy_high + 1e-10
+                        or not auc_low - 1e-10 <= row.AUC <= auc_high + 1e-10):
+                    raise ValueError('Noise metrics disagree with saved predictions beyond rounding')
+                largest_difference = max(largest_difference, abs(auc_influences(p, y)[0] - row.AUC))
+    return {'training_seed': seed, 'test_rows_verified': size, 'noise_rows_verified': count,
+            'noise_metric_rows_verified': len(noisy), 'maximum_noise_auc_rounding_difference': largest_difference}
+
+
 def summarize(source, destination):
     source=Path(source); destination=Path(destination); destination.mkdir(parents=True,exist_ok=True)
     paths=sorted(source.rglob('clean_metrics.csv'))
     if len(paths)!=3:
         raise ValueError(f'Expected exactly three complete training runs; found {len(paths)}')
-    clean=[]; noisy=[]; metadata=[]; influences=[]; common_labels=None; common_rows=None
+    clean=[]; noisy=[]; metadata=[]; influences=[]; verification=[]; common_labels=None; common_rows=None; models=None
     for path in paths:
         folder=path.parent
         c=pd.read_csv(path); n=pd.read_csv(folder/'noise_metrics.csv')
         m=json.loads((folder/'metadata.json').read_text())
+        current_models=m.get('models',MODELS)
+        if models is None: models=current_models
+        if current_models!=models: raise ValueError('Runs evaluated different models')
         predictions=loadmat(folder/'clean_predictions.mat')
+        verification.append(verify_saved_run(c,n,m,predictions,loadmat(folder/'noise_predictions.mat'),models))
         labels=predictions['labels'].ravel(); rows=predictions['rows'].ravel()
         if common_labels is None:
             common_labels=labels; common_rows=rows
         elif not np.array_equal(common_labels,labels) or not np.array_equal(common_rows,rows):
             raise ValueError('Training runs did not evaluate identical official test rows')
         values=[]
-        for j,model in enumerate(MODELS):
+        for j,model in enumerate(models):
             auc,vp,vn=auc_influences(predictions['probabilities'][:,j],labels)
             reported=c.loc[c.Model==model,'AUC'].item()
             accuracy=float(np.mean((predictions['probabilities'][:,j]>=.5)==labels))
-            if not np.isclose(auc,reported,atol=1e-10) or not np.isclose(accuracy,c.loc[c.Model==model,'Accuracy'].item(),atol=1e-10):
+            if not np.isclose(auc,reported,atol=1e-10,rtol=0) or not np.isclose(accuracy,c.loc[c.Model==model,'Accuracy'].item(),atol=1e-10,rtol=0):
                 raise ValueError('Saved predictions disagree with reported metrics')
             variance=vp.var(ddof=1)/len(vp)+vn.var(ddof=1)/len(vn)
             c.loc[c.Model==model,'AUC_TestCI_Low']=max(0,auc-1.96*np.sqrt(variance))
@@ -73,12 +139,16 @@ def summarize(source, destination):
     first=metadata[0]
     signature=first['manifest']['fitting_sha256']
     for m in metadata:
-        if m['manifest']['fitting_sha256']!=signature or m['codeCommit']!=first['codeCommit']:
+        if m['manifest']!=first['manifest'] or m['codeCommit']!=first['codeCommit']:
             raise ValueError('The runs used different data or code versions')
         if not m['manifest']['full_official_test']:
             raise ValueError('The full official test partition was not evaluated')
+        ignored={'dataDir','modelsDir','resultsDir','cnnSeed','graphSeed','winnerSeed'}
+        settings=lambda config: {k:v for k,v in config.items() if k not in ignored}
+        if settings(m['configuration']) != settings(first['configuration']):
+            raise ValueError('Training runs used different experiment settings')
     means=[]
-    for model in MODELS:
+    for model in models:
         row={'Model':model}
         for metric in ['Accuracy','AUC']:
             mean,sd,low,high=seed_interval(clean.loc[clean.Model==model,metric])
@@ -94,23 +164,27 @@ def summarize(source, destination):
         Accuracy_Mean=('Accuracy','mean'),Accuracy_SeedSD=('Accuracy','std'),
         AUC_Mean=('AUC','mean'),AUC_SeedSD=('AUC','std')).reset_index()
     paired=[]
-    for a,b in itertools.combinations(range(3),2):
-        left=clean[clean.Model==MODELS[a]].set_index('Seed').AUC
-        right=clean[clean.Model==MODELS[b]].set_index('Seed').AUC
+    for a,b in itertools.combinations(range(len(models)),2):
+        left=clean[clean.Model==models[a]].set_index('Seed').AUC
+        right=clean[clean.Model==models[b]].set_index('Seed').AUC
         mean,sd,low,high=seed_interval(right-left)
         vp=np.mean([run[b][0]-run[a][0] for run in influences],axis=0)
         vn=np.mean([run[b][1]-run[a][1] for run in influences],axis=0)
         se=np.sqrt(vp.var(ddof=1)/len(vp)+vn.var(ddof=1)/len(vn))
-        paired.append({'Difference':f'{MODELS[b]} minus {MODELS[a]}','MeanAUC_Difference':mean,
+        paired.append({'Difference':f'{models[b]} minus {models[a]}','MeanAUC_Difference':mean,
             'TrainingSeedSD':sd,'TrainingSeedCI_Low':low,'TrainingSeedCI_High':high,
             'ConditionalTestCI_Low':mean-1.96*se,'ConditionalTestCI_High':mean+1.96*se})
     report={'code_commit':first['codeCommit'],'workflow_run':first['workflowRun'],
+        'analysis_script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        'fitting_sha256':signature,'verification':verification,'models':models,
+        'training_provenance':[m.get('trainingProvenance',{'codeCommit':m['codeCommit']}) for m in metadata],
         'protocol':{'train_jets':first['manifest']['train_count'],'validation_jets':first['manifest']['val_count'],
             'test_jets':len(common_labels),'noise_test_jets':int(noisy.TestJets.iloc[0]),
             'training_seeds':[101,202,303],'noise_seeds':first['configuration']['noiseSeeds'],
             'epochs':first['configuration']['cnnEpochs'],'sources':first['manifest']['sources']},
         'clean_summary':means,'per_seed_clean':clean.to_dict(orient='records'),
-        'noise_summary':noise_summary.to_dict(orient='records'),'paired_auc':paired,
+        'noise_summary':noise_summary.to_dict(orient='records'),
+        'per_seed_noise':noisy.to_dict(orient='records'),'paired_auc':paired,
         'uncertainty_note':'Seed intervals describe training variability on a fixed test set. Conditional test intervals hold fitted models fixed. Neither covers detector-model mismatch.'}
     clean.to_csv(destination/'per_seed_clean.csv',index=False)
     noisy.to_csv(destination/'per_seed_noise.csv',index=False)
@@ -131,8 +205,9 @@ def make_plots(report,destination):
     clean=pd.DataFrame(report['clean_summary']); noise=pd.DataFrame(report['noise_summary'])
     plt.rcParams.update({'font.size':11,'axes.spines.top':False,'axes.spines.right':False})
     fig,ax=plt.subplots(figsize=(7.4,4.5))
-    colors=['#2878a0','#bf6434','#637b4b']
-    for color,model in zip(colors,MODELS):
+    palette=dict(zip(MODELS,['#2878a0','#bf6434','#637b4b']))
+    models=clean.Model.tolist(); colors=[palette[model] for model in models]
+    for color,model in zip(colors,models):
         d=noise[noise.Model==model].sort_values('Sigma')
         ax.errorbar(d.Sigma,d.AUC_Mean,yerr=d.AUC_SeedSD,label=model,color=color,marker='o',capsize=3)
     ax.set(xlabel='Synthetic component smearing (fraction)',ylabel='AUC',title='Paired noise study: mean and SD across 3 training seeds')

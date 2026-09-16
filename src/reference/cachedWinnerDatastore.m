@@ -8,6 +8,7 @@ function ds = cachedWinnerDatastore(jets,labels,normalization,cfg)
         images(:,:,:,j) = observation{1}; features(j,:) = observation{2};
     end
     targets = categorical(labels(:),[0 1],{'0','1'});
-    ds = combine(arrayDatastore(images,IterationDimension=4), ...
-        arrayDatastore(features),arrayDatastore(targets));
+    batch = cfg.winnerBatchSize;
+    ds = combine(arrayDatastore(images,IterationDimension=4,ReadSize=batch), ...
+        arrayDatastore(features,ReadSize=batch),arrayDatastore(targets,ReadSize=batch));
 end

@@ -10,10 +10,36 @@ from scipy.io import loadmat
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from prepare_official import prepare, read_rows
 from convert_dataset import PARTICLE_COLUMNS
-from summarize_experiment import auc_influences
+from summarize_experiment import MODELS, auc_influences, verify_saved_run
 
 
 class OfficialPartitions(unittest.TestCase):
+    def test_saved_noise_rounding_is_allowed_but_corrupt_metrics_are_rejected(self):
+        labels = np.array([0,1,0,1,0,1])
+        p = np.array([.1,.9,.7,.3,.500000001,.499999999])
+        scores = np.tile(p[:,None],(1,3))
+        levels = np.array([0.,.1]); draws = np.array([7,17,27])
+        cfg = {'noiseLevels':levels.tolist(),'noiseSeeds':draws.tolist(),'noiseTestJets':6}
+        meta = {'trainingSeed':101,'configuration':cfg,
+                'manifest':{'test_count':6,'sources':{'test':{'available_rows':6}}}}
+        predictions = {'labels':labels,'rows':np.arange(6),'probabilities':scores,'seed':np.array(101)}
+        saved = np.tile(scores.astype('float32')[:,:,None,None],(1,1,2,3))
+        noise = {'noisePredictions':saved,'noiseLabels':labels,'noiseLevels':levels,
+                 'noiseSeeds':draws,'seed':np.array(101)}
+        clean = pd.DataFrame({'Seed':[101]*3,'Model':MODELS,'TestJets':[6]*3})
+        noisy = pd.DataFrame([{'Seed':101,'NoiseSeed':int(draw),'Sigma':level,'Model':model,
+            'TestJets':6,'Accuracy':np.mean((p>=.5)==labels),'AUC':auc_influences(p,labels)[0]}
+            for level in levels for draw in draws for model in MODELS])
+        self.assertEqual(verify_saved_run(clean,noisy,meta,predictions,noise)['noise_metric_rows_verified'],18)
+        changed = noisy.copy(); changed.loc[0,'AUC'] = 0.
+        with self.assertRaisesRegex(ValueError,'beyond rounding'):
+            verify_saved_run(clean,changed,meta,predictions,noise)
+        with self.assertRaisesRegex(ValueError,'missing or duplicated'):
+            verify_saved_run(clean,noisy.iloc[:-1],meta,predictions,noise)
+        noise['noisePredictions'] = saved.copy(); noise['noisePredictions'][0,0,0,1] = .8
+        with self.assertRaisesRegex(ValueError,'Zero-noise'):
+            verify_saved_run(clean,noisy,meta,predictions,noise)
+
     def test_root_commands_cannot_shadow_implementation(self):
         root = Path(__file__).resolve().parents[1]
         duplicates = [p.name for p in (root/'src').rglob('*.m') if (root/p.name).exists()]

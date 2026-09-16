@@ -32,7 +32,9 @@ the small holdout and single training seed limit scientific conclusions.
 | GraphSAGE | 63.00% | 0.66275 | 0.6294 | 0.6227 |
 | ResNeXt-SE reference | 86.33% | 0.94658 | 0.9103 | 0.8399 |
 
-Values above were read from the completed MATLAB logs. The run's artifact
+Values above were read from the completed MATLAB logs and saved result tables.
+Clean accuracy and AUC were independently recomputed from all 300 saved prediction
+rows in Python and matched the reported values. The run's artifact
 contains its models, predictions, configuration, result tables, and plots.
 The reference has the highest clean score in this small run; the CNN has the
 higher AUC at the two shown nonzero noise levels. This is not a general model

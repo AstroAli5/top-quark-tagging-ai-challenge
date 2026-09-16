@@ -43,7 +43,9 @@ holdout from train.h5 and is separate from this evaluation.
 The downloader checks the publisher's MD5 and byte count for each partition.
 The conversion manifest records SHA-256 values, row intervals, and prepared-file
 checksums. `fitting.mat` contains only training and validation rows with explicit
-partition labels. The test set is read only after all three checkpoints are fixed.
+partition labels. Each model's test set is read only after its checkpoint is fixed.
+All architecture, training, and evaluation choices are fixed before any test result
+is inspected.
 Training-only normalization is saved with the reference model. The baseline CNN
 also learns its normalization during training. No test labels select checkpoints.
 
@@ -52,6 +54,12 @@ test jet cannot be processed, rather than silently removing it. Per-jet
 probabilities, labels, source rows, configuration, code commit, and runtime are
 saved. Summarization independently recomputes AUC and accuracy from predictions
 and rejects mismatched data, code versions, or missing seeds.
+
+The final analysis also checks every noise metric against its saved predictions,
+verifies zero-noise identity on the same sample, and rejects missing or duplicated
+noise rows. Stored float32 scores can round near ties and the classification
+threshold; adjacent representable values bound that rounding when checking the
+original full-precision metrics. The analysis script's SHA-256 is saved in its report.
 
 Noise multiplies each momentum component by 1 + sigma Z and recomputes energy from
 the original nonnegative mass-squared estimate. A separate random stream makes
@@ -81,6 +89,23 @@ independent training runs. Compare noisy results with the zero-noise results on
 the same 10,000 jets, not with clean results on all 404,000 jets.
 
 ## Limits
+
+### Execution recovery, 16 September 2026
+
+The original three-hour jobs completed all CNN and GraphSAGE training, then timed
+out during reference training. The completed core checkpoints are restored from
+run 35042290356 together with its original prepared data. The recovery verifies
+the fitting-file checksum and seed/settings before evaluating those checkpoints.
+Their training times are reconstructed from stage start/save log timestamps.
+
+The reference runs separately with a six-hour job allowance, epoch checkpoint
+files, and visible training progress. Its cached datastore now reads one full
+mini-batch per call, following [MathWorks' performance guidance](https://www.mathworks.com/help/deeplearning/ug/optimize-datastores-performance.html).
+These are execution changes: the data, seeds, architecture, optimizer settings,
+12-epoch budget, and validation-based selection are unchanged. An interrupted
+reference is not counted as a completed trained model. Core and reference outputs
+are joined only after checks of source hashes, settings, labels, and source rows.
+The completed core analysis can be inspected independently of the slower reference.
 
 The data are simulated. Smearing is a stress test, not a calibrated detector
 response; no hardware deployment claim follows. The reference keeps 35

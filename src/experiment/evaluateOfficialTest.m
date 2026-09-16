@@ -1,10 +1,16 @@
 function evaluateOfficialTest(cfg,officialDir,manifest,seed,trainingSeconds)
 %EVALUATEOFFICIALTEST Freeze models before reading the separate official test set.
-    models.cnn = load(fullfile(cfg.modelsDir,'cnn_model.mat'));
-    models.sage = load(fullfile(cfg.modelsDir,'graphsage_model.mat'));
-    models.reference = load(fullfile(cfg.modelsDir,'winner_reference.mat'));
-    verifyDatasetIds(models.cnn,models.sage,models.reference);
-    probabilities = zeros(manifest.test_count,3);
+    allNames = ["CNN";"GraphSAGE";"ResNeXt-SE reference"];
+    fields = {'cnn','sage','reference'};
+    files = {'cnn_model.mat','graphsage_model.mat','winner_reference.mat'};
+    if isfield(cfg,'experimentModels'), names = string(cfg.experimentModels(:)); else, names = allNames; end
+    assert(~isempty(names) && isequal(names,allNames(ismember(allNames,names))), 'Invalid model selection.');
+    models = struct;
+    for m = 1:3
+        if ismember(allNames(m),names), models.(fields{m}) = load(fullfile(cfg.modelsDir,files{m})); end
+    end
+    loaded = struct2cell(models); verifyDatasetIds(loaded{:});
+    probabilities = zeros(manifest.test_count,numel(names));
     labels = zeros(manifest.test_count,1); rows = labels;
     noiseCount = min(cfg.noiseTestJets,manifest.test_count);
     noiseJets = cell(noiseCount,1);
@@ -29,9 +35,8 @@ function evaluateOfficialTest(cfg,officialDir,manifest,seed,trainingSeconds)
     end
     assert(position == manifest.test_count,'Incomplete official test coverage.');
     cleanSeconds = toc(timer);
-    names = ["CNN";"GraphSAGE";"ResNeXt-SE reference"];
     metrics = table;
-    for m = 1:3
+    for m = 1:numel(names)
         [~,~,auc] = computeROC(probabilities(:,m),labels);
         metrics = [metrics;table(seed,names(m),manifest.test_count, ...
             mean((probabilities(:,m)>=0.5)==labels),auc,trainingSeconds(m), ...
@@ -43,7 +48,7 @@ function evaluateOfficialTest(cfg,officialDir,manifest,seed,trainingSeconds)
     disp(metrics);
     noiseLabels = labels(1:noiseCount);
     noiseMetrics = table;
-    noisePredictions = zeros(noiseCount,3,numel(cfg.noiseLevels),numel(cfg.noiseSeeds),'single');
+    noisePredictions = zeros(noiseCount,numel(names),numel(cfg.noiseLevels),numel(cfg.noiseSeeds),'single');
     for r = 1:numel(cfg.noiseSeeds)
         for l = 1:numel(cfg.noiseLevels)
             sigma = cfg.noiseLevels(l);
@@ -51,7 +56,7 @@ function evaluateOfficialTest(cfg,officialDir,manifest,seed,trainingSeconds)
                 scores = probabilities(1:noiseCount,:);
             else
                 stream = RandStream('mt19937ar','Seed',cfg.noiseSeeds(r));
-                scores = zeros(noiseCount,3);
+                scores = zeros(noiseCount,numel(names));
                 for first = 1:1000:noiseCount
                     indices = first:min(first+999,noiseCount);
                     jets = cell(numel(indices),1);
@@ -62,7 +67,7 @@ function evaluateOfficialTest(cfg,officialDir,manifest,seed,trainingSeconds)
                 end
             end
             noisePredictions(:,:,l,r) = single(scores);
-            for m = 1:3
+            for m = 1:numel(names)
                 [~,~,auc] = computeROC(scores(:,m),noiseLabels);
                 noiseMetrics = [noiseMetrics;table(seed,cfg.noiseSeeds(r),sigma,names(m),noiseCount, ...
                     mean((scores(:,m)>=0.5)==noiseLabels),auc, ...
@@ -77,7 +82,12 @@ function evaluateOfficialTest(cfg,officialDir,manifest,seed,trainingSeconds)
         'matlabVersion',version,'cleanEvaluationSeconds',cleanSeconds, ...
         'createdAtUTC',char(datetime('now','TimeZone','UTC')), ...
         'codeCommit',getenv('GITHUB_SHA'),'workflowRun',getenv('GITHUB_RUN_ID'), ...
-        'datasetId',models.cnn.datasetId,'normalization',models.reference.normalization);
+        'datasetId',loaded{1}.datasetId,'models',{cellstr(names)});
+    if isfield(models,'reference'), metadata.normalization = models.reference.normalization; end
+    if isfield(cfg,'recoveredFromWorkflow')
+        metadata.trainingProvenance = struct('workflowRun',cfg.recoveredFromWorkflow, ...
+            'codeCommit',cfg.trainingCommit,'timingSource','Training-stage start/save log timestamps');
+    end
     fid = fopen(fullfile(cfg.resultsDir,'metadata.json'),'w');
     assert(fid>=0,'Cannot write experiment metadata.');
     cleanup = onCleanup(@() fclose(fid));
