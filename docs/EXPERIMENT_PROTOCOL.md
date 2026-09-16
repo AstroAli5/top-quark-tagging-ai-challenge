@@ -16,7 +16,7 @@ provides separate training, validation, and test files. Preserve that assignment
 | --- | --- |
 | Training | First 50,000 rows of official train.h5 |
 | Validation | First 10,000 rows of official val.h5 |
-| Clean testing | Every row of official test.h5 (published count: 400,000) |
+| Clean testing | Every row of official test.h5 (404,000 rows in the verified file) |
 | Training seeds | 101, 202, 303; same fixed data across runs |
 | Epoch budget | 12 per model; best validation-loss checkpoint |
 | CNN | Existing 32-pixel compact CNN, Adam at 0.001, batch 64 |
@@ -28,7 +28,10 @@ provides separate training, validation, and test files. Preserve that assignment
 | Noise realizations | Independent streams seeded 7, 17, 27; shared across models/training seeds |
 | Classification threshold | Fixed P(top) >= 0.5 |
 
-The official training set contains 1.2 million rows and validation contains 400,000.
+The publisher describes approximately 1.2 million training and 400,000 validation
+and test jets. The verified files contain 1,211,000 training, 403,000 validation,
+and 404,000 test rows. The frozen choice is to use every test row; the exact count
+comes from the source file, not a rounded description.
 This is a **training-subset study with a full official test evaluation**, not a
 full-data state-of-the-art benchmark. Equal epochs do not mean equal compute;
 training seconds are reported. No hyperparameter search or test-guided retuning is
@@ -75,7 +78,7 @@ and [SciPy's Student-t distribution](https://docs.scipy.org/doc/scipy/reference/
 Average the three noise realizations within each training seed before reporting
 between-training-seed variation. Nine combinations are not treated as nine
 independent training runs. Compare noisy results with the zero-noise results on
-the same 10,000 jets, not with clean results on all 400,000 jets.
+the same 10,000 jets, not with clean results on all 404,000 jets.
 
 ## Limits
 

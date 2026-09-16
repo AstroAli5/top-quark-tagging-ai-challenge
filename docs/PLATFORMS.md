@@ -8,15 +8,17 @@
 
 ## MATLAB
 
-The [test workflow](.github/workflows/tests.yml) runs MATLAB R2024a with Deep
-Learning Toolbox. The manual [small benchmark workflow](.github/workflows/benchmark.yml)
+The [test workflow](../.github/workflows/tests.yml) runs MATLAB R2024a with Deep
+Learning Toolbox. The manual [small benchmark workflow](../.github/workflows/benchmark.yml)
 downloads the official training file and runs the 2,000-jet, three-epoch example.
 Open the repository's **Actions** tab, select **Small real-data benchmark**, and
 choose **Run workflow**. Successful runs provide model and result artifacts,
 including metadata. Check the run's commit before comparing results.
 
 GitHub Actions is a bounded CPU execution route, not an interactive MATLAB
-desktop. Longer research runs are better handled in your own MATLAB environment.
+desktop. The [official-partition workflow](../.github/workflows/research.yml) also runs the
+larger three-seed study. Its CPU jobs have a three-hour limit; use your own
+MATLAB environment for experiments requiring more time.
 MATLAB Online also requires signing in to your MathWorks account and having the
 appropriate product access. No account credentials are included in this project.
 
