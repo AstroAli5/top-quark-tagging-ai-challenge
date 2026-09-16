@@ -2,6 +2,8 @@
 from pathlib import Path
 import argparse
 import json
+import re
+import subprocess
 import numpy as np
 import pandas as pd
 from scipy.io import loadmat, savemat
@@ -22,15 +24,25 @@ def combine(source, destination):
             verify_saved_run(clean[i],noisy[i],meta[i],predictions[i],noise[i],meta[i]['models'])
             assert meta[i]['trainingSeed']==seed, 'Wrong training seed'
         assert meta[0]['manifest']==meta[1]['manifest'], 'Different prepared data'
-        assert meta[0]['codeCommit']==meta[1]['codeCommit'], 'Different evaluation versions'
+        if meta[0]['codeCommit'] != meta[1]['codeCommit']:
+            revisions=[item['codeCommit'] for item in meta]
+            if not all(re.fullmatch('[0-9a-f]{40}',revision) for revision in revisions):
+                raise ValueError('Evaluation revisions must be full Git commit hashes')
+            # Separate recovery commits may add orchestration or documentation;
+            # the model, representation, and evaluation code must be unchanged.
+            shared=['src/core','src/reference','src/experiment/evaluateOfficialTest.m',
+                    'src/experiment/predictThreeModels.m','src/experiment/readJetChunk.m',
+                    'run_experiment.m','projectConfig.m']
+            subprocess.run(['git','diff','--exit-code',*revisions,'--',*shared],
+                cwd=Path(__file__).resolve().parents[1],check=True,capture_output=True)
         for key in ['labels','rows']:
             np.testing.assert_array_equal(predictions[0][key],predictions[1][key])
         for key in ['noiseLabels','noiseLevels','noiseSeeds']:
             np.testing.assert_array_equal(noise[0][key],noise[1][key])
-        for key in ['cnnEpochs','graphEpochs','winnerEpochs','cnnSeed','graphSeed','winnerSeed',
-                    'noiseLevels','noiseSeeds','noiseTestJets','winnerWidths','winnerGroups',
-                    'winnerLearnRate','winnerImageSize','winnerMaxParticles','winnerBatchSize']:
-            assert meta[0]['configuration'][key]==meta[1]['configuration'][key], f'Different setting: {key}'
+        ignored={'dataDir','modelsDir','resultsDir','inputFile','experimentModels',
+                 'recoveredFromWorkflow','trainingCommit','trainingTimeSource'}
+        settings=lambda item: {k:v for k,v in item['configuration'].items() if k not in ignored}
+        assert settings(meta[0])==settings(meta[1]), 'Different experiment settings'
         out=destination/f'seed_{seed}'/'results'; out.mkdir(parents=True,exist_ok=False)
         pd.concat(clean,ignore_index=True).to_csv(out/'clean_metrics.csv',index=False)
         pd.concat(noisy,ignore_index=True).to_csv(out/'noise_metrics.csv',index=False)
@@ -46,6 +58,8 @@ def combine(source, destination):
         m['trainingProvenance']={family:item.get('trainingProvenance',{'codeCommit':item['codeCommit'],
             'workflowRun':item['workflowRun']}) for family,item in zip(['core','reference'],meta)}
         m['familyDatasetIds']={family:item['datasetId'] for family,item in zip(['core','reference'],meta)}
+        m['evaluationProvenance']={family:{'codeCommit':item['codeCommit'],'workflowRun':item['workflowRun']}
+            for family,item in zip(['core','reference'],meta)}
         (out/'metadata.json').write_text(json.dumps(m,indent=2)+'\n')
     print('Combined all three seeds after verifying source hashes, settings, rows, and predictions.')
 

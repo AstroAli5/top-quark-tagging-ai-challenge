@@ -141,6 +141,8 @@ def summarize(source, destination):
     for m in metadata:
         if m['manifest']!=first['manifest'] or m['codeCommit']!=first['codeCommit']:
             raise ValueError('The runs used different data or code versions')
+        if m.get('evaluationProvenance')!=first.get('evaluationProvenance'):
+            raise ValueError('Training seeds used different family evaluation versions')
         if not m['manifest']['full_official_test']:
             raise ValueError('The full official test partition was not evaluated')
         ignored={'dataDir','modelsDir','resultsDir','cnnSeed','graphSeed','winnerSeed'}
@@ -178,6 +180,7 @@ def summarize(source, destination):
         'analysis_script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'fitting_sha256':signature,'verification':verification,'models':models,
         'training_provenance':[m.get('trainingProvenance',{'codeCommit':m['codeCommit']}) for m in metadata],
+        'evaluation_provenance':first.get('evaluationProvenance',{'codeCommit':first['codeCommit'],'workflowRun':first['workflowRun']}),
         'protocol':{'train_jets':first['manifest']['train_count'],'validation_jets':first['manifest']['val_count'],
             'test_jets':len(common_labels),'noise_test_jets':int(noisy.TestJets.iloc[0]),
             'training_seeds':[101,202,303],'noise_seeds':first['configuration']['noiseSeeds'],

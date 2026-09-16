@@ -107,6 +107,15 @@ reference is not counted as a completed trained model. Core and reference output
 are joined only after checks of source hashes, settings, labels, and source rows.
 The completed core analysis can be inspected independently of the slower reference.
 
+A full input audit found three one-particle and five two-particle test jets, with
+no empty jets among all 404,000 rows. An initially over-strict reader rejected
+those eight rows. The corrected reader retains every nonempty jet: the existing
+graph implementation already uses min(k,n-1) neighbors and supports isolated
+nodes. No model weights or test-set rows are changed. Recovery evaluates saved
+checkpoints; summaries record both training and evaluation revisions. If model
+families were evaluated at different commits, combination requires an empty Git
+diff for their shared model, representation, and evaluation implementation.
+
 The data are simulated. Smearing is a stress test, not a calibrated detector
 response; no hardware deployment claim follows. The reference keeps 35
 constituents while the original models retain up to 200, so it has a different
