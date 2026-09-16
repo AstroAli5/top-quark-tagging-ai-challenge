@@ -76,3 +76,23 @@ function testCachedFeaturesMatchStreamed(testCase)
     verifyEqual(testCase,injectDetectorNoise(jets{1},0.1,a),injectDetectorNoise(jets{1},0.1,b));
     verifyEqual(testCase,rng,before);
 end
+
+function testSparseConstituentTestJetsAreRetained(testCase)
+    path = [tempname '.mat']; cleanup = onCleanup(@() delete(path));
+    particleData = zeros(2,800,'single');
+    particleData(1,1:4) = [10 10 0 0];
+    particleData(2,1:8) = [10 10 0 0 5 4 3 0];
+    labels = [0;1]; sourceRows = [49496;49497];
+    save(path,'particleData','labels','sourceRows');
+    [jets,y,rows] = readJetChunk(path);
+    verifyEqual(testCase,cellfun(@(x) size(x,1),jets),[1;2]);
+    verifyEqual(testCase,y,labels); verifyEqual(testCase,rows,sourceRows);
+    for j = 1:2
+        [features,adjacency] = buildJetGraph(jets{j},6);
+        verifyEqual(testCase,size(features),[j 4]);
+        verifySize(testCase,adjacency,[j j]);
+        verifyTrue(testCase,all(isfinite(buildJetImage(jets{j})),'all'));
+    end
+    particleData(1,:) = 0; save(path,'particleData','labels','sourceRows');
+    verifyError(testCase,@() readJetChunk(path),'topquark:InvalidTestJet');
+end
