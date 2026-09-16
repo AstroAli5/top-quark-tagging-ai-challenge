@@ -2,9 +2,14 @@
 
 ## Larger official-partition study
 
-The three-seed study is running from commit
-`0f7ae539735f1aa5ee113c84bf36a17f4f366e2c`.
-[Execution record](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35042290356).
+The three-seed study is being recovered in
+[run 35094350524](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35094350524),
+evaluation commit `0470bd1368f22c976096ad74f8c5c3538ab86195`.
+The [earlier run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35042290356)
+completed all six CNN/GraphSAGE checkpoints at commit
+`0f7ae539735f1aa5ee113c84bf36a17f4f366e2c`, then hit its three-hour limit during
+reference training. Those completed core models are reused. The reference runs
+separately with epoch checkpoints and a six-hour allowance.
 
 The fixed design uses 50,000 training jets, 10,000 validation jets, and the full
 official test partition, with training seeds 101, 202, and 303 and 12 epochs per

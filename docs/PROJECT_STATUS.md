@@ -1,7 +1,7 @@
 # Project status
 
 This is an independent student research repository. It does not claim a prize,
-registration, or competition submission. The event page checked on 16 September
+registration, or competition submission. The [event page](https://www.mathworks.com/academia/students/competitions/student-challenge/ai-challenge.html) checked on 16 September
 2026 describes the closed 2025 MathWorks AI Challenge; the research can be read
 and reproduced independently of that event.
 

@@ -6,14 +6,62 @@ import unittest
 from unittest.mock import patch
 import numpy as np
 import pandas as pd
-from scipy.io import loadmat
+from scipy.io import loadmat, savemat
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from prepare_official import prepare, read_rows
 from convert_dataset import PARTICLE_COLUMNS
 from summarize_experiment import MODELS, auc_influences, verify_saved_run
+from summarize_experiment import summarize
+from combine_study_runs import combine
 
 
 class OfficialPartitions(unittest.TestCase):
+    def test_separate_model_families_combine_and_summarize_consistently(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root=Path(temporary); labels=np.array([0,1]*5); rows=np.arange(10)
+            levels=np.array([0.,.1]); draws=np.array([7,17,27])
+            for seed in [101,202,303]:
+                for family,models in [('core',MODELS[:2]),('reference',MODELS[2:])]:
+                    folder=root/'input'/f'research-{family}-seed-{seed}'/'results'
+                    folder.mkdir(parents=True)
+                    scores=np.random.default_rng(seed).uniform(.05,.95,(10,len(models))).astype('float32')
+                    cfg=dict(cnnEpochs=12,graphEpochs=12,winnerEpochs=12,cnnSeed=seed,
+                        graphSeed=seed,winnerSeed=seed,noiseLevels=levels.tolist(),noiseSeeds=draws.tolist(),
+                        noiseTestJets=10,winnerWidths=[32,64,128],winnerGroups=4,winnerLearnRate=.005,
+                        winnerImageSize=37,winnerMaxParticles=35,winnerBatchSize=64,experimentModels=models)
+                    meta=dict(trainingSeed=seed,models=models,configuration=cfg,codeCommit='test-fixture',
+                        workflowRun='synthetic',datasetId=f'{family}-{seed}',normalization={},
+                        manifest=dict(test_count=10,train_count=20,val_count=10,full_official_test=True,
+                            fitting_sha256='fixture',sources={'test':{'available_rows':10}}))
+                    (folder/'metadata.json').write_text(json.dumps(meta))
+                    clean=[]; noisy=[]
+                    for j,model in enumerate(models):
+                        accuracy=np.mean((scores[:,j]>=.5)==labels); auc=auc_influences(scores[:,j],labels)[0]
+                        clean.append(dict(Seed=seed,Model=model,TestJets=10,Accuracy=accuracy,AUC=auc,TrainingSeconds=1.))
+                        noisy.extend(dict(Seed=seed,Model=model,TestJets=10,Accuracy=accuracy,AUC=auc,
+                            Sigma=float(level),NoiseSeed=int(draw)) for level in levels for draw in draws)
+                    pd.DataFrame(clean).to_csv(folder/'clean_metrics.csv',index=False)
+                    pd.DataFrame(noisy).to_csv(folder/'noise_metrics.csv',index=False)
+                    savemat(folder/'clean_predictions.mat',dict(labels=labels,rows=rows,probabilities=scores,seed=seed))
+                    savemat(folder/'noise_predictions.mat',dict(noiseLabels=labels,noiseLevels=levels,noiseSeeds=draws,
+                        noisePredictions=np.tile(scores[:,:,None,None],(1,1,2,3)),seed=seed))
+            with patch('builtins.print'), patch('summarize_experiment.make_plots'):
+                combine(root/'input',root/'combined')
+                summarize(root/'combined',root/'summary')
+            report=json.loads((root/'summary/report.json').read_text())
+            self.assertEqual(report['models'],MODELS)
+            self.assertEqual(len(report['per_seed_clean']),9)
+            self.assertEqual(len(report['per_seed_noise']),54)
+            self.assertEqual(len(report['verification']),3)
+            original=loadmat(root/'input/research-core-seed-101/results/clean_predictions.mat')
+            combined=loadmat(root/'combined/seed_101/results/clean_predictions.mat')
+            np.testing.assert_array_equal(combined['probabilities'][:,:2],original['probabilities'])
+            bad=root/'input/research-reference-seed-101/results/metadata.json'
+            changed=json.loads(bad.read_text()); changed['manifest']['fitting_sha256']='different'
+            bad.write_text(json.dumps(changed))
+            with self.assertRaisesRegex(AssertionError,'Different prepared data'):
+                combine(root/'input',root/'invalid')
+
     def test_saved_noise_rounding_is_allowed_but_corrupt_metrics_are_rejected(self):
         labels = np.array([0,1,0,1,0,1])
         p = np.array([.1,.9,.7,.3,.500000001,.499999999])

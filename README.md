@@ -76,7 +76,9 @@ additional disk for prepared data and models. The larger reference model caches
 about 4 GB of input images; use a machine with at least 16 GB RAM.
 Existing experiment models are preserved: choose a new output folder to rerun.
 The [research workflow](.github/workflows/research.yml) runs the same study in MATLAB
-on GitHub Actions and retains results and checkpoints as downloadable artifacts.
+on GitHub Actions in separate core/reference jobs and retains results and
+checkpoints as downloadable artifacts. The core summary does not wait for the
+slower reference; the combined summary verifies their shared data before joining them.
 
 ## Find your way around
 

@@ -17,7 +17,7 @@ including metadata. Check the run's commit before comparing results.
 
 GitHub Actions is a bounded CPU execution route, not an interactive MATLAB
 desktop. The [official-partition workflow](../.github/workflows/research.yml) also runs the
-larger three-seed study. Its CPU jobs have a three-hour limit; use your own
+larger three-seed study. Its reference jobs allow up to six hours; use your own
 MATLAB environment for experiments requiring more time.
 MATLAB Online also requires signing in to your MathWorks account and having the
 appropriate product access. No account credentials are included in this project.
