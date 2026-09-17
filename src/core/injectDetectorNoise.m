@@ -1,4 +1,4 @@
-function noisyFourVectors = injectDetectorNoise(fourVectors,noiseLevel)
+function noisyFourVectors = injectDetectorNoise(fourVectors,noiseLevel,stream)
 %INJECTDETECTORNOISE Simulate imperfect detector resolution by adding
 %proportional Gaussian smearing to each particle's momentum.
 %
@@ -32,7 +32,12 @@ function noisyFourVectors = injectDetectorNoise(fourVectors,noiseLevel)
     pz = fourVectors(:,4);
 
     numParticles = size(fourVectors,1);
-    smear = 1 + noiseLevel*randn(numParticles,3);
+    if nargin < 3
+        draws = randn(numParticles,3);
+    else
+        draws = randn(stream,numParticles,3);
+    end
+    smear = 1 + noiseLevel*draws;
 
     pxNoisy = px .* smear(:,1);
     pyNoisy = py .* smear(:,2);

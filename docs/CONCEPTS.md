@@ -55,7 +55,7 @@ The empirical AUC equals the fraction of signal/background pairs where signal
 gets the higher score, plus half credit for ties. Thus every score being equal
 must give AUC 0.5, independent of the order of labels.
 
-The [ROC implementation](computeROC.m) groups equal scores before adding a curve
+The [ROC implementation](../src/core/computeROC.m) groups equal scores before adding a curve
 point. It rejects a one-class evaluation because its ROC is undefined.
 
 ## What does the noise experiment establish?
@@ -91,5 +91,5 @@ Both models must use the same held-out jets, predictions must have the right
 class mapping, and no test information may guide training or checkpoint selection.
 Preserve source checksums, splits, configuration, code revision, and predictions.
 A synthetic integration test checks software execution; only a real-data run can
-answer the research question. The [README](README.md#results-status) distinguishes
-archived numbers from results that still need to be measured.
+answer the research question. The [results page](RESULTS.md) distinguishes
+archived numbers from verified measurements and ongoing experiments.

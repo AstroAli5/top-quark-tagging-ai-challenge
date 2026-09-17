@@ -2,6 +2,7 @@ function run_all(cfg)
 %RUN_ALL Execute all seven stages. Existing outputs in cfg are overwritten.
 %   Run from the project folder, or add that folder to the MATLAB path.
 %   Input data must already exist; see scripts/convert_dataset.py.
+    setupProject;
     if nargin < 1, cfg = projectConfig; end
     if verLessThan('matlab','24.1') || isempty(ver('nnet'))
         error('topquark:Requirements', ...

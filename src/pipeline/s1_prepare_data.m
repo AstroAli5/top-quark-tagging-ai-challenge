@@ -19,6 +19,14 @@ function s1_prepare_data(cfg)
         error('topquark:InvalidDataset','Supply one 0/1 label per jet and include both classes.');
     end
     jetFourVectors = cell(numJets,1);
+    partition = [];
+    if isfield(raw,'partition')
+        partition = double(raw.partition(:));
+        if numel(partition) ~= numJets || any(~ismember(partition,[1 2])) || ...
+                ~all(ismember([1 2],unique(partition)))
+            error('topquark:InvalidPartition','Official fitting input must contain train=1 and validation=2 only.');
+        end
+    end
     removedParticles = 0;
     for j = 1:numJets
         jet = reshape(particleData(j,:),4,200).';
@@ -42,7 +50,7 @@ function s1_prepare_data(cfg)
     end
     if ~isfolder(cfg.dataDir), mkdir(cfg.dataDir); end
     save(fullfile(cfg.dataDir,'jets_raw.mat'), ...
-        'jetFourVectors','labels','datasetId','sourceInfo','-v7.3');
+        'jetFourVectors','labels','partition','datasetId','sourceInfo','-v7.3');
     fprintf('Loaded %d jets; signal %d, background %d. Removed %d invalid/zero-pT constituents.\n', ...
         numJets,sum(labels==1),sum(labels==0),removedParticles);
 end

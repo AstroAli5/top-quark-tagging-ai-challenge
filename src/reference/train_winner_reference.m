@@ -4,11 +4,21 @@ function train_winner_reference(cfg)
     split = load(fullfile(cfg.dataDir,'jet_split.mat'));
     fprintf('Training the 2025-winner-inspired reference on %d jets...\n',numel(split.idxTrain));
     rng(cfg.winnerSeed,'twister');
+    preparation = tic;
     normalization = fitWinnerNormalization(split.jetFourVectors(split.idxTrain),cfg);
-    trainData = winnerDatastore(split.jetFourVectors(split.idxTrain), ...
+    % Cache once for larger CPU runs; the default streaming route uses less RAM.
+    if isfield(cfg,'winnerCacheImages') && cfg.winnerCacheImages
+        makeData = @cachedWinnerDatastore;
+    else
+        makeData = @winnerDatastore;
+    end
+    trainData = makeData(split.jetFourVectors(split.idxTrain), ...
         split.labels(split.idxTrain),normalization,cfg);
-    valData = winnerDatastore(split.jetFourVectors(split.idxVal), ...
+    valData = makeData(split.jetFourVectors(split.idxVal), ...
         split.labels(split.idxVal),normalization,cfg);
+    fprintf('Reference features prepared in %.1f seconds.\n',toc(preparation));
+    checkpointPath = fullfile(cfg.modelsDir,'reference_checkpoints');
+    if ~isfolder(checkpointPath), mkdir(checkpointPath); end
     net = buildWinnerNetwork(cfg);
     options = trainingOptions('adam',MaxEpochs=cfg.winnerEpochs, ...
         MiniBatchSize=cfg.winnerBatchSize,InitialLearnRate=cfg.winnerLearnRate, ...
@@ -16,7 +26,8 @@ function train_winner_reference(cfg)
         L2Regularization=1e-4,Shuffle='every-epoch',ValidationData=valData, ...
         ValidationFrequency=max(1,ceil(numel(split.idxTrain)/cfg.winnerBatchSize)), ...
         OutputNetwork='best-validation',ExecutionEnvironment=cfg.executionEnvironment, ...
-        Plots='none',Verbose=false);
+        CheckpointPath=checkpointPath,Plots='none',Verbose=true, ...
+        VerboseFrequency=max(1,ceil(numel(split.idxTrain)/cfg.winnerBatchSize)));
     [netWinner,trainingInfo] = trainnet(trainData,net,'crossentropy',options);
     classNames = {'0';'1'};
     datasetId = split.datasetId;

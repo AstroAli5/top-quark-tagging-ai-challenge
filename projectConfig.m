@@ -2,6 +2,7 @@ function cfg = projectConfig(outputRoot)
 %PROJECTCONFIG Portable defaults. Edit a returned struct to change a run.
 %   cfg = projectConfig; run_all(cfg)
 %   cfg = projectConfig(tempname) isolates all generated data and outputs.
+    setupProject;
     if nargin < 1
         outputRoot = fileparts(mfilename('fullpath'));
     end
@@ -36,4 +37,5 @@ function cfg = projectConfig(outputRoot)
     cfg.winnerEpochs = 12;
     cfg.winnerBatchSize = 64;
     cfg.winnerLearnRate = 5e-3;
+    cfg.winnerCacheImages = false;
 end

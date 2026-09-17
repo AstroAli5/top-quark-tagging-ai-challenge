@@ -5,6 +5,12 @@ end
 function setupOnce(testCase)
     root = fileparts(fileparts(mfilename('fullpath')));
     testCase.applyFixture(matlab.unittest.fixtures.PathFixture(root));
+    for folder = {'core','pipeline','reference','experiment'}
+        location = fullfile(root,'src',folder{1});
+        if isfolder(location)
+            testCase.applyFixture(matlab.unittest.fixtures.PathFixture(location));
+        end
+    end
 end
 
 function testOccupiedMomentsAndEmptyJet(testCase)

@@ -1,0 +1,1633 @@
+{
+  "code_commit": "d3b5eb286c87e7f8a6d8cb7f40a72b196ad13177",
+  "workflow_run": "35095505566",
+  "analysis_script_sha256": "5f3d1080681484e5d923051862db1dfa4f2b3eb6f3c4f3c52e83e84a3f7d2f03",
+  "fitting_sha256": "b8911d9b5646ff8e031c1baf2946f0c3b532ba382574540d2f37679575f16a6e",
+  "verification": [
+    {
+      "training_seed": 101,
+      "test_rows_verified": 404000,
+      "noise_rows_verified": 10000,
+      "noise_metric_rows_verified": 45,
+      "maximum_noise_auc_rounding_difference": 4.001024245248175e-08
+    },
+    {
+      "training_seed": 202,
+      "test_rows_verified": 404000,
+      "noise_rows_verified": 10000,
+      "noise_metric_rows_verified": 45,
+      "maximum_noise_auc_rounding_difference": 4.00102446729278e-08
+    },
+    {
+      "training_seed": 303,
+      "test_rows_verified": 404000,
+      "noise_rows_verified": 10000,
+      "noise_metric_rows_verified": 45,
+      "maximum_noise_auc_rounding_difference": 2.000512189237469e-08
+    }
+  ],
+  "models": [
+    "CNN",
+    "GraphSAGE",
+    "ResNeXt-SE reference"
+  ],
+  "training_provenance": [
+    {
+      "core": {
+        "workflowRun": "35042290356",
+        "codeCommit": "0f7ae539735f1aa5ee113c84bf36a17f4f366e2c",
+        "timingSource": "Training-stage start/save log timestamps"
+      },
+      "reference": {
+        "workflowRun": "35094350524",
+        "codeCommit": "0470bd1368f22c976096ad74f8c5c3538ab86195",
+        "timingSource": "training_progress.mat: elapsed training-function wall time"
+      }
+    },
+    {
+      "core": {
+        "workflowRun": "35042290356",
+        "codeCommit": "0f7ae539735f1aa5ee113c84bf36a17f4f366e2c",
+        "timingSource": "Training-stage start/save log timestamps"
+      },
+      "reference": {
+        "workflowRun": "35094350524",
+        "codeCommit": "0470bd1368f22c976096ad74f8c5c3538ab86195",
+        "timingSource": "training_progress.mat: elapsed training-function wall time"
+      }
+    },
+    {
+      "core": {
+        "workflowRun": "35042290356",
+        "codeCommit": "0f7ae539735f1aa5ee113c84bf36a17f4f366e2c",
+        "timingSource": "Training-stage start/save log timestamps"
+      },
+      "reference": {
+        "workflowRun": "35094350524",
+        "codeCommit": "0470bd1368f22c976096ad74f8c5c3538ab86195",
+        "timingSource": "training_progress.mat: elapsed training-function wall time"
+      }
+    }
+  ],
+  "evaluation_provenance": {
+    "core": {
+      "codeCommit": "d3b5eb286c87e7f8a6d8cb7f40a72b196ad13177",
+      "workflowRun": "35095505566"
+    },
+    "reference": {
+      "codeCommit": "f9257a49df2e135359d33771b2f8f3351d538e8b",
+      "workflowRun": "35148856141"
+    }
+  },
+  "protocol": {
+    "train_jets": 50000,
+    "validation_jets": 10000,
+    "test_jets": 404000,
+    "noise_test_jets": 10000,
+    "training_seeds": [
+      101,
+      202,
+      303
+    ],
+    "noise_seeds": [
+      7,
+      17,
+      27
+    ],
+    "epochs": 12,
+    "sources": {
+      "train": {
+        "file": "train.h5",
+        "sha256": "443b452d5ecaf959a1e6f975736cce0a2034a5e39a1e564e4427a004c3b258e9",
+        "available_rows": 1211000.0
+      },
+      "val": {
+        "file": "val.h5",
+        "sha256": "3abe6b0b7d98392695d1fcdd5486a6d4d886c285c4a05d547ac8525b60aaccd6",
+        "available_rows": 403000
+      },
+      "test": {
+        "file": "test.h5",
+        "sha256": "cb799b78ba28c58e47616948261012bd9c74fd367a6a37ee11ac8e0b7e2b4859",
+        "available_rows": 404000
+      }
+    }
+  },
+  "clean_summary": [
+    {
+      "Model": "CNN",
+      "Accuracy_Mean": 0.9105866336633662,
+      "Accuracy_SeedSD": 0.00047327742439168827,
+      "Accuracy_SeedCI_Low": 0.9094109473653148,
+      "Accuracy_SeedCI_High": 0.9117623199614177,
+      "AUC_Mean": 0.9692862903638857,
+      "AUC_SeedSD": 0.0007222321547803279,
+      "AUC_SeedCI_Low": 0.9674921662315572,
+      "AUC_SeedCI_High": 0.9710804144962142,
+      "TrainingSeconds_Mean": 564.754
+    },
+    {
+      "Model": "GraphSAGE",
+      "Accuracy_Mean": 0.865786303630363,
+      "Accuracy_SeedSD": 0.0050533354800476535,
+      "Accuracy_SeedCI_Low": 0.8532331223942506,
+      "Accuracy_SeedCI_High": 0.8783394848664754,
+      "AUC_Mean": 0.9276931651688779,
+      "AUC_SeedSD": 0.00045571385338524816,
+      "AUC_SeedCI_Low": 0.9265611091999165,
+      "AUC_SeedCI_High": 0.9288252211378393,
+      "TrainingSeconds_Mean": 339.3283333333333
+    },
+    {
+      "Model": "ResNeXt-SE reference",
+      "Accuracy_Mean": 0.915949669966997,
+      "Accuracy_SeedSD": 0.00044095777993282857,
+      "Accuracy_SeedCI_Low": 0.9148542701165762,
+      "Accuracy_SeedCI_High": 0.9170450698174178,
+      "AUC_Mean": 0.9715899919381595,
+      "AUC_SeedSD": 0.00010775585325547818,
+      "AUC_SeedCI_Low": 0.9713223115594257,
+      "AUC_SeedCI_High": 0.9718576723168934,
+      "TrainingSeconds_Mean": 8940.551307333333
+    }
+  ],
+  "per_seed_clean": [
+    {
+      "Seed": 101,
+      "Model": "CNN",
+      "TestJets": 404000,
+      "Accuracy": 0.910678217821782,
+      "AUC": 0.968452350582622,
+      "TrainingSeconds": 620.948,
+      "AUC_TestCI_Low": 0.9679687310019456,
+      "AUC_TestCI_High": 0.968935970163312,
+      "Accuracy_TestCI_Low": 0.9097948270826957,
+      "Accuracy_TestCI_High": 0.9115537984299782
+    },
+    {
+      "Seed": 101,
+      "Model": "GraphSAGE",
+      "TestJets": 404000,
+      "Accuracy": 0.865376237623762,
+      "AUC": 0.928145584882932,
+      "TrainingSeconds": 407.085,
+      "AUC_TestCI_Low": 0.9273357927297023,
+      "AUC_TestCI_High": 0.9289553770362398,
+      "Accuracy_TestCI_Low": 0.8643202465311659,
+      "Accuracy_TestCI_High": 0.8664252801222618
+    },
+    {
+      "Seed": 101,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 404000,
+      "Accuracy": 0.916443069306931,
+      "AUC": 0.971681125172755,
+      "TrainingSeconds": 8582.031681,
+      "AUC_TestCI_Low": 0.971231431252802,
+      "AUC_TestCI_High": 0.9721308190929291,
+      "Accuracy_TestCI_Low": 0.915585789305774,
+      "Accuracy_TestCI_High": 0.9172924295433211
+    },
+    {
+      "Seed": 202,
+      "Model": "CNN",
+      "TestJets": 404000,
+      "Accuracy": 0.910074257425743,
+      "AUC": 0.969708515377552,
+      "TrainingSeconds": 633.243,
+      "AUC_TestCI_Low": 0.9692392563649647,
+      "AUC_TestCI_High": 0.970177774390068,
+      "Accuracy_TestCI_Low": 0.9091881968104276,
+      "Accuracy_TestCI_High": 0.9109525193960688
+    },
+    {
+      "Seed": 202,
+      "Model": "GraphSAGE",
+      "TestJets": 404000,
+      "Accuracy": 0.860950495049505,
+      "AUC": 0.927234227105742,
+      "TrainingSeconds": 356.765,
+      "AUC_TestCI_Low": 0.9264048280230041,
+      "AUC_TestCI_High": 0.9280636261885608,
+      "Accuracy_TestCI_Low": 0.8598801243411744,
+      "Accuracy_TestCI_High": 0.8620140013309217
+    },
+    {
+      "Seed": 202,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 404000,
+      "Accuracy": 0.915594059405941,
+      "AUC": 0.971471060655832,
+      "TrainingSeconds": 10217.053917,
+      "AUC_TestCI_Low": 0.971016981969706,
+      "AUC_TestCI_High": 0.9719251393419285,
+      "Accuracy_TestCI_Low": 0.9147328606859985,
+      "Accuracy_TestCI_High": 0.9164473545072821
+    },
+    {
+      "Seed": 303,
+      "Model": "CNN",
+      "TestJets": 404000,
+      "Accuracy": 0.911007425742574,
+      "AUC": 0.969698005131483,
+      "TrainingSeconds": 440.071,
+      "AUC_TestCI_Low": 0.9692303999941494,
+      "AUC_TestCI_High": 0.9701656102688858,
+      "Accuracy_TestCI_Low": 0.9101254954017549,
+      "Accuracy_TestCI_High": 0.9118815396917449
+    },
+    {
+      "Seed": 303,
+      "Model": "GraphSAGE",
+      "TestJets": 404000,
+      "Accuracy": 0.871032178217822,
+      "AUC": 0.92769968351796,
+      "TrainingSeconds": 254.135,
+      "AUC_TestCI_Low": 0.926865243109157,
+      "AUC_TestCI_High": 0.928534123926764,
+      "Accuracy_TestCI_Low": 0.8699951188326616,
+      "Accuracy_TestCI_High": 0.8720621814462375
+    },
+    {
+      "Seed": 303,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 404000,
+      "Accuracy": 0.915811881188119,
+      "AUC": 0.971617789985892,
+      "TrainingSeconds": 8022.568324,
+      "AUC_TestCI_Low": 0.97116564233197,
+      "AUC_TestCI_High": 0.972069937639855,
+      "Accuracy_TestCI_Low": 0.9149516853728946,
+      "Accuracy_TestCI_High": 0.916664169242286
+    }
+  ],
+  "noise_summary": [
+    {
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "Accuracy_Mean": 0.9087333333333335,
+      "Accuracy_SeedSD": 0.0022546248764115334,
+      "AUC_Mean": 0.9690468826686315,
+      "AUC_SeedSD": 0.0007542375759013192
+    },
+    {
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "Accuracy_Mean": 0.8629333333333333,
+      "Accuracy_SeedSD": 0.004488132499529554,
+      "AUC_Mean": 0.9255166255894851,
+      "AUC_SeedSD": 0.0005696787724890019
+    },
+    {
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "Accuracy_Mean": 0.9147,
+      "Accuracy_SeedSD": 0.0016643316977093764,
+      "AUC_Mean": 0.9710179939397827,
+      "AUC_SeedSD": 0.0004571167546398192
+    },
+    {
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "Accuracy_Mean": 0.9017111111111111,
+      "Accuracy_SeedSD": 0.0003892062197364017,
+      "AUC_Mean": 0.9651171010889913,
+      "AUC_SeedSD": 0.00047002934813099165
+    },
+    {
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "Accuracy_Mean": 0.858111111111111,
+      "Accuracy_SeedSD": 0.004617879904763117,
+      "AUC_Mean": 0.9214803034021156,
+      "AUC_SeedSD": 0.00027615118226863083
+    },
+    {
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "Accuracy_Mean": 0.9060555555555556,
+      "Accuracy_SeedSD": 0.000323751161874189,
+      "AUC_Mean": 0.9669254684754872,
+      "AUC_SeedSD": 0.00013574173559371692
+    },
+    {
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "Accuracy_Mean": 0.8672111111111112,
+      "Accuracy_SeedSD": 0.00632915066562235,
+      "AUC_Mean": 0.9418502736700605,
+      "AUC_SeedSD": 0.0015313124079981203
+    },
+    {
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "Accuracy_Mean": 0.8432333333333334,
+      "Accuracy_SeedSD": 0.006797630306053579,
+      "AUC_Mean": 0.9089732038068415,
+      "AUC_SeedSD": 0.0019517291728983746
+    },
+    {
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "Accuracy_Mean": 0.8786444444444443,
+      "Accuracy_SeedSD": 0.0020003703360831735,
+      "AUC_Mean": 0.9453836293202199,
+      "AUC_SeedSD": 0.0030035350226367387
+    },
+    {
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "Accuracy_Mean": 0.6862,
+      "Accuracy_SeedSD": 0.015433765292731137,
+      "AUC_Mean": 0.8048096534935171,
+      "AUC_SeedSD": 0.004431218420685929
+    },
+    {
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "Accuracy_Mean": 0.7643555555555556,
+      "Accuracy_SeedSD": 0.015385936339301473,
+      "AUC_Mean": 0.8488595880545424,
+      "AUC_SeedSD": 0.011841767599730508
+    },
+    {
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "Accuracy_Mean": 0.7174,
+      "Accuracy_SeedSD": 0.010258709037257523,
+      "AUC_Mean": 0.7831140082972358,
+      "AUC_SeedSD": 0.017662286024543238
+    },
+    {
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "Accuracy_Mean": 0.5691888888888889,
+      "Accuracy_SeedSD": 0.009332996025650839,
+      "AUC_Mean": 0.6613035314818373,
+      "AUC_SeedSD": 0.010563072027687567
+    },
+    {
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "Accuracy_Mean": 0.6736888888888889,
+      "Accuracy_SeedSD": 0.009201288154584757,
+      "AUC_Mean": 0.7375079487015346,
+      "AUC_SeedSD": 0.013723007294739192
+    },
+    {
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "Accuracy_Mean": 0.574911111111111,
+      "Accuracy_SeedSD": 0.005380245072209662,
+      "AUC_Mean": 0.604597636995071,
+      "AUC_SeedSD": 0.015201653311825889
+    }
+  ],
+  "per_seed_noise": [
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9089,
+      "AUC": 0.968347256897768
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.86,
+      "AUC": 0.926139731771335
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9042,
+      "AUC": 0.966399478266438
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8565,
+      "AUC": 0.920807566737085
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8661,
+      "AUC": 0.940983731835354
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.836,
+      "AUC": 0.906701675628961
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.6842,
+      "AUC": 0.809435235420268
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.7493,
+      "AUC": 0.841369830676655
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.5676,
+      "AUC": 0.670522293707189
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.6652,
+      "AUC": 0.732447306510467
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9089,
+      "AUC": 0.968347256897768
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.86,
+      "AUC": 0.926139731771335
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.898,
+      "AUC": 0.963493414314067
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8555,
+      "AUC": 0.921793779207476
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8657,
+      "AUC": 0.938576755649446
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8352,
+      "AUC": 0.905767876576403
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.6871,
+      "AUC": 0.807598685263428
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.7469,
+      "AUC": 0.832230370974971
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.567,
+      "AUC": 0.676050648966136
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.6673,
+      "AUC": 0.723318049420651
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9089,
+      "AUC": 0.968347256897768
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.86,
+      "AUC": 0.926139731771335
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9027,
+      "AUC": 0.964240265507969
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8573,
+      "AUC": 0.922137667242814
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8672,
+      "AUC": 0.941292310831574
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8363,
+      "AUC": 0.90803477690289
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.6869,
+      "AUC": 0.806798780487805
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.7438,
+      "AUC": 0.838280639843801
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.5672,
+      "AUC": 0.672474933582997
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.6631,
+      "AUC": 0.721881521669547
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9128,
+      "AUC": 0.971513987580823
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9042,
+      "AUC": 0.965914994238526
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.8761,
+      "AUC": 0.941891484219965
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.7063,
+      "AUC": 0.763659016708279
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 7,
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.5664,
+      "AUC": 0.590370014723769
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9128,
+      "AUC": 0.971513987580823
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.905,
+      "AUC": 0.96636362908905
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.8739,
+      "AUC": 0.940590371135013
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.7045,
+      "AUC": 0.761692533288523
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 17,
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.57,
+      "AUC": 0.589794067281224
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9128,
+      "AUC": 0.971513987580823
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9098,
+      "AUC": 0.968036717399658
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.8794,
+      "AUC": 0.943400410505094
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.7071,
+      "AUC": 0.765022565776839
+    },
+    {
+      "Seed": 101,
+      "NoiseSeed": 27,
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.5697,
+      "AUC": 0.594501392356444
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9064,
+      "AUC": 0.968947510562707
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8607,
+      "AUC": 0.925387659240767
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.904,
+      "AUC": 0.965244002464635
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8528,
+      "AUC": 0.920186727802316
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8611,
+      "AUC": 0.942708293323095
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8437,
+      "AUC": 0.908930046091798
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.6718,
+      "AUC": 0.800257265860062
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.7778,
+      "AUC": 0.851939536521349
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.5606,
+      "AUC": 0.651878900998656
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.675,
+      "AUC": 0.73930142116382
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9064,
+      "AUC": 0.968947510562707
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8607,
+      "AUC": 0.925387659240767
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9031,
+      "AUC": 0.965253344856287
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8565,
+      "AUC": 0.922282624351836
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8626,
+      "AUC": 0.940074259010307
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8452,
+      "AUC": 0.909510994814674
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.6712,
+      "AUC": 0.798377644677038
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.7747,
+      "AUC": 0.844256249599898
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.5614,
+      "AUC": 0.654704024230203
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.6697,
+      "AUC": 0.733329812431982
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9064,
+      "AUC": 0.968947510562707
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8607,
+      "AUC": 0.925387659240767
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8993,
+      "AUC": 0.964527379009031
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8544,
+      "AUC": 0.921035305038091
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8604,
+      "AUC": 0.942984043915242
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8451,
+      "AUC": 0.909837878496898
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.6695,
+      "AUC": 0.800585109788107
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.7714,
+      "AUC": 0.84878232827604
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.5609,
+      "AUC": 0.650913973977338
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.6725,
+      "AUC": 0.72935635522694
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9159,
+      "AUC": 0.970613637091096
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9026,
+      "AUC": 0.96651622815441
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.8798,
+      "AUC": 0.947170755713468
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.7186,
+      "AUC": 0.798056042346842
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 7,
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.5794,
+      "AUC": 0.61853774566289
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9159,
+      "AUC": 0.970613637091096
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9048,
+      "AUC": 0.966329660393064
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.8785,
+      "AUC": 0.945851317937395
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.72,
+      "AUC": 0.795698918923246
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 17,
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.5765,
+      "AUC": 0.622791614653352
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9159,
+      "AUC": 0.970613637091096
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.911,
+      "AUC": 0.968241029703609
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.8829,
+      "AUC": 0.949714867005959
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.7227,
+      "AUC": 0.799202415818451
+    },
+    {
+      "Seed": 202,
+      "NoiseSeed": 27,
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.5785,
+      "AUC": 0.622549312624033
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9109,
+      "AUC": 0.969845880545419
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8681,
+      "AUC": 0.925022485756353
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9006,
+      "AUC": 0.965348729274694
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8623,
+      "AUC": 0.921155055694258
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8734,
+      "AUC": 0.942910825171244
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8479,
+      "AUC": 0.91053833781448
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.7021,
+      "AUC": 0.808121399078164
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.7727,
+      "AUC": 0.862901702835926
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.5814,
+      "AUC": 0.65912795675693
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.6849,
+      "AUC": 0.759874847961078
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9109,
+      "AUC": 0.969845880545419
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8681,
+      "AUC": 0.925022485756353
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9017,
+      "AUC": 0.965566404999679
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.863,
+      "AUC": 0.921654823634851
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8745,
+      "AUC": 0.943648854106651
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8498,
+      "AUC": 0.910344088086549
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.7008,
+      "AUC": 0.806955520613277
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.77,
+      "AUC": 0.856083397349721
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.5762,
+      "AUC": 0.657902863132962
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.683,
+      "AUC": 0.747565936879841
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.0,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9109,
+      "AUC": 0.969845880545419
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.0,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8681,
+      "AUC": 0.925022485756353
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.05,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.9018,
+      "AUC": 0.965980891108123
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.05,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8647,
+      "AUC": 0.922269180910313
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.1,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.8739,
+      "AUC": 0.943473389187631
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.1,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.8499,
+      "AUC": 0.911093159848921
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.2,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.7022,
+      "AUC": 0.805157240253505
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.2,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.7726,
+      "AUC": 0.863892236412521
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.35,
+      "Model": "CNN",
+      "TestJets": 10000,
+      "Accuracy": 0.5804,
+      "AUC": 0.658156187984124
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.35,
+      "Model": "GraphSAGE",
+      "TestJets": 10000,
+      "Accuracy": 0.6825,
+      "AUC": 0.750496287049485
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9154,
+      "AUC": 0.970926357147429
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9042,
+      "AUC": 0.966103462486396
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.8782,
+      "AUC": 0.946322018436719
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.7248,
+      "AUC": 0.787416858715831
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 7,
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.5781,
+      "AUC": 0.599085986012419
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9154,
+      "AUC": 0.970926357147429
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9052,
+      "AUC": 0.966751268324691
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.8773,
+      "AUC": 0.945736028423276
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.7231,
+      "AUC": 0.785820330004481
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 17,
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.5779,
+      "AUC": 0.600871723161129
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.0,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9154,
+      "AUC": 0.970926357147429
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.05,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.9077,
+      "AUC": 0.968072226489981
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.1,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.8817,
+      "AUC": 0.947775410505089
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.2,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.7295,
+      "AUC": 0.791457393092631
+    },
+    {
+      "Seed": 303,
+      "NoiseSeed": 27,
+      "Sigma": 0.35,
+      "Model": "ResNeXt-SE reference",
+      "TestJets": 10000,
+      "Accuracy": 0.5777,
+      "AUC": 0.602876876480379
+    }
+  ],
+  "paired_auc": [
+    {
+      "Difference": "GraphSAGE minus CNN",
+      "MeanAUC_Difference": -0.041593125195007685,
+      "TrainingSeedSD": 0.0011391561035896695,
+      "TrainingSeedCI_Low": -0.04442294583150535,
+      "TrainingSeedCI_High": -0.03876330455851002,
+      "ConditionalTestCI_Low": -0.04221871185754694,
+      "ConditionalTestCI_High": -0.04096753853246843
+    },
+    {
+      "Difference": "ResNeXt-SE reference minus CNN",
+      "MeanAUC_Difference": 0.00230370157427399,
+      "TrainingSeedSD": 0.0008049851766200896,
+      "TrainingSeedCI_Low": 0.00030400753963202506,
+      "TrainingSeedCI_High": 0.004303395608915955,
+      "ConditionalTestCI_Low": 0.0020083954291290327,
+      "ConditionalTestCI_High": 0.002599007719418947
+    },
+    {
+      "Difference": "ResNeXt-SE reference minus GraphSAGE",
+      "MeanAUC_Difference": 0.04389682676928167,
+      "TrainingSeedSD": 0.00035113057173219046,
+      "TrainingSeedCI_Low": 0.043024570074293285,
+      "TrainingSeedCI_High": 0.04476908346427006,
+      "ConditionalTestCI_Low": 0.043243409775415534,
+      "ConditionalTestCI_High": 0.04455024376314781
+    }
+  ],
+  "uncertainty_note": "Seed intervals describe training variability on a fixed test set. Conditional test intervals hold fitted models fixed. Neither covers detector-model mismatch."
+}
