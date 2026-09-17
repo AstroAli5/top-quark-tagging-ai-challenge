@@ -21,9 +21,16 @@ and reproduced independently of that event.
 
 ## Measurement status
 
-The small real-data run completed. The larger official-partition study is being
-run and checked; see [Results](RESULTS.md) for measured values and run links.
-No pending run is counted as a completed result.
+The small real-data demonstration and larger official-partition study are
+complete. All nine model fits finished their 12-epoch budgets, and every model
+was evaluated on all 404,000 official test jets. The paired noise study is also
+complete. Saved predictions were checked locally, and the complete recalculated
+report matches the workflow report exactly.
+
+See [Results](RESULTS.md) for the measured values and
+[the evidence folder](../experiments/official-study/) for tables, figures,
+uncertainty, source hashes, and reproduction commands. All 10 Python and
+15 MATLAB tests passed. Historical outputs remain unchanged.
 
 ## Scientific scope
 

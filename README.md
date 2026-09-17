@@ -14,6 +14,22 @@ Adit Shah's 2025 winning project, with attribution.
 **Start here:** [Results](docs/RESULTS.md) · [Student walkthrough](docs/WALKTHROUGH.md) ·
 [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Project status](docs/PROJECT_STATUS.md)
 
+## Verified result
+
+Mean scores across three training seeds, using 50,000 training jets and all
+404,000 official test jets:
+
+| Model | Clean accuracy | Clean AUC |
+| --- | ---: | ---: |
+| CNN | 91.06% | 0.96929 |
+| GraphSAGE | 86.58% | 0.92769 |
+| ResNeXt-SE reference | 91.59% | 0.97159 |
+
+The reference has the highest clean score. GraphSAGE has the highest AUC under
+20% and 35% synthetic smearing in each training run. Read the
+[results and uncertainty](docs/RESULTS.md) or inspect the
+[saved evidence](experiments/official-study/).
+
 ## Run the core project
 
 Requirements: **MATLAB R2024a+**, **Deep Learning Toolbox**, and **Python 3.11**.
@@ -90,6 +106,7 @@ slower reference; the combined summary verifies their shared data before joining
 | `src/experiment/` | Official test evaluation in bounded chunks |
 | `scripts/`, `notebooks/` | Download, conversion, summaries, and Colab preparation |
 | `docs/` | Explanation, results, protocol, and attribution |
+| `experiments/official-study/` | Verified metric tables, uncertainty summaries, figures, and run provenance |
 | `archive/original-results/` | Unchanged historical outputs, separated from current evidence |
 
 Root commands call `setupProject` automatically. Call it first when exploring

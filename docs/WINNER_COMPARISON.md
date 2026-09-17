@@ -36,12 +36,15 @@ adaptation, not an exact reproduction or a claim of matching his score.
 The radius-weighted momentum channel is a geometric proxy, not physical angular
 momentum. Pixel moments use actual occupied constituents; padding zeros do not
 enter their calculation. Single-particle and constant samples have zero
-standardized moments by convention. Empty jets produce finite zero features;
-the shared data pipeline excludes jets with fewer than three valid constituents.
+standardized moments by convention. The introductory preparation pipeline excludes
+jets with fewer than three valid constituents. None of the larger study's selected
+training or validation jets were excluded. Official test evaluation retains every
+nonempty jet, including its eight one- or two-particle jets.
 
-Images are generated on demand through a datastore. This avoids storing a full
-12-channel image tensor, although the original pipeline still holds jets and
-baseline representations in memory. Sorting, continuous alignment, moment
+Images can be generated on demand through a datastore. The larger study caches
+the training and validation images (about 4 GB) to reduce repeated preprocessing.
+The original pipeline also holds jets and baseline representations in memory.
+Sorting, continuous alignment, moment
 conventions, log compression, normalization, network size, split protocol, and
 training subset can all differ from the winning implementation. These choices
 must be considered when interpreting any accuracy difference.
@@ -65,7 +68,7 @@ New outputs in `results/` are `winner_comparison.csv`, `winner_robustness.csv`,
 `winner_predictions.mat`, `winner_roc.png`, `winner_robustness.png`, and
 `winner_metadata.json`. The reference checkpoint is `models/winner_reference.mat`.
 The metadata records configurations for all three models and actual split counts.
-The original historical artifacts in the repository root remain historical.
+The original outputs are preserved in [archive/original-results](../archive/original-results/).
 
 For a first real-data feasibility run:
 
@@ -84,15 +87,19 @@ the implementation runs on actual data; it does not establish a competitive
 score. Equal epochs do not imply equal compute. The download is about 1.04 GB,
 even when only 2,000 rows are converted; the published checksum is verified.
 
-## What remains for a submission-quality scientific claim
+## Interpreting the comparison
 
-Record actual metrics and the code commit; do not copy the winner's score into
-your results. Use the official dataset partitions for an official benchmark,
-tune only on validation data, repeat several training/noise seeds, quantify
-uncertainty, and report runtime and training budget. Ablations should separately
-test alignment, added channels, radial features, and attention to establish which
-changes help. The synthetic smearing experiment cannot validate detector or
-FPGA deployment.
+The [larger study](RESULTS.md) uses the publisher's separate data partitions,
+repeated training and noise seeds, validation-based checkpoint selection, and
+saved predictions. It records measured scores, uncertainty, runtime, and the
+training and evaluation revisions. Its protocol and budgets are documented
+before interpreting the results.
+
+The comparison measures whole pipelines. Establishing which changes help would
+require additional ablations of alignment, added channels, radial features, and
+attention. The synthetic smearing experiment does not validate detector or FPGA
+deployment, and differing data selections prevent a direct score comparison
+with the winner's published result.
 
 ## Architecture references
 

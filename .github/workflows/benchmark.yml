@@ -2,10 +2,6 @@ name: Small real-data benchmark
 
 on:
   workflow_dispatch:
-  # One bounded validation run while introducing this workflow.
-  push:
-    branches: ['codex/winner-inspired-comparison']
-    paths: ['.github/workflows/benchmark.yml']
 
 permissions:
   contents: read

@@ -88,9 +88,7 @@ between-training-seed variation. Nine combinations are not treated as nine
 independent training runs. Compare noisy results with the zero-noise results on
 the same 10,000 jets, not with clean results on all 404,000 jets.
 
-## Limits
-
-### Execution recovery, 16 September 2026
+## Execution recovery, 16 September 2026
 
 The original three-hour jobs completed all CNN and GraphSAGE training, then timed
 out during reference training. The completed core checkpoints are restored from
@@ -98,14 +96,15 @@ run 35042290356 together with its original prepared data. The recovery verifies
 the fitting-file checksum and seed/settings before evaluating those checkpoints.
 Their training times are reconstructed from stage start/save log timestamps.
 
-The reference runs separately with a six-hour job allowance, epoch checkpoint
+The reference trained separately with a six-hour job allowance, epoch checkpoint
 files, and visible training progress. Its cached datastore now reads one full
 mini-batch per call, following [MathWorks' performance guidance](https://www.mathworks.com/help/deeplearning/ug/optimize-datastores-performance.html).
 These are execution changes: the data, seeds, architecture, optimizer settings,
 12-epoch budget, and validation-based selection are unchanged. An interrupted
 reference is not counted as a completed trained model. Core and reference outputs
 are joined only after checks of source hashes, settings, labels, and source rows.
-The completed core analysis can be inspected independently of the slower reference.
+All three reference runs completed their 12-epoch budget. Their saved models were
+evaluated separately from training, using the corrected reader described below.
 
 A full input audit found three one-particle and five two-particle test jets, with
 no empty jets among all 404,000 rows. An initially over-strict reader rejected
@@ -115,6 +114,12 @@ nodes. No model weights or test-set rows are changed. Recovery evaluates saved
 checkpoints; summaries record both training and evaluation revisions. If model
 families were evaluated at different commits, combination requires an empty Git
 diff for their shared model, representation, and evaluation implementation.
+Both evaluation workflows and the combined verification completed successfully
+on 16 September. A local reanalysis on 17 September exactly matched the report.
+The one-time recovery helpers and workflows remain in those historical commits;
+the current research workflow starts fresh runs from the verified source files.
+
+## Limits
 
 The data are simulated. Smearing is a stress test, not a calibrated detector
 response; no hardware deployment claim follows. The reference keeps 35
