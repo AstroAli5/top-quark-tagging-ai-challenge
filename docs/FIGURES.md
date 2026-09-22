@@ -44,22 +44,36 @@ explanation figures below must not be presented as final-model explanations.
 1,400 training, 300 validation, and **300 internal test jets**.
 **Training:** one seed per model, three epochs. **Renderer:** MATLAB R2024a.
 
-Download the `small-real-data-benchmark` artifact from
-[this completed MATLAB run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/34936617829).
-Open its `results` folder. It contains these six PNGs:
+All six original exports and their result tables are now saved in
+[the small-run evidence folder](../experiments/small-benchmark/), so the figures
+remain available after the original workflow artifact expires.
 
 | File | What it shows |
 | --- | --- |
-| `roc_baseline.png` | CNN and GraphSAGE ROC curves |
-| `robustness_curves.png` | Their accuracy and AUC under noise |
-| `graphsage_feature_importance.png` | AUC changes after graph features are shuffled |
-| `cnn_radial_occlusion.png` | AUC when the outer image region is masked |
-| `winner_roc.png` | Three-model ROC comparison |
-| `winner_robustness.png` | Three-model noise comparison |
+| [roc_baseline.png](../experiments/small-benchmark/roc_baseline.png) | CNN and GraphSAGE ROC curves |
+| [robustness_curves.png](../experiments/small-benchmark/robustness_curves.png) | Their accuracy and AUC under noise |
+| [graphsage_feature_importance.png](../experiments/small-benchmark/graphsage_feature_importance.png) | AUC changes after graph features are shuffled |
+| [cnn_radial_occlusion.png](../experiments/small-benchmark/cnn_radial_occlusion.png) | AUC when the outer image region is masked |
+| [winner_roc.png](../experiments/small-benchmark/winner_roc.png) | Three-model ROC comparison |
+| [winner_robustness.png](../experiments/small-benchmark/winner_robustness.png) | Three-model noise comparison |
+
+<details>
+<summary>View the six small-run MATLAB figures</summary>
+
+![Small-run CNN and GraphSAGE ROC](../experiments/small-benchmark/roc_baseline.png)
+![Small-run noise response](../experiments/small-benchmark/robustness_curves.png)
+![Small-run graph feature sensitivity](../experiments/small-benchmark/graphsage_feature_importance.png)
+![Small-run image occlusion](../experiments/small-benchmark/cnn_radial_occlusion.png)
+![Small-run three-model ROC](../experiments/small-benchmark/winner_roc.png)
+![Small-run three-model noise response](../experiments/small-benchmark/winner_robustness.png)
+
+</details>
 
 The explanation plots are sensitivity measurements. Shuffling correlated
 features or masking image regions does not establish a causal physics explanation.
-The artifact's current retention ends on 15 October 2026.
+The [original run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/34936617829)
+also holds the small trained models and predictions; that artifact currently
+expires on 15 October 2026. The committed pictures and tables do not expire.
 
 ## Original figures — historical, unchanged
 

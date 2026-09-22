@@ -38,6 +38,10 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
     radialBySeed = zeros(seedCount,numel(radiusFractions));
     permutationTable = table; radiusTable = table;
     provenance = cell(seedCount,1);
+    % CPU kernels can differ by a few float32 rounding units across runners.
+    % Also require unchanged decisions and near-identical ranking metrics.
+    probabilityTolerance = 64*double(eps('single'));
+    aucTolerance = 1e-6;
     if ~isfolder(outputDir), mkdir(outputDir); end
     for s = 1:seedCount
         runDir = runDirs{s};
@@ -71,12 +75,19 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
         end
         cleanProbabilities = [cnnScores(cnn,images,cfg,blocks), ...
             graphScores(sage,features,adjacency,cfg,blocks)];
-        difference = max(abs(cleanProbabilities-saved.probabilities(1:n,[cnnColumn graphColumn])),[],'all');
-        if difference > 1e-6
+        originalProbabilities = saved.probabilities(1:n,[cnnColumn graphColumn]);
+        difference = max(abs(cleanProbabilities-originalProbabilities),[],'all');
+        if difference > probabilityTolerance || ~isequal(cleanProbabilities>=0.5,originalProbabilities>=0.5)
             error('topquark:ExplanationMismatch','Clean predictions changed by %.3g; aborting explanations.',difference);
         end
+        aucDifference = zeros(1,2);
         for m = 1:2
             [~,~,baselineAUC(s,m)] = computeROC(cleanProbabilities(:,m),labels);
+            [~,~,originalAUC] = computeROC(originalProbabilities(:,m),labels);
+            aucDifference(m) = abs(baselineAUC(s,m)-originalAUC);
+            if aucDifference(m) > aucTolerance
+                error('topquark:ExplanationMismatch','Clean AUC changed beyond the numerical tolerance.');
+            end
         end
         nodeCounts = cellfun(@(x) size(x,1),features);
         allFeatures = vertcat(features{:});
@@ -118,7 +129,8 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
             'cleanProbabilities','permutationProbabilities','occlusionProbabilities','-v7');
         provenance{s} = struct('trainingSeed',seed,'datasetId',cnn.datasetId, ...
             'cnnCheckpointSHA256',fileSHA256(cnnPath),'graphCheckpointSHA256',fileSHA256(sagePath), ...
-            'sourceEvaluation',metadata,'maxCleanProbabilityDifference',difference);
+            'sourceEvaluation',metadata,'maxCleanProbabilityDifference',difference, ...
+            'cleanAUCDifference',aucDifference,'changedCleanDecisions',0);
         fprintf('Explained seed %d: %d test jets, %d permutations, %d radii; clean delta %.3g.\n', ...
             seed,n,numel(permutationSeeds),numel(radiusFractions),difference);
     end
@@ -153,6 +165,7 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
     exportgraphics(fig,fullfile(outputDir,'cnn_radial_occlusion.png'),'Resolution',180);
     report = struct('analysis','Post-hoc sensitivity; no retraining or model selection', ...
         'options',options,'testJets',n,'firstSourceRow',rows(1),'lastSourceRow',rows(end), ...
+        'cleanProbabilityTolerance',probabilityTolerance,'cleanAUCTolerance',aucTolerance, ...
         'trainingSeeds',seeds,'trainingJets',manifest.train_count,'validationJets',manifest.val_count, ...
         'permutationAggregation','Average repeats within each training seed, then mean and sample SD across training seeds', ...
         'graphEdges','Unchanged; one feature column shuffled across all constituent nodes', ...
