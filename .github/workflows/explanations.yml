@@ -1,0 +1,48 @@
+name: Explain saved final models
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/experiment/explainSavedModels.m'
+      - '.github/workflows/explanations.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  explain:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: official-prepared-data
+          run-id: 35042290356
+          github-token: ${{ github.token }}
+          path: data/official/
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: research-core-seed-*
+          run-id: 35095505566
+          github-token: ${{ github.token }}
+          path: downloads/
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: >-
+            setupProject;
+            assertSuccess(runtests('tests/TestOfficialExperiment.m'));
+            explainSavedModels({'downloads/research-core-seed-101','downloads/research-core-seed-202','downloads/research-core-seed-303'},'data/official','results/explanations');
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: final-model-explanations
+          path: results/explanations/
+          if-no-files-found: ignore
+          retention-days: 90

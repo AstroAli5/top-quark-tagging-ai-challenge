@@ -1,6 +1,11 @@
 name: Official-partition research study
 on:
   workflow_dispatch:
+    inputs:
+      include_reference:
+        description: 'Also train the optional reference (about 149 CPU minutes per seed in the recorded study)'
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
@@ -73,6 +78,7 @@ jobs:
             runs/core_${{ matrix.seed }}/models/
           retention-days: 90
   reference:
+    if: ${{ inputs.include_reference }}
     needs: [validate, prepare]
     runs-on: ubuntu-22.04
     timeout-minutes: 360
@@ -121,6 +127,7 @@ jobs:
           path: core-results/
           retention-days: 90
   summarize:
+    if: ${{ inputs.include_reference }}
     needs: [core, reference]
     runs-on: ubuntu-22.04
     steps:

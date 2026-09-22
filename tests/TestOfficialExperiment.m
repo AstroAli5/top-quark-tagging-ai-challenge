@@ -63,6 +63,25 @@ function testOfficialPartitionsAndSavedPredictions(testCase)
         verifyEqual(testCase,separate.probabilities,clean.probabilities(:,columns));
     end
     verifyError(testCase,@() run_experiment(101,official,output,overrides),'topquark:ExistingRun');
+    % Explanations must use the frozen models and identical official test rows.
+    explanationDir = fullfile(folder,'explanations');
+    settings = struct('maxJets',14,'permutationSeeds',[11 21],'radiusFractions',[1 0.5]);
+    before = rng;
+    report = explainSavedModels({output},official,explanationDir,settings);
+    verifyEqual(testCase,rng,before);
+    verifyEqual(testCase,report.testJets,14);
+    explanation = load(fullfile(explanationDir,'predictions_seed_101.mat'));
+    verifyEqual(testCase,explanation.cleanProbabilities,clean.probabilities(1:14,1:2),'AbsTol',1e-6);
+    verifyEqual(testCase,explanation.occlusionProbabilities(:,1),explanation.cleanProbabilities(:,1));
+    verifySize(testCase,explanation.permutationProbabilities,[14 4 2]);
+    verifyTrue(testCase,isfile(fullfile(explanationDir,'graphsage_feature_importance.png')));
+    verifyTrue(testCase,isfile(fullfile(explanationDir,'cnn_radial_occlusion.png')));
+    verifyError(testCase,@() explainSavedModels({output},official,explanationDir,settings), ...
+        'topquark:ExistingExplanation');
+    changed = clean; changed.labels(1) = 1-changed.labels(1);
+    save(fullfile(output,'results','clean_predictions.mat'),'-struct','changed');
+    verifyError(testCase,@() explainSavedModels({output},official,fullfile(folder,'mismatched'),settings), ...
+        'topquark:ExplanationMismatch');
 end
 
 function testCachedFeaturesMatchStreamed(testCase)
