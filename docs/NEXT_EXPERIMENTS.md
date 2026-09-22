@@ -8,14 +8,18 @@ experiment. New runs must have their own protocol and output directory.
 | --- | --- | --- |
 | Too much code to navigate | A short reading path and one figure gallery | Optional code remains available without entering the main learning path |
 | Expensive reference | Research workflow defaults to the two core models; reference requires opting in | Same reference architecture still costs more when selected |
-| Missing final-model explanation plots | Implemented checkpoint-only permutation and occlusion analysis | Complete real-data execution, independent checks, and figure publication |
+| Missing final-model explanation plots | Completed and independently verified; [figures and evidence](../experiments/explanations/) | Broader perturbations or more test jets would be separate extensions |
 | Only three training seeds | Preserve the recorded three-seed study | Add two core-model seeds under a separately recorded extension |
 | Only 50,000 training jets | Clearly state the training subset | Measure a learning curve before committing to full-data training |
 | Different representations | Describe results as comparisons of complete pipelines | Controlled ablations and matched constituent selections |
 | No quantum model | Keep the central physics question focused | A quantum extension needs its own hypothesis and fair classical baseline |
 | No competition entry | Keep the repository reproducible and attribution clear | Select an open, suitable competition and check its actual requirements |
 
-## 1. Finish explanations without training again
+## 1. Completed: explanations without training again
+
+The analysis below completed on 22 September 2026. See
+[the measured report](../experiments/explanations/README.md). The remaining
+sections describe work that has not been run.
 
 Use the final CNN/GraphSAGE checkpoints for seeds 101, 202, and 303. Keep weights,
 normalization, class mapping, and test rows fixed. First reproduce the saved clean

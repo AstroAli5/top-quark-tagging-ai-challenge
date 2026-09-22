@@ -57,7 +57,8 @@ def verify(directory, core_input):
         raw = loadmat(directory/f'predictions_seed_{seed}.mat', simplify_cells=True)
         core = core_input/f'research-core-seed-{seed}'
         original = loadmat(core/'results/clean_predictions.mat', simplify_cells=True)
-        names = np.atleast_1d(original['names']).tolist()
+        # MATLAB string objects are opaque to SciPy; use the saved JSON schema.
+        names = json.loads((core/'results/metadata.json').read_text())['models']
         columns = [names.index('CNN'), names.index('GraphSAGE')]
         labels, rows = np.asarray(raw['labels']), np.asarray(raw['rows'])
         np.testing.assert_array_equal(rows, np.arange(n))
@@ -80,7 +81,7 @@ def verify(directory, core_input):
             close(delta,source['cleanAUCDifference'][m])
             if delta > 1e-6:
                 raise ValueError('Clean AUC drift exceeds tolerance')
-        features = np.atleast_1d(raw['featureNames']).tolist()
+        features = ['deltaEta','deltaPhi','log(pT)','log(E)']
         repeats = np.atleast_1d(raw['permutationSeeds']).astype(int).tolist()
         radii = np.atleast_1d(raw['radiusFractions']).tolist()
         for f, feature in enumerate(features):

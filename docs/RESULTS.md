@@ -82,6 +82,44 @@ The software checks passed: 10 Python tests and 15 MATLAB tests, including data
 partitioning, tied-score AUC, noise pairing, sparse valid jets, and a small
 end-to-end experiment. Test fixtures are separate from the measured physics data.
 
+## Final-model explanation study
+
+[Completed MATLAB run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35709427585),
+22 September 2026. This reuses the final 50,000-jet-trained CNN and GraphSAGE
+checkpoints for seeds 101, 202, and 303 on the first 10,000 official test jets.
+It does not retrain models, change the classification/noise report, or select
+hyperparameters from the explanatory results.
+
+| Graph feature shuffled, fixed edges | Mean AUC drop | Training-seed SD |
+| --- | ---: | ---: |
+| deltaEta | 0.10154 | 0.00301 |
+| deltaPhi | 0.12628 | 0.01094 |
+| log(pT) | 0.07072 | 0.00856 |
+| log(E) | 0.01236 | 0.00613 |
+
+The fitted graph models are most sensitive to the angular-feature shuffles in
+this experiment. Shuffling breaks correlations and leaves edges unchanged;
+these are not causal importances or an isolated explanation of noise robustness.
+
+| CNN radius fraction retained | Mean AUC | Training-seed SD |
+| --- | ---: | ---: |
+| 1.00 | 0.96905 | 0.00075 |
+| 0.75 | 0.96905 | 0.00075 |
+| 0.50 | 0.96890 | 0.00073 |
+| 0.35 | 0.94915 | 0.00032 |
+| 0.20 | 0.76774 | 0.00423 |
+
+Retaining half the center-to-corner radius preserves nearly all clean AUC;
+the strongest central crop substantially reduces it. Radius fractions are not
+area fractions. Both analyses use fixed trained models and retained normalization.
+
+All 36 feature-shuffle measurements and 15 radial-mask measurements were
+recomputed independently with a rank-based AUC formula. Six checkpoint hashes
+match the source artifacts. The rerun changes no clean classifications or AUCs;
+one seed has a maximum probability difference of 0.00000316 from float arithmetic.
+See [the MATLAB figures](FIGURES.md#explanation-of-the-final-models--verified-matlab-exports)
+and [the complete explanation evidence](../experiments/explanations/).
+
 ## Verified small real-data run
 
 [Completed run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/34936617829),

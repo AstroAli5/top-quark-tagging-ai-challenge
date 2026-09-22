@@ -26,17 +26,35 @@ averaged inside each training seed before calculating the plotted mean and SD.
 [Measured tables and uncertainty](RESULTS.md) ·
 [Saved evidence](../experiments/official-study/)
 
-## Explanation of the final models — pending verification
+## Explanation of the final models — verified MATLAB exports
 
-The new `explainSavedModels` analysis reuses the frozen CNN and GraphSAGE
-checkpoints from all three training seeds. It plans to use the first 10,000
-official test jets, three feature-shuffle streams, and five radial masks.
-It does not train or select new models.
+These figures use the frozen CNN and GraphSAGE checkpoints from **all three
+training seeds**, trained on **50,000 jets**, and the first **10,000 official test
+jets**. MATLAB R2024a generated both PNGs. No model was retrained or selected.
 
-The first real-data execution stopped at its clean-prediction consistency guard.
-A correction that preserves the original inference batch boundaries is prepared;
-new final-model figures are not yet verified or published. The small-run
-explanation figures below must not be presented as final-model explanations.
+### Graph feature sensitivity
+
+Shuffle one feature across particle nodes while keeping graph edges fixed.
+Larger AUC drops indicate more sensitivity to that particular shuffle. The
+three shuffles are averaged within each fitted model; error bars show SD across
+the three training seeds, not nine independent trained models.
+
+![Final-model GraphSAGE feature sensitivity](../experiments/explanations/graphsage_feature_importance.png)
+
+### Image-region sensitivity
+
+Set pixels outside a central disk to zero, keeping the learned normalization
+fixed. The x-axis measures **radius, not retained area**. A radius fraction of 1
+preserves the entire image. Strong central cropping reduces AUC considerably.
+
+![Final-model CNN radial occlusion](../experiments/explanations/cnn_radial_occlusion.png)
+
+[Measured values, limitations, and reproduction](../experiments/explanations/README.md) ·
+[Successful MATLAB run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35709427585)
+
+All 51 perturbation measurements were independently recalculated from the saved
+probabilities. Checkpoint hashes match the original models. Small floating-point
+differences in one restored model changed neither classifications nor clean AUC.
 
 ## Small demonstration — actual MATLAB exports
 

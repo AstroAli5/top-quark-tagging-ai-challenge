@@ -1,0 +1,11 @@
+{
+  "workflow_run": 35709427585,
+  "artifact_id": 10685639317,
+  "artifact_name": "final-model-explanations",
+  "sha256": "92e14c759cd33b0e7e8f7c0e111f510240d1e16977d1fc53fe8f906e252bbf18",
+  "analysis_branch_commit": "fbffb95f2e2ed1852b60b0064594d4b4a50c4b3d",
+  "workflow_merge_commit": "63817ebb945e635abfc5f43347ccbecd339418f2",
+  "expires_at": "2026-12-21T09:16:17Z",
+  "core_evaluation_run": 35095505566,
+  "source_data_preparation_run": 35042290356
+}
