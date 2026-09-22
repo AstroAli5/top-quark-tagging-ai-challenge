@@ -1,0 +1,8 @@
+{
+  "workflow_run": 34936617829,
+  "artifact_id": 10383837460,
+  "name": "small-real-data-benchmark",
+  "archive_sha256": "b1012b9924bf985b92dbb8a6b450c8163c59a30532d2417c6fc7a62388b37040",
+  "code_commit": "ec0e3402c1c5130c2d00e975b941b64cd3308d1f",
+  "note": "Unmodified small-run figures and tables; 1400 train, 300 validation, 300 internal test jets."
+}

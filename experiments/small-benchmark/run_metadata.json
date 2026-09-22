@@ -1,0 +1,72 @@
+{
+  "startedAtUTC": "15-Sep-2026 06:34:00",
+  "finishedAtUTC": "15-Sep-2026 06:34:29",
+  "matlabVersion": "24.1.0.3303086 (R2024a) Update 9",
+  "configuration": {
+    "dataDir": "/home/runner/work/top-quark-tagging-ai-challenge/top-quark-tagging-ai-challenge/data",
+    "modelsDir": "/home/runner/work/top-quark-tagging-ai-challenge/top-quark-tagging-ai-challenge/models",
+    "resultsDir": "/home/runner/work/top-quark-tagging-ai-challenge/top-quark-tagging-ai-challenge/results",
+    "inputFile": "/home/runner/work/top-quark-tagging-ai-challenge/top-quark-tagging-ai-challenge/data/jets_real_2000.mat",
+    "imageSize": 32,
+    "kNeighbors": 6,
+    "splitSeed": 42,
+    "cnnSeed": 101,
+    "graphSeed": 102,
+    "noiseSeed": 7,
+    "permutationSeed": 11,
+    "cnnEpochs": 3,
+    "graphEpochs": 3,
+    "cnnBatchSize": 64,
+    "graphBatchSize": 32,
+    "hiddenSize": 32,
+    "graphLearnRate": 0.01,
+    "noiseLevels": [
+      0,
+      0.1,
+      0.2
+    ],
+    "radiusFractions": [
+      1,
+      0.5
+    ],
+    "executionEnvironment": "cpu",
+    "winnerImageSize": 37,
+    "winnerExtent": 1.6,
+    "winnerMaxParticles": 35,
+    "winnerWidths": [
+      32,
+      64,
+      128
+    ],
+    "winnerGroups": 4,
+    "winnerSeed": 103,
+    "winnerEpochs": 3,
+    "winnerBatchSize": 32,
+    "winnerLearnRate": 0.005
+  },
+  "datasetId": "20260915T063400.924116000-s42-i32-k6",
+  "sourceInfo": {
+    "inputFile": "/home/runner/work/top-quark-tagging-ai-challenge/top-quark-tagging-ai-challenge/data/jets_real_2000.mat",
+    "inputJets": 2000,
+    "removedNonpaddingParticles": 0,
+    "conversion": {
+      "source_file": "train.h5",
+      "source_sha256": "443b452d5ecaf959a1e6f975736cce0a2034a5e39a1e564e4427a004c3b258e9",
+      "hdf_key": "/table",
+      "selection": "first rows in source order",
+      "requested_max_jets": 2000,
+      "converted_jets": 2000,
+      "column_order": "(E, PX, PY, PZ) for particles 0..199",
+      "signal_jets": 960,
+      "background_jets": 1040,
+      "converted_at_utc": "2026-09-15T06:33:55.386512+00:00",
+      "numpy_version": "2.4.6",
+      "pandas_version": "2.3.3",
+      "scipy_version": "1.17.1"
+    },
+    "droppedJets": 0
+  },
+  "trainJets": 1400,
+  "validationJets": 300,
+  "testJets": 300
+}

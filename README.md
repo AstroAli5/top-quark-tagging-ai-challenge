@@ -11,8 +11,12 @@ The central project is the CNN/GraphSAGE comparison. An optional, independently
 implemented [ResNeXt-SE reference](docs/WINNER_COMPARISON.md) explores ideas from
 Adit Shah's 2025 winning project, with attribution.
 
-**Start here:** [Results](docs/RESULTS.md) · [Student walkthrough](docs/WALKTHROUGH.md) ·
-[Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Project status](docs/PROJECT_STATUS.md)
+| What you want to do | Start here |
+| --- | --- |
+| See the MATLAB pictures and main findings | [Figure gallery](docs/FIGURES.md) · [Results](docs/RESULTS.md) |
+| Understand the project or present it | [Student walkthrough](docs/WALKTHROUGH.md) |
+| Run the two core models | The short instructions below |
+| Reproduce or extend the research | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Next experiments](docs/NEXT_EXPERIMENTS.md) |
 
 ## Verified result
 
@@ -29,6 +33,12 @@ The reference has the highest clean score. GraphSAGE has the highest AUC under
 20% and 35% synthetic smearing in each training run. Read the
 [results and uncertainty](docs/RESULTS.md) or inspect the
 [saved evidence](experiments/official-study/).
+
+![Noise sensitivity of the three final models](experiments/official-study/noise_auc.png)
+
+This chart uses **10,000 official test jets and three training seeds**. It was
+rendered in Python from MATLAB predictions. The [gallery](docs/FIGURES.md)
+labels the origin and experiment behind every available figure.
 
 ## Run the core project
 
@@ -48,8 +58,6 @@ Open this folder in MATLAB:
 ```matlab
 cfg = projectConfig;
 run_all(cfg)
-% Optional third model, using the same prepared data:
-run_winner_comparison(cfg)
 ```
 
 `run_all` prepares jets, builds representations, trains both models, evaluates
@@ -61,7 +69,13 @@ subset**. It is useful for learning the pipeline. It does not use the official
 test partition. For a quick 2,000-jet example, see the
 [small benchmark](docs/WINNER_COMPARISON.md#run-all-three-models).
 
+The reference is an optional extension. Run `run_winner_comparison(cfg)` only
+when you want that comparison; it is not required to understand the core project.
+
 ## Reproduce the larger study
+
+<details>
+<summary>Advanced: training budget, commands, and computing requirements</summary>
 
 The [frozen protocol](docs/EXPERIMENT_PROTOCOL.md) uses **50,000 official training
 jets, 10,000 official validation jets, the full official test partition, and
@@ -92,9 +106,13 @@ additional disk for prepared data and models. The larger reference model caches
 about 4 GB of input images; use a machine with at least 16 GB RAM.
 Existing experiment models are preserved: choose a new output folder to rerun.
 The [research workflow](.github/workflows/research.yml) runs the same study in MATLAB
-on GitHub Actions in separate core/reference jobs and retains results and
-checkpoints as downloadable artifacts. The core summary does not wait for the
-slower reference; the combined summary verifies their shared data before joining them.
+on GitHub Actions. It defaults to **CNN and GraphSAGE only**. Select
+**include_reference** to also train the reference and produce the combined summary.
+The recorded reference took about 149 CPU minutes per seed, versus roughly
+9.4 minutes for CNN and 5.7 minutes for GraphSAGE; runner conditions vary.
+The MATLAB commands above explicitly reproduce the original three-model study.
+
+</details>
 
 ## Find your way around
 
@@ -105,7 +123,8 @@ slower reference; the combined summary verifies their shared data before joining
 | `src/reference/` | Optional ResNeXt-SE comparison |
 | `src/experiment/` | Official test evaluation in bounded chunks |
 | `scripts/`, `notebooks/` | Download, conversion, summaries, and Colab preparation |
-| `docs/` | Explanation, results, protocol, and attribution |
+| `docs/FIGURES.md` | One gallery for final-study, small-run, and historical figures |
+| `docs/` | Walkthrough, results, protocol, and attribution |
 | `experiments/official-study/` | Verified metric tables, uncertainty summaries, figures, and run provenance |
 | `archive/original-results/` | Unchanged historical outputs, separated from current evidence |
 

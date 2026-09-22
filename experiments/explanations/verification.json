@@ -1,0 +1,17 @@
+{
+  "status": "verified",
+  "training_seeds": [
+    101,
+    202,
+    303
+  ],
+  "test_jets": 10000,
+  "permutation_metrics_checked": 36,
+  "occlusion_metrics_checked": 15,
+  "auc_method": "Independent average-rank calculation, ties receive half credit",
+  "checkpoint_hashes_verified": 6,
+  "clean_probability_tolerance": 7.62939453125e-06,
+  "clean_auc_tolerance": 1e-06,
+  "changed_clean_decisions": 0,
+  "verifier_sha256": "cf18b5565b9dfef32cae7cbb6a99f4e9065251c3841759f85be71f985f940177"
+}

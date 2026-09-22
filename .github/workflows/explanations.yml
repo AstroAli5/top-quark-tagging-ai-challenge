@@ -1,0 +1,72 @@
+name: Explain saved final models
+
+on:
+  workflow_dispatch:
+    inputs:
+      data_run:
+        description: 'Run containing the prepared test data artifact'
+        type: string
+        default: '35042290356'
+      data_artifact:
+        description: 'Prepared test data artifact name'
+        type: string
+        default: official-prepared-data
+      core_run:
+        description: 'Run containing the three evaluated core checkpoints'
+        type: string
+        default: '35095505566'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  explain:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        id: prepared
+        continue-on-error: true
+        with:
+          name: ${{ inputs.data_artifact || 'official-prepared-data' }}
+          run-id: ${{ inputs.data_run || '35042290356' }}
+          github-token: ${{ github.token }}
+          path: data/official/
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - name: Recreate expired prepared data from the public source
+        if: steps.prepared.outcome == 'failure'
+        run: python scripts/prepare_official.py --data-dir regenerated
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: research-core-seed-*
+          run-id: ${{ inputs.core_run || '35095505566' }}
+          github-token: ${{ github.token }}
+          path: downloads/
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox
+      - uses: matlab-actions/run-command@v2
+        env:
+          EXPLANATION_DATA_DIR: ${{ steps.prepared.outcome == 'success' && 'data/official' || 'regenerated/official' }}
+        with:
+          command: >-
+            setupProject;
+            assertSuccess(runtests('tests/TestOfficialExperiment.m'));
+            explainSavedModels({'downloads/research-core-seed-101','downloads/research-core-seed-202','downloads/research-core-seed-303'},getenv('EXPLANATION_DATA_DIR'),'results/explanations');
+      - name: Independently verify every explanation metric and checkpoint hash
+        run: python scripts/verify_explanations.py --input results/explanations --core-input downloads
+      # Plots, scores and provenance for the public MC-simulated jet dataset.
+      # Publisher metadata: https://zenodo.org/api/records/2603256
+      # Access: open; license: CC-BY-4.0. No source jets or model weights uploaded.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: final-model-explanations
+          path: results/explanations/
+          if-no-files-found: error
+          retention-days: 90
