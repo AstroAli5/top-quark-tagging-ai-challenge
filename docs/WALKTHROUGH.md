@@ -1,5 +1,20 @@
 # A student walkthrough
 
+You can understand the central project without reading the optional reference
+model or every helper. Start with the [figure gallery](FIGURES.md), then read
+the sections below. When you want the code, follow this short path:
+
+| Question | File to read |
+| --- | --- |
+| What happens in what order? | [`run_all.m`](../run_all.m) |
+| How do particles become images and graphs? | [`s2_build_representations.m`](../src/pipeline/s2_build_representations.m) |
+| How does the image model learn? | [`s3_train_cnn.m`](../src/pipeline/s3_train_cnn.m) |
+| How does the graph model learn? | [`s4_train_graphsage.m`](../src/pipeline/s4_train_graphsage.m) |
+| How is the same noise applied to both models? | [`s6_robustness_test.m`](../src/pipeline/s6_robustness_test.m) |
+
+Follow a helper only when its role is unclear. The official evaluation and
+reference folders are extensions to this reading path.
+
 ## 1. The question
 
 A jet is a collection of particles. Here, each particle has energy and three

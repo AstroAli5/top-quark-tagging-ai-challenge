@@ -26,7 +26,7 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
     manifest = jsondecode(fileread(fullfile(officialDir,'manifest.json')));
     assert(strcmp(manifest.dataset,'10.5281/zenodo.2603256'),'Unexpected dataset.');
     n = min(options.maxJets,manifest.test_count);
-    [jets,labels,rows] = readSample(officialDir,manifest,n);
+    [jets,labels,rows,blocks] = readSample(officialDir,manifest,n);
     assert(numel(unique(labels)) == 2,'The explanation sample needs both classes.');
     featureNames = ["deltaEta";"deltaPhi";"log(pT)";"log(E)"];
     permutationSeeds = options.permutationSeeds;
@@ -42,7 +42,7 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
     for s = 1:seedCount
         runDir = runDirs{s};
         metadata = jsondecode(fileread(fullfile(runDir,'results','metadata.json')));
-        assert(isequaln(metadata.manifest,manifest),'Checkpoint data manifest mismatch.');
+        verifySourceManifest(metadata.manifest,manifest);
         cnnPath = fullfile(runDir,'models','cnn_model.mat');
         sagePath = fullfile(runDir,'models','graphsage_model.mat');
         cnn = load(cnnPath); sage = load(sagePath);
@@ -69,8 +69,8 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
             [f,a] = buildJetGraph(jets{j},sage.cfg.kNeighbors);
             features{j} = single(f); adjacency{j} = sparse(a);
         end
-        cleanProbabilities = [predictCNN(cnn.netCNN,images,cnn.classNames,cfg.cnnBatchSize), ...
-            predictGraphSAGE(sage.parameters,features,adjacency,cfg.graphBatchSize)];
+        cleanProbabilities = [cnnScores(cnn,images,cfg,blocks), ...
+            graphScores(sage,features,adjacency,cfg,blocks)];
         difference = max(abs(cleanProbabilities-saved.probabilities(1:n,[cnnColumn graphColumn])),[],'all');
         if difference > 1e-6
             error('topquark:ExplanationMismatch','Clean predictions changed by %.3g; aborting explanations.',difference);
@@ -88,7 +88,7 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
                 shuffled = allFeatures;
                 shuffled(:,f) = shuffled(randperm(stream,size(shuffled,1)),f);
                 perturbed = mat2cell(shuffled,nodeCounts,size(shuffled,2));
-                p = predictGraphSAGE(sage.parameters,perturbed,adjacency,cfg.graphBatchSize);
+                p = graphScores(sage,perturbed,adjacency,cfg,blocks);
                 permutationProbabilities(:,f,r) = p;
                 [~,~,auc] = computeROC(p,labels);
                 drops(r,f) = baselineAUC(s,2)-auc;
@@ -103,7 +103,7 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
         occlusionProbabilities = zeros(n,numel(radiusFractions));
         for r = 1:numel(radiusFractions)
             mask = radiusMap <= radiusFractions(r)*max(radiusMap(:));
-            p = predictCNN(cnn.netCNN,images.*single(mask),cnn.classNames,cfg.cnnBatchSize);
+            p = cnnScores(cnn,images.*single(mask),cfg,blocks);
             occlusionProbabilities(:,r) = p;
             [~,~,auc] = computeROC(p,labels);
             radialBySeed(s,r) = auc;
@@ -165,8 +165,9 @@ function report = explainSavedModels(runDirs,officialDir,outputDir,options)
     disp(featureSummary); disp(radiusSummary);
 end
 
-function [jets,labels,rows] = readSample(officialDir,manifest,n)
+function [jets,labels,rows,blocks] = readSample(officialDir,manifest,n)
     jets = cell(n,1); labels = zeros(n,1); rows = zeros(n,1); position = 0;
+    blocks = {};
     for c = 1:numel(manifest.test_chunks)
         chunk = manifest.test_chunks(c);
         path = fullfile(officialDir,chunk.file);
@@ -178,11 +179,46 @@ function [jets,labels,rows] = readSample(officialDir,manifest,n)
             'Test rows have gaps, duplicates, or changed order.');
         count = min(numel(batch),n-position);
         idx = position+(1:count);
+        blocks{end+1} = idx; %#ok<AGROW>
         jets(idx) = batch(1:count); labels(idx) = y(1:count); rows(idx) = ids(1:count);
         position = position+count;
         if position == n, break; end
     end
     assert(position == n,'Incomplete explanation sample.');
+end
+
+function p = cnnScores(cnn,images,cfg,blocks)
+    % Preserve the original test-chunk batch boundaries and float arithmetic.
+    p = zeros(size(images,4),1);
+    for b = 1:numel(blocks)
+        idx = blocks{b};
+        p(idx) = predictCNN(cnn.netCNN,images(:,:,:,idx),cnn.classNames,cfg.cnnBatchSize);
+    end
+end
+
+function p = graphScores(sage,features,adjacency,cfg,blocks)
+    p = zeros(numel(features),1);
+    for b = 1:numel(blocks)
+        idx = blocks{b};
+        p(idx) = predictGraphSAGE(sage.parameters,features(idx),adjacency(idx),cfg.graphBatchSize);
+    end
+end
+
+function verifySourceManifest(saved,current)
+    % Regenerating a MAT file changes its header timestamp and byte hash.
+    % Require identical source partitions/row intervals, check the current
+    % chunk hashes on read, and compare predictions with the frozen record.
+    for field = {'dataset','train_count','val_count','test_count','full_official_test'}
+        assert(isequaln(saved.(field{1}),current.(field{1})),'Checkpoint data manifest mismatch.');
+    end
+    if isfield(saved,'sources')
+        assert(isfield(current,'sources') && isequaln(saved.sources,current.sources), ...
+            'Source partition hashes changed.');
+    end
+    a = saved.test_chunks; b = current.test_chunks;
+    if isfield(a,'sha256'), a = rmfield(a,'sha256'); end
+    if isfield(b,'sha256'), b = rmfield(b,'sha256'); end
+    assert(isequaln(a,b),'Official test chunk boundaries changed.');
 end
 
 function value = fileSHA256(path)
