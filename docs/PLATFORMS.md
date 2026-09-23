@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | MATLAB | All three models, synthetic-noise evaluation, tests, and plots | MATLAB R2024a+ and Deep Learning Toolbox; local, MATLAB Online, or the configured GitHub Actions runner |
 | Google Colab | A Python notebook to download, verify, and convert the official training data into a MATLAB input file | Open the notebook in your own Colab session |
-| Qiskit | A possible separate quantum-computing experiment; not a dependency of these classical models | Local SDK for simulation; your own IBM Quantum credentials for cloud hardware |
+| Qiskit | A completed optional four-qubit simulator comparison with linear/RBF SVM controls | Python 3.12 and the optional requirements file; no IBM account needed for this CPU simulation |
 
 ## MATLAB
 
@@ -40,10 +40,13 @@ Compute availability and session limits vary; see the
 
 Qiskit is a Python quantum-computing SDK, not a MATLAB execution service. See
 IBM's [installation guide](https://quantum.cloud.ibm.com/docs/en/guides/install-qiskit).
-The models here use classical neural networks. Adding a quantum classifier would
-be a separate research comparison requiring a small, explicit feature encoding,
-classical controls, and its own evaluation; it would not by itself improve the
-current score or reproduce the 2025 winner.
+The main models use classical neural networks. A separate
+[measured four-qubit pilot](../experiments/quantum-pilot/) now compares a simulated
+quantum fidelity kernel against linear and RBF SVMs on matched four-feature
+inputs. The RBF baseline performed better in this small experiment.
+Install `requirements-quantum.txt` in a separate Python environment to reproduce
+it. This does not accelerate MATLAB or reproduce the 2025 winner. No hardware
+execution or quantum advantage is claimed.
 
 Opening a notebook or preparing SDK code does not grant access to your Colab,
 MathWorks, or IBM Quantum account. Keep account authentication in the platform's

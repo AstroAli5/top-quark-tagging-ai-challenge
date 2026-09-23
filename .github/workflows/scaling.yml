@@ -8,10 +8,6 @@ on:
         type: choice
         options: ['10000', '25000', '50000', '100000']
         default: '100000'
-  pull_request:
-    types: [synchronize]
-    paths:
-      - '.github/workflows/scaling.yml'
 
 permissions:
   contents: read

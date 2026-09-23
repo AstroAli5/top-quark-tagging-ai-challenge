@@ -4,6 +4,11 @@ This is a research roadmap, not a list of completed results. The verified
 classification/noise study remains the fixed 50,000-training-jet, three-seed
 experiment. New runs must have their own protocol and output directory.
 
+Update on 23 September: the [Qiskit simulator pilot](../experiments/quantum-pilot/)
+is now complete. The additional core seeds and the 100,000-jet study have been
+launched; their verified status is tracked in [Project status](PROJECT_STATUS.md).
+The designs below remain useful context rather than proof of completed runs.
+
 | Issue | Current action | What remains |
 | --- | --- | --- |
 | Too much code to navigate | A short reading path and one figure gallery | Optional code remains available without entering the main learning path |
@@ -12,7 +17,7 @@ experiment. New runs must have their own protocol and output directory.
 | Only three training seeds | Preserve the recorded three-seed study | Add two core-model seeds under a separately recorded extension |
 | Only 50,000 training jets | Clearly state the training subset | Measure a learning curve before committing to full-data training |
 | Different representations | Describe results as comparisons of complete pipelines | Controlled ablations and matched constituent selections |
-| No quantum model | Keep the central physics question focused | A quantum extension needs its own hypothesis and fair classical baseline |
+| No quantum model | Completed a separate four-qubit simulator pilot with matched classical baselines | No quantum-device, noise, scalability or advantage result |
 | No competition entry | Keep the repository reproducible and attribution clear | Select an open, suitable competition and check its actual requirements |
 
 ## 1. Completed: explanations without training again
@@ -74,11 +79,12 @@ remove confounding between architecture and preprocessing.
 
 ## 5. Keep quantum work and competition entry as deliberate choices
 
-Qiskit is not necessary to complete this classical comparison. A quantum study
-would need an explicitly defined encoding, simulator/device budget, noise model,
-and classical comparison on the same inputs. Installing a quantum library would
-not establish a quantum advantage or strengthen the existing evidence by itself.
+The [completed optional quantum pilot](../experiments/quantum-pilot/) uses a
+specified four-feature encoding, exact simulator and matched classical controls.
+The RBF SVM performed better. This is a small noiseless simulator comparison;
+quantum hardware, device noise and scaling are separate research questions.
 
 Competition entry depends on an organizer's current eligibility, dates, required
 format, and authorship rules. Repository completion does not create a submission
 or a prize. No entry has been made.
+See [the current options and requirements](COMPETITIONS.md).

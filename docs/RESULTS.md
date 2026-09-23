@@ -120,6 +120,22 @@ one seed has a maximum probability difference of 0.00000316 from float arithmeti
 See [the MATLAB figures](FIGURES.md#explanation-of-the-final-models--verified-matlab-exports)
 and [the complete explanation evidence](../experiments/explanations/).
 
+## Optional four-qubit simulator pilot
+
+The [separate pilot](../experiments/quantum-pilot/) is complete and verified:
+512 training jets and 256 validation jets per repeat, the same 2,000 official
+test jets, four matched features, and three fitting-sample repeats.
+
+| Kernel | Mean test AUC ± sampling SD | Mean accuracy |
+| --- | --- | --- |
+| Linear | 0.91549 ± 0.00165 | 88.37% |
+| RBF | 0.94508 ± 0.00306 | 88.63% |
+| Four-qubit simulated fidelity | 0.88045 ± 0.00140 | 82.80% |
+
+The classical RBF baseline performed better here. These small-sample, engineered-
+feature results are not directly comparable with the larger MATLAB study and
+do not demonstrate quantum advantage. No quantum device was used.
+
 ## Verified small real-data run
 
 [Completed run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/34936617829),

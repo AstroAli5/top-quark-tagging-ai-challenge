@@ -2,10 +2,6 @@ name: Additional core training seeds
 
 on:
   workflow_dispatch:
-  pull_request:
-    types: [opened]
-    paths:
-      - '.github/workflows/additional-seeds.yml'
 
 permissions:
   contents: read
@@ -17,6 +13,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          # Reproduce the frozen implementation used by the recorded extension.
+          ref: eee2a92242be92518ba28f71e397baa13fb87794
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
@@ -37,6 +35,8 @@ jobs:
         uses: matlab-actions/run-command@v2
         with:
           command: >-
+            [status,actualCommit]=system('git rev-parse HEAD'); assert(status==0);
+            setenv('GITHUB_SHA',strtrim(actualCommit));
             run_experiment(404,'data/official','runs/core_404',struct('experimentModels',{{'CNN','GraphSAGE'}}));
             run_experiment(505,'data/official','runs/core_505',struct('experimentModels',{{'CNN','GraphSAGE'}}));
       # Results and trained weights use only the public, CC-BY-4.0 simulated

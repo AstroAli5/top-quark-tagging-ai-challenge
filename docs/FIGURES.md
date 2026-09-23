@@ -56,6 +56,18 @@ All 51 perturbation measurements were independently recalculated from the saved
 probabilities. Checkpoint hashes match the original models. Small floating-point
 differences in one restored model changed neither classifications nor clean AUC.
 
+## Optional quantum/classical pilot — verified Python export
+
+Four matched features, 512 training and 256 validation jets per repeat,
+2,000 fixed official test jets, and three fitting-sample repeats. Qiskit simulates
+four qubits exactly on a CPU; the SVM optimization is classical. These are
+different inputs and samples from the MATLAB study.
+
+![Matched classical and simulated quantum kernels](../experiments/quantum-pilot/kernel_comparison.png)
+
+[Measured report and saved scores](../experiments/quantum-pilot/). The RBF baseline
+performed better in this pilot; it does not demonstrate quantum advantage.
+
 ## Small demonstration — actual MATLAB exports
 
 **Data:** the first 2,000 rows of the official training file, split into

@@ -1,0 +1,9 @@
+{
+  "status": "verified",
+  "model_repeat_metrics": 9,
+  "unique_test_jets": 2000,
+  "sampling_repeats": 3,
+  "method": "Independent average-rank AUC and threshold-zero accuracy",
+  "scores_sha256": "3336a61ce8a5bb4e567e73f6e4013ddca9da2c791e44408eb1de274d61086639",
+  "verifier_sha256": "0f7f0c947a46f58877d922c723ae66f3bb330fef9523fe8d985391e3e1493871"
+}

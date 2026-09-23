@@ -52,9 +52,22 @@ Training on the full source training set, extensive hyperparameter searches,
 architecture ablations, and a calibrated detector model are possible follow-up
 studies. They are outside the present fixed experiment.
 
-[Next experiments](NEXT_EXPERIMENTS.md) prioritizes two additional core training
-seeds, a learning curve, and targeted ablations. Those experiments have not run.
-Quantum-model work and competition entry are also not completed outcomes.
+## Follow-ups on 23 September 2026
+
+- The [four-qubit Qiskit pilot](../experiments/quantum-pilot/) is complete. All
+  nine model/repeat metric pairs were independently recalculated. The classical
+  RBF SVM outperformed the simulated quantum kernel on the matched pilot inputs.
+- [Seeds 404 and 505](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35841193310)
+  are running for the core models. A combined five-seed result is pending verification.
+- The [100,000-training-jet study](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35842565638)
+  is running for three core-model seeds. Its results and measured memory are pending.
+- [Configurable data sizes and memory controls](SCALING.md) are implemented and tested.
+- [Competition options and requirements](COMPETITIONS.md) were checked. No entry
+  has been made; eligibility and student-authorship requirements remain relevant.
+
+[Next experiments](NEXT_EXPERIMENTS.md) distinguishes these follow-ups from
+unrun controlled ablations, a complete learning curve, full-data training,
+GPU validation, and quantum-device/noise experiments.
 
 The [walkthrough](WALKTHROUGH.md) explains the project in presentation order.
 The author should review and understand the implementation and

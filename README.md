@@ -17,6 +17,8 @@ Adit Shah's 2025 winning project, with attribution.
 | Understand the project or present it | [Student walkthrough](docs/WALKTHROUGH.md) |
 | Run the two core models | The short instructions below |
 | Reproduce or extend the research | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Next experiments](docs/NEXT_EXPERIMENTS.md) |
+| Inspect the optional quantum comparison or larger-data controls | [Measured Qiskit pilot](experiments/quantum-pilot/) · [Scaling](docs/SCALING.md) |
+| Check possible competition entry routes | [Current requirements and fit](docs/COMPETITIONS.md) |
 
 ## Verified result
 

@@ -8,6 +8,13 @@ OpenAI Codex assisted with the code audit, bug fixes, tests, workflow automation
 data provenance, the independently implemented ResNeXt-SE reference, the larger
 experiment, and repository organization and explanation.
 
+The September 2026 extensions also used Codex to specify and implement the
+additional-seed and larger-subset workflows, memory controls, source-compatibility
+checks, and four-qubit Qiskit simulator pilot. Codex executed the simulator and
+independently recalculated its reported metrics. These contributions are not
+being represented as unaided student work. Review [competition-specific
+requirements](COMPETITIONS.md) before using the repository in an entry.
+
 Measured scores must come from the linked execution records and saved
 predictions. A published winner's score is not a measurement of this code.
 Passing software tests does not establish the scientific conclusion.

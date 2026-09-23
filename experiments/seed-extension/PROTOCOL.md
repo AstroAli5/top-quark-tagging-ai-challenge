@@ -19,6 +19,6 @@ three-seed results were known. It is not a new blind benchmark.
 - Report mean, sample SD and uncertainty, with repeated noise draws averaged
   within each trained model. Five seeds remain a modest study.
 
-The workflow runs once when this experiment's PR is opened and can also be
-started manually. Recorded outcomes and the verified report will be added only
-after the runs finish.
+The initial workflow ran when this experiment's PR opened. Reproduction is now
+manual and pins the original extension implementation. Recorded outcomes and
+the verified report are added only after the runs finish.
