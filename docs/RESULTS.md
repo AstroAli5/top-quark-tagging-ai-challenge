@@ -120,6 +120,45 @@ one seed has a maximum probability difference of 0.00000316 from float arithmeti
 See [the MATLAB figures](FIGURES.md#explanation-of-the-final-models--verified-matlab-exports)
 and [the complete explanation evidence](../experiments/explanations/).
 
+## Verified core follow-ups: five seeds and 100k training
+
+Both follow-ups completed on 23 September 2026. Their results are recorded
+separately from the original three-model report.
+
+| Training selection | Seeds per core model | CNN accuracy | GraphSAGE accuracy | CNN AUC | GraphSAGE AUC |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 50k, original core fits | 3 | 91.059% | 86.579% | 0.96929 | 0.92769 |
+| 50k, extended core study | 5 | 91.063% | 86.583% | 0.96899 | 0.92707 |
+| 100k, larger-subset study | 3 | 91.633% | 87.400% | 0.97181 | 0.93460 |
+
+All rows evaluate every official test jet. The [five-seed report](../experiments/seed-extension/)
+verifies implementation and data compatibility before combining seeds 404/505
+with 101/202/303. Accuracy SDs are 0.040 and 0.361 percentage points; AUC SDs
+are 0.00065 and 0.00092 for CNN and GraphSAGE, respectively. All clean scores
+and 150 noise-metric rows passed independent prediction checks.
+
+The [100k report](../experiments/scaling/) uses seeds 101/202/303, matching the
+first row. Mean accuracy increases are +0.574 percentage points for CNN and
++0.822 for GraphSAGE. The paired 95% seed intervals are +0.197 to +0.950 and
+−0.986 to +2.630 points; the GraphSAGE accuracy interval includes zero. AUC
+increases are +0.00253 and +0.00691. Test rows/labels, training settings, model
+implementation and MATLAB version match. All 90 noise-metric rows also passed.
+
+![Matched three-seed 50k versus 100k comparison](../experiments/scaling/training_size_comparison.png)
+
+Both sizes use 12 epochs, so 100k also receives more optimizer updates. This
+does not isolate a pure data effect or compare equal compute. GraphSAGE still
+has higher mean AUC at 20%/35% smearing, but its mean 35%-noise AUC decreases
+from 0.73751 at 50k to 0.72382 at 100k. Improved clean scores do not imply
+uniformly improved robustness.
+
+Measured MATLAB-process peak RAM at 100k was 3.68–3.73 GiB. The
+[resource record](../experiments/scaling/resources.json) distinguishes this
+measurement from the conservative 12.33 GiB planning estimate. The reference
+has no 100k or five-seed result. The explanation study above applies only to
+the original three 50k core checkpoints. Neither follow-up uses all available
+training data or establishes competition placement.
+
 ## Optional four-qubit simulator pilot
 
 The [separate pilot](../experiments/quantum-pilot/) is complete and verified:

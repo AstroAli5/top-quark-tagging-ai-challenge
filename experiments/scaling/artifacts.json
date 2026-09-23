@@ -1,0 +1,36 @@
+{
+  "verified_at": "2026-09-23",
+  "repository": "AstroAli5/top-quark-tagging-ai-challenge",
+  "artifacts": [
+    {
+      "name": "scaling-100000-seed-101",
+      "id": 10743577360,
+      "workflow_run": 35842565638,
+      "code_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "sha256": "5ee919ff51fe34285b7fcb4a3acef94ad9335d45cc0d2fbec922686b85d09e63",
+      "size_in_bytes": 6267111,
+      "expires_at": "2026-12-22T09:22:38Z",
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10743577360"
+    },
+    {
+      "name": "scaling-100000-seed-202",
+      "id": 10744470730,
+      "workflow_run": 35842565638,
+      "code_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "sha256": "eb559cf43a5265445af06e912945aaf872a908c60c0c815d4bb1ecebe144a3cb",
+      "size_in_bytes": 6275314,
+      "expires_at": "2026-12-22T09:22:38Z",
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10744470730"
+    },
+    {
+      "name": "scaling-100000-seed-303",
+      "id": 10743983874,
+      "workflow_run": 35842565638,
+      "code_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "sha256": "8c9d19c75f252d2019b9a54c7feaaffad0961d3d85173472861bbc25a8e7fdae",
+      "size_in_bytes": 6280356,
+      "expires_at": "2026-12-22T09:22:38Z",
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10743983874"
+    }
+  ]
+}

@@ -11,7 +11,8 @@ and reproduced independently of that event.
 - The original seven-stage CNN/GraphSAGE experiment.
 - A separately organized, attributed ResNeXt-SE reference.
 - Download verification, source provenance, and explicit official partitions.
-- Three training seeds with fixed choices and validation-only checkpoint selection.
+- Three training seeds for the original three-model study, plus a verified
+  five-seed core extension, with validation-only checkpoint selection.
 - Full test evaluation in chunks, plus paired noise experiments.
 - Prediction-based metric verification and separate measures of seed variability
   and finite-test uncertainty.
@@ -32,8 +33,9 @@ report matches the workflow report exactly.
 
 See [Results](RESULTS.md) for the measured values and
 [the evidence folder](../experiments/official-study/) for tables, figures,
-uncertainty, source hashes, and reproduction commands. All 10 Python and
-15 MATLAB tests passed. Historical outputs remain unchanged.
+uncertainty, source hashes, and reproduction commands. The current check suite
+contains 16 Python tests (including four optional quantum checks) and 15 MATLAB
+tests. Historical outputs remain unchanged.
 
 On 22 September, [the final-model explanation run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35709427585)
 also completed. It evaluates all three frozen CNN/GraphSAGE training seeds on
@@ -58,9 +60,14 @@ studies. They are outside the present fixed experiment.
   nine model/repeat metric pairs were independently recalculated. The classical
   RBF SVM outperformed the simulated quantum kernel on the matched pilot inputs.
 - [Seeds 404 and 505](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35841193310)
-  are running for the core models. A combined five-seed result is pending verification.
+  completed for the core models. The [five-seed report](../experiments/seed-extension/)
+  verifies source compatibility and every saved clean/noise result. The reference
+  remains a three-seed result.
 - The [100,000-training-jet study](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35842565638)
-  is running for three core-model seeds. Its results and measured memory are pending.
+  completed for three core-model seeds. [Verified results](../experiments/scaling/)
+  include the matched 50k/100k comparison and MATLAB-process peak RAM of
+  3.68–3.73 GiB. Its explanation plots have not been run; the existing explanation
+  study remains specific to the original 50k checkpoints.
 - [Configurable data sizes and memory controls](SCALING.md) are implemented and tested.
 - [Competition options and requirements](COMPETITIONS.md) were checked. No entry
   has been made; eligibility and student-authorship requirements remain relevant.

@@ -10,8 +10,9 @@ experiment, and repository organization and explanation.
 
 The September 2026 extensions also used Codex to specify and implement the
 additional-seed and larger-subset workflows, memory controls, source-compatibility
-checks, and four-qubit Qiskit simulator pilot. Codex executed the simulator and
-independently recalculated its reported metrics. These contributions are not
+checks, and four-qubit Qiskit simulator pilot. Codex launched the additional
+MATLAB studies through GitHub Actions, executed the simulator, and independently
+recalculated the reported metrics and matched training-size comparison. These contributions are not
 being represented as unaided student work. Review [competition-specific
 requirements](COMPETITIONS.md) before using the repository in an entry.
 

@@ -1,0 +1,245 @@
+{
+  "analysis_script_sha256": "4f611ab2a53c893d1f9400c948ce04341832639c070e87ed45eaac459266399f",
+  "input_report_sha256": [
+    "6243f3477bd33852139f90a77bbea20b047c65d5eae533789fd48861a2738e4a",
+    "6665ab229cca64f4e0c212d68637bb920f7fb290ad215938ce888a7851e9cfc9"
+  ],
+  "training_seeds": [
+    101,
+    202,
+    303
+  ],
+  "verification": [
+    {
+      "train_jets": 50000,
+      "seed": 101,
+      "test_rows_verified": 404000,
+      "workflow_run": "35095505566",
+      "training_commit": "0f7ae539735f1aa5ee113c84bf36a17f4f366e2c",
+      "evaluation_commit": "d3b5eb286c87e7f8a6d8cb7f40a72b196ad13177",
+      "training_source_sha256": "fe7891048591b9d6419b2332fcc28c8547bc11503f52a8ee96a4a2407e92b867",
+      "evaluation_source_sha256": "82bb7d4414d93ee1a39969881a457a767df26c022d23a34db244c8d6011391d5",
+      "predictions_sha256": "d31a935453c3515686b590dba5c9f3020ba0ba1a292fcb70b4b87641f0915f17",
+      "metadata_sha256": "bfbadfe195f30292e64fbc5a09a6c3aeba06b780665cb551050da639a38cdd21"
+    },
+    {
+      "train_jets": 50000,
+      "seed": 202,
+      "test_rows_verified": 404000,
+      "workflow_run": "35095505566",
+      "training_commit": "0f7ae539735f1aa5ee113c84bf36a17f4f366e2c",
+      "evaluation_commit": "d3b5eb286c87e7f8a6d8cb7f40a72b196ad13177",
+      "training_source_sha256": "fe7891048591b9d6419b2332fcc28c8547bc11503f52a8ee96a4a2407e92b867",
+      "evaluation_source_sha256": "82bb7d4414d93ee1a39969881a457a767df26c022d23a34db244c8d6011391d5",
+      "predictions_sha256": "e5d89a32f30a953b4ba7b0c41dc6769c47978e020e128902b6d9324467cb10ef",
+      "metadata_sha256": "af0f20015120589f58300c3868ef8d48b13744d29f52fbd81a84efe9ddffa0ba"
+    },
+    {
+      "train_jets": 50000,
+      "seed": 303,
+      "test_rows_verified": 404000,
+      "workflow_run": "35095505566",
+      "training_commit": "0f7ae539735f1aa5ee113c84bf36a17f4f366e2c",
+      "evaluation_commit": "d3b5eb286c87e7f8a6d8cb7f40a72b196ad13177",
+      "training_source_sha256": "fe7891048591b9d6419b2332fcc28c8547bc11503f52a8ee96a4a2407e92b867",
+      "evaluation_source_sha256": "82bb7d4414d93ee1a39969881a457a767df26c022d23a34db244c8d6011391d5",
+      "predictions_sha256": "9d5c7091c7096697f3ac0dfcca83c65ea1ea0e3197b118c6bf38c1008df03b8a",
+      "metadata_sha256": "9766f2901f0f0849e30dd604461043f8068896dfecd141df38c90a93408b0a4c"
+    },
+    {
+      "train_jets": 100000,
+      "seed": 101,
+      "test_rows_verified": 404000,
+      "workflow_run": "35842565638",
+      "training_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "evaluation_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "training_source_sha256": "fe7891048591b9d6419b2332fcc28c8547bc11503f52a8ee96a4a2407e92b867",
+      "evaluation_source_sha256": "82bb7d4414d93ee1a39969881a457a767df26c022d23a34db244c8d6011391d5",
+      "predictions_sha256": "7a63f9dec127adff811156b67443cfb56ab73f80b64e379eead15f5f98f94074",
+      "metadata_sha256": "3045db1737683a7c7b50744f0bb540fbbab3b2a9966edd8cbe8d2618dcb04737"
+    },
+    {
+      "train_jets": 100000,
+      "seed": 202,
+      "test_rows_verified": 404000,
+      "workflow_run": "35842565638",
+      "training_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "evaluation_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "training_source_sha256": "fe7891048591b9d6419b2332fcc28c8547bc11503f52a8ee96a4a2407e92b867",
+      "evaluation_source_sha256": "82bb7d4414d93ee1a39969881a457a767df26c022d23a34db244c8d6011391d5",
+      "predictions_sha256": "48a3588c7557e7be4eb874a5674a404cdbb789ca1f6a286a7a50560ea6be401a",
+      "metadata_sha256": "e0f50e2896e098c49c444b7daabdbc828d7ffb56a9240db0d98a66ea1a475074"
+    },
+    {
+      "train_jets": 100000,
+      "seed": 303,
+      "test_rows_verified": 404000,
+      "workflow_run": "35842565638",
+      "training_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "evaluation_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "training_source_sha256": "fe7891048591b9d6419b2332fcc28c8547bc11503f52a8ee96a4a2407e92b867",
+      "evaluation_source_sha256": "82bb7d4414d93ee1a39969881a457a767df26c022d23a34db244c8d6011391d5",
+      "predictions_sha256": "ed30cc44bc245ca3b0fd79bd1fed031a55efdaf12f32236568987448546e56ac",
+      "metadata_sha256": "b1dca050d5123444d975e0f335a26f87782aea719b9d69a8a221a0da9465ab19"
+    }
+  ],
+  "matched_per_seed": [
+    {
+      "TrainJets": 50000,
+      "Seed": 101,
+      "Model": "CNN",
+      "Accuracy": 0.9106782178217822,
+      "AUC": 0.9684523505826288
+    },
+    {
+      "TrainJets": 50000,
+      "Seed": 101,
+      "Model": "GraphSAGE",
+      "Accuracy": 0.8653762376237624,
+      "AUC": 0.928145584882971
+    },
+    {
+      "TrainJets": 50000,
+      "Seed": 202,
+      "Model": "CNN",
+      "Accuracy": 0.9100742574257425,
+      "AUC": 0.9697085153775163
+    },
+    {
+      "TrainJets": 50000,
+      "Seed": 202,
+      "Model": "GraphSAGE",
+      "Accuracy": 0.8609504950495049,
+      "AUC": 0.9272342271057824
+    },
+    {
+      "TrainJets": 50000,
+      "Seed": 303,
+      "Model": "CNN",
+      "Accuracy": 0.9110074257425742,
+      "AUC": 0.9696980051315176
+    },
+    {
+      "TrainJets": 50000,
+      "Seed": 303,
+      "Model": "GraphSAGE",
+      "Accuracy": 0.8710321782178218,
+      "AUC": 0.9276996835179605
+    },
+    {
+      "TrainJets": 100000,
+      "Seed": 101,
+      "Model": "CNN",
+      "Accuracy": 0.9151559405940594,
+      "AUC": 0.9700653022277956
+    },
+    {
+      "TrainJets": 100000,
+      "Seed": 101,
+      "Model": "GraphSAGE",
+      "Accuracy": 0.8761361386138614,
+      "AUC": 0.9332988309155513
+    },
+    {
+      "TrainJets": 100000,
+      "Seed": 202,
+      "Model": "CNN",
+      "Accuracy": 0.9174950495049505,
+      "AUC": 0.9727307631437292
+    },
+    {
+      "TrainJets": 100000,
+      "Seed": 202,
+      "Model": "GraphSAGE",
+      "Accuracy": 0.8748316831683168,
+      "AUC": 0.9357214958483526
+    },
+    {
+      "TrainJets": 100000,
+      "Seed": 303,
+      "Model": "CNN",
+      "Accuracy": 0.9163267326732674,
+      "AUC": 0.9726471892632735
+    },
+    {
+      "TrainJets": 100000,
+      "Seed": 303,
+      "Model": "GraphSAGE",
+      "Accuracy": 0.871039603960396,
+      "AUC": 0.9347748107439099
+    }
+  ],
+  "paired_differences": [
+    {
+      "Seed": 101,
+      "Model": "CNN",
+      "Accuracy_Difference": 0.004477722772277204,
+      "AUC_Difference": 0.001612951645166838
+    },
+    {
+      "Seed": 202,
+      "Model": "CNN",
+      "Accuracy_Difference": 0.007420792079207983,
+      "AUC_Difference": 0.003022247766212849
+    },
+    {
+      "Seed": 303,
+      "Model": "CNN",
+      "Accuracy_Difference": 0.005319306930693157,
+      "AUC_Difference": 0.002949184131755933
+    },
+    {
+      "Seed": 101,
+      "Model": "GraphSAGE",
+      "Accuracy_Difference": 0.010759900990099047,
+      "AUC_Difference": 0.005153246032580272
+    },
+    {
+      "Seed": 202,
+      "Model": "GraphSAGE",
+      "Accuracy_Difference": 0.013881188118811894,
+      "AUC_Difference": 0.00848726874257022
+    },
+    {
+      "Seed": 303,
+      "Model": "GraphSAGE",
+      "Accuracy_Difference": 7.425742574285188e-06,
+      "AUC_Difference": 0.007075127225949385
+    }
+  ],
+  "summary": [
+    {
+      "Model": "CNN",
+      "Metric": "Accuracy",
+      "Mean_Difference": 0.005739273927392781,
+      "SeedSD": 0.001515814449425516,
+      "SeedCI_Low": 0.0019737820895587934,
+      "SeedCI_High": 0.00950476576522677
+    },
+    {
+      "Model": "CNN",
+      "Metric": "AUC",
+      "Mean_Difference": 0.002528127847711873,
+      "SeedSD": 0.0007934073259988069,
+      "SeedCI_Low": 0.0005571947884192487,
+      "SeedCI_High": 0.004499060907004498
+    },
+    {
+      "Model": "GraphSAGE",
+      "Metric": "Accuracy",
+      "Mean_Difference": 0.008216171617161741,
+      "SeedSD": 0.007278271770148087,
+      "SeedCI_Low": -0.009864057763430955,
+      "SeedCI_High": 0.02629640099775444
+    },
+    {
+      "Model": "GraphSAGE",
+      "Metric": "AUC",
+      "Mean_Difference": 0.006905214000366626,
+      "SeedSD": 0.001673493273321746,
+      "SeedCI_Low": 0.002748026249747574,
+      "SeedCI_High": 0.011062401750985678
+    }
+  ],
+  "note": "100k minus 50k; three matched seed labels, identical test rows and model settings. Equal epochs increase optimizer updates. Seed intervals condition on this test set; this is not an architecture ablation or an equal-compute comparison."
+}

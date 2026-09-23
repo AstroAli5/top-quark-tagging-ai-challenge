@@ -41,4 +41,9 @@ to supported GPU operations and verify CPU/GPU agreement on a small fixture.
 [MathWorks documents the required Parallel Computing Toolbox and GPU data handling](https://www.mathworks.com/help/deeplearning/ug/run-custom-training-loops-on-gpu-and-in-parallel.html).
 
 The current larger-subset experiment is described in
-[its separate protocol](../experiments/scaling/PROTOCOL.md).
+[its separate protocol](../experiments/scaling/PROTOCOL.md). It completed on
+23 September 2026: [the verified 100k report](../experiments/scaling/) records
+all three seeds, the matched 50k comparison, and measured MATLAB-process peak
+RAM of **3.68–3.73 GiB**. The MATLAB experiment took 23.77–38.63 minutes per
+seed, excluding downloads/setup. Those measurements do not establish a minimum
+RAM requirement for every environment or for the optional reference model.

@@ -42,6 +42,12 @@ This chart uses **10,000 official test jets and three training seeds**. It was
 rendered in Python from MATLAB predictions. The [gallery](docs/FIGURES.md)
 labels the origin and experiment behind every available figure.
 
+**Verified follow-ups:** the [five-seed core report](experiments/seed-extension/)
+supports the same clean/noise trade-off. With [100,000 training jets](experiments/scaling/),
+the same three original seed labels gave mean accuracy of **91.63% for CNN**
+and **87.40% for GraphSAGE**. That experiment also uses more training updates;
+its separate report includes uncertainty and measured memory use.
+
 ## Run the core project
 
 Requirements: **MATLAB R2024a+**, **Deep Learning Toolbox**, and **Python 3.11**.

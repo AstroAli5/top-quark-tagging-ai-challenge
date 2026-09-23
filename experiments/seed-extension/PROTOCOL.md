@@ -20,5 +20,6 @@ three-seed results were known. It is not a new blind benchmark.
   within each trained model. Five seeds remain a modest study.
 
 The initial workflow ran when this experiment's PR opened. Reproduction is now
-manual and pins the original extension implementation. Recorded outcomes and
-the verified report are added only after the runs finish.
+manual and pins the original extension implementation. Both additional seeds
+completed on 23 September 2026; [the verified five-seed report](README.md)
+records the outcomes without changing this experiment's choices.

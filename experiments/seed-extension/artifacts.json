@@ -1,0 +1,49 @@
+{
+  "verified_at": "2026-09-23",
+  "repository": "AstroAli5/top-quark-tagging-ai-challenge",
+  "artifacts": [
+    {
+      "name": "research-core-seed-303",
+      "id": 10446560178,
+      "workflow_run": 35095505566,
+      "code_commit": "d3b5eb286c87e7f8a6d8cb7f40a72b196ad13177",
+      "sha256": "96f28ade20d713fd409d889dc95db5e39d1f43e2c520e02119154c7bbdab9151",
+      "size_in_bytes": 6195666,
+      "created_at": "2026-09-16T12:29:13Z",
+      "expires_at": "2026-12-15T12:23:08Z",
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10446560178"
+    },
+    {
+      "name": "research-core-seed-202",
+      "id": 10446435622,
+      "workflow_run": 35095505566,
+      "code_commit": "d3b5eb286c87e7f8a6d8cb7f40a72b196ad13177",
+      "sha256": "222d6066759ca91801146079310306a67ea935a377409dbf61bffb21523d4405",
+      "size_in_bytes": 6169865,
+      "created_at": "2026-09-16T12:30:24Z",
+      "expires_at": "2026-12-15T12:23:08Z",
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10446435622"
+    },
+    {
+      "name": "research-core-seed-101",
+      "id": 10446261993,
+      "workflow_run": 35095505566,
+      "code_commit": "d3b5eb286c87e7f8a6d8cb7f40a72b196ad13177",
+      "sha256": "ec2cdf39db9f2ce5f7993d174d34ffbaa093649aff43d2233d956ceb9c3c1a9b",
+      "size_in_bytes": 6175477,
+      "created_at": "2026-09-16T12:30:28Z",
+      "expires_at": "2026-12-15T12:23:08Z",
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10446261993"
+    },
+    {
+      "name": "additional-core-seeds",
+      "id": 10743276785,
+      "workflow_run": 35841193310,
+      "code_commit": "9c767326cdfab32dc9bb6cdc6ff43c341493b97b",
+      "sha256": "27739a3e33181ce8d31149a2c41d0e194490890ff4655936e2bec3f40213bb54",
+      "size_in_bytes": 12387264,
+      "expires_at": "2026-12-22T09:08:41Z",
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10743276785"
+    }
+  ]
+}

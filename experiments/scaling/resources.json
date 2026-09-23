@@ -1,0 +1,51 @@
+{
+  "workflow_run": 35842565638,
+  "measurements": [
+    {
+      "seed": 101,
+      "wallSeconds": 1425.92749,
+      "platform": "GLNXA64",
+      "matlabVersion": "24.1.0.3303086 (R2024a) Update 9",
+      "peakResidentKiB": 3914460.0,
+      "measurement": "Linux /proc/self/status VmHWM for the MATLAB process",
+      "peakResidentGiB": 3.7331199645996094,
+      "source_sha256": "f9d6f8935af771c2a188f675dab197d3fc7ae9b3079332fa84d70e717a0d1499"
+    },
+    {
+      "seed": 202,
+      "wallSeconds": 2272.247077,
+      "platform": "GLNXA64",
+      "matlabVersion": "24.1.0.3303086 (R2024a) Update 9",
+      "peakResidentKiB": 3897064.0,
+      "measurement": "Linux /proc/self/status VmHWM for the MATLAB process",
+      "peakResidentGiB": 3.7165298461914062,
+      "source_sha256": "90ceb8f5b946fe6b5604a32b2758ab87b19bf3da99b84a1e7382b3f5d9b16d9e"
+    },
+    {
+      "seed": 303,
+      "wallSeconds": 2317.583324,
+      "platform": "GLNXA64",
+      "matlabVersion": "24.1.0.3303086 (R2024a) Update 9",
+      "peakResidentKiB": 3860056.0,
+      "measurement": "Linux /proc/self/status VmHWM for the MATLAB process",
+      "peakResidentGiB": 3.6812362670898438,
+      "source_sha256": "ce90cb580ad529ffda476c09e252fa95ac51f39a38d057444a24dd499570d764"
+    }
+  ],
+  "planning_estimate": {
+    "train_jets": 100000,
+    "validation_jets": 10000,
+    "assumed_constituents_per_jet": 200,
+    "components_bytes": {
+      "double_four_vectors": 704000000,
+      "single_images": 450560000,
+      "single_node_features": 352000000,
+      "sparse_graph_allowance": 4576000000
+    },
+    "planning_peak_gib": 12.32965087890625,
+    "fitting_particle_array_bytes": 352000000,
+    "mat_v5_array_limit_ok": true,
+    "interpretation": "Conservative planning estimate using 200 particles per jet; not measured RAM, an exact upper bound, or a guarantee. Excludes the optional reference model."
+  },
+  "note": "VmHWM covers the MATLAB process. Wall time covers the scaled experiment, excluding source downloads and workflow setup. The conservative estimate is neither measured demand nor an exact upper bound."
+}

@@ -1,6 +1,6 @@
 # Larger-subset follow-up
 
-Specified on 23 September 2026 before this follow-up runs. The original test
+Specified on 23 September 2026 before this follow-up ran. The original test
 results were already known. This is not a blind evaluation or a complete
 four-point learning curve.
 
@@ -22,3 +22,7 @@ four-point learning curve.
 The workflow also supports explicitly requested 10k/25k/50k follow-ups. Those
 settings are available controls, not completed experiments. GPU execution has
 not been validated; this workflow uses the existing CPU training path.
+
+All three 100k fits per core model completed on 23 September 2026. The
+[verified report, matched comparison and resource measurements](README.md)
+record the outcome; no 10k/25k learning-curve fits were added.
