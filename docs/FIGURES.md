@@ -56,6 +56,47 @@ All 51 perturbation measurements were independently recalculated from the saved
 probabilities. Checkpoint hashes match the original models. Small floating-point
 differences in one restored model changed neither classifications nor clean AUC.
 
+These explanation plots are specific to the original three 50k-trained core
+models. They do not explain the additional seeds or the 100k checkpoints below.
+
+## Core follow-ups — verified MATLAB predictions, Python charts
+
+### Five seeds at 50,000 training jets
+
+Seeds 101/202/303/404/505, the same 10,000 validation jets, and 12 epochs.
+Clean accuracy uses all 404,000 test jets; paired noise uses the first 10,000.
+Error bars show training-seed SD. The reference is not part of this extension.
+
+![Five-seed core clean accuracy](../experiments/seed-extension/clean_accuracy.png)
+![Five-seed core noise sensitivity](../experiments/seed-extension/noise_auc.png)
+
+[Five-seed measurements, compatibility checks and provenance](../experiments/seed-extension/)
+
+### Three seeds at 100,000 training jets
+
+Seeds 101/202/303, with the same validation/test selections and epoch budget.
+The paired comparison uses only those same three seed labels at 50k and 100k.
+More jets at equal epochs also mean more optimizer updates.
+
+![Matched 50k versus 100k core comparison](../experiments/scaling/training_size_comparison.png)
+![100k core clean accuracy](../experiments/scaling/clean_accuracy.png)
+![100k core noise sensitivity](../experiments/scaling/noise_auc.png)
+
+[100k measurements, paired intervals and measured memory](../experiments/scaling/).
+Clean scores improved on average; GraphSAGE's strongest-noise AUC decreased.
+
+## Optional quantum/classical pilot — verified Python export
+
+Four matched features, 512 training and 256 validation jets per repeat,
+2,000 fixed official test jets, and three fitting-sample repeats. Qiskit simulates
+four qubits exactly on a CPU; the SVM optimization is classical. These are
+different inputs and samples from the MATLAB study.
+
+![Matched classical and simulated quantum kernels](../experiments/quantum-pilot/kernel_comparison.png)
+
+[Measured report and saved scores](../experiments/quantum-pilot/). The RBF baseline
+performed better in this pilot; it does not demonstrate quantum advantage.
+
 ## Small demonstration — actual MATLAB exports
 
 **Data:** the first 2,000 rows of the official training file, split into

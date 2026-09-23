@@ -1,5 +1,6 @@
 """Verify prepared-file hashes before evaluating restored checkpoints."""
 import hashlib
+import argparse
 import json
 from pathlib import Path
 
@@ -18,4 +19,6 @@ def verify(directory):
 
 
 if __name__=='__main__':
-    verify('data/official')
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--data-dir',type=Path,default=Path('data/official'))
+    verify(parser.parse_args().data_dir)

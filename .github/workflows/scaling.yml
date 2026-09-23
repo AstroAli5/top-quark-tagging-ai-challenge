@@ -1,0 +1,59 @@
+name: Larger training subset
+
+on:
+  workflow_dispatch:
+    inputs:
+      train_count:
+        description: Official training rows (separate follow-up study)
+        type: choice
+        options: ['10000', '25000', '50000', '100000']
+        default: '100000'
+
+permissions:
+  contents: read
+
+jobs:
+  train:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        seed: [101, 202, 303]
+    env:
+      TRAIN_COUNT: ${{ inputs.train_count || '100000' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: data/*.h5
+          key: zenodo-2603256-official-v1
+      - name: Plan and prepare a separate training selection
+        run: >-
+          python scripts/prepare_official.py --train-count "$TRAIN_COUNT"
+          --output-dir data/scaling --memory-budget-gib 14
+      - run: python scripts/verify_prepared.py --data-dir data/scaling
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox
+      - name: Train and measure peak resident memory
+        uses: matlab-actions/run-command@v2
+        with:
+          command: setupProject; runScaledExperiment(${{ matrix.seed }},'data/scaling','runs/scaling_${{ matrix.seed }}');
+      # Public simulated-data results and models; source jets are not uploaded.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scaling-${{ env.TRAIN_COUNT }}-seed-${{ matrix.seed }}
+          path: |
+            runs/scaling_${{ matrix.seed }}/results/
+            runs/scaling_${{ matrix.seed }}/models/
+            data/scaling/resource_plan.json
+          if-no-files-found: error
+          retention-days: 90

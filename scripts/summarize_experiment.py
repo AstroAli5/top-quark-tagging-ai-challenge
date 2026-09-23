@@ -96,11 +96,12 @@ def verify_saved_run(clean, noisy, metadata, predictions, noise, models=MODELS):
             'noise_metric_rows_verified': len(noisy), 'maximum_noise_auc_rounding_difference': largest_difference}
 
 
-def summarize(source, destination):
+def summarize(source, destination, five_seed_core=False, regenerated_partitions=False):
     source=Path(source); destination=Path(destination); destination.mkdir(parents=True,exist_ok=True)
     paths=sorted(source.rglob('clean_metrics.csv'))
-    if len(paths)!=3:
-        raise ValueError(f'Expected exactly three complete training runs; found {len(paths)}')
+    expected_seeds = [101,202,303,404,505] if five_seed_core else [101,202,303]
+    if len(paths)!=len(expected_seeds):
+        raise ValueError(f'Expected exactly {len(expected_seeds)} complete training runs; found {len(paths)}')
     clean=[]; noisy=[]; metadata=[]; influences=[]; verification=[]; common_labels=None; common_rows=None; models=None
     for path in paths:
         folder=path.parent
@@ -134,20 +135,29 @@ def summarize(source, destination):
             values.append((vp,vn))
         clean.append(c); noisy.append(n); metadata.append(m); influences.append(values)
     clean=pd.concat(clean,ignore_index=True); noisy=pd.concat(noisy,ignore_index=True)
-    if set(clean.Seed)!={101,202,303}:
-        raise ValueError('The frozen training seeds must be 101, 202, 303')
+    if set(clean.Seed)!=set(expected_seeds):
+        raise ValueError(f'The declared training seeds must be {expected_seeds}')
     first=metadata[0]
+    compatibility = None
+    if five_seed_core:
+        from verify_seed_extension import verify_compatibility
+        compatibility = verify_compatibility(metadata)
+    if regenerated_partitions:
+        from verify_seed_extension import semantic_manifest
+        if any(semantic_manifest(m['manifest']) != semantic_manifest(first['manifest']) for m in metadata):
+            raise ValueError('Regenerated partitions have different source hashes or row selections')
     signature=first['manifest']['fitting_sha256']
     for m in metadata:
-        if m['manifest']!=first['manifest'] or m['codeCommit']!=first['codeCommit']:
+        if not five_seed_core and (m['codeCommit']!=first['codeCommit'] or
+                (not regenerated_partitions and m['manifest']!=first['manifest'])):
             raise ValueError('The runs used different data or code versions')
-        if m.get('evaluationProvenance')!=first.get('evaluationProvenance'):
+        if not five_seed_core and m.get('evaluationProvenance')!=first.get('evaluationProvenance'):
             raise ValueError('Training seeds used different family evaluation versions')
         if not m['manifest']['full_official_test']:
             raise ValueError('The full official test partition was not evaluated')
         ignored={'dataDir','modelsDir','resultsDir','cnnSeed','graphSeed','winnerSeed'}
         settings=lambda config: {k:v for k,v in config.items() if k not in ignored}
-        if settings(m['configuration']) != settings(first['configuration']):
+        if not five_seed_core and settings(m['configuration']) != settings(first['configuration']):
             raise ValueError('Training runs used different experiment settings')
     means=[]
     for model in models:
@@ -177,13 +187,16 @@ def summarize(source, destination):
             'TrainingSeedSD':sd,'TrainingSeedCI_Low':low,'TrainingSeedCI_High':high,
             'ConditionalTestCI_Low':mean-1.96*se,'ConditionalTestCI_High':mean+1.96*se})
     report={'code_commit':first['codeCommit'],'workflow_run':first['workflowRun'],
+        'compatibility':compatibility,
+        'regenerated_partitions':regenerated_partitions,
+        'prepared_fitting_hashes':[m['manifest']['fitting_sha256'] for m in metadata],
         'analysis_script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         'fitting_sha256':signature,'verification':verification,'models':models,
         'training_provenance':[m.get('trainingProvenance',{'codeCommit':m['codeCommit']}) for m in metadata],
         'evaluation_provenance':first.get('evaluationProvenance',{'codeCommit':first['codeCommit'],'workflowRun':first['workflowRun']}),
         'protocol':{'train_jets':first['manifest']['train_count'],'validation_jets':first['manifest']['val_count'],
             'test_jets':len(common_labels),'noise_test_jets':int(noisy.TestJets.iloc[0]),
-            'training_seeds':[101,202,303],'noise_seeds':first['configuration']['noiseSeeds'],
+            'training_seeds':expected_seeds,'noise_seeds':first['configuration']['noiseSeeds'],
             'epochs':first['configuration']['cnnEpochs'],'sources':first['manifest']['sources']},
         'clean_summary':means,'per_seed_clean':clean.to_dict(orient='records'),
         'noise_summary':noise_summary.to_dict(orient='records'),
@@ -213,16 +226,19 @@ def make_plots(report,destination):
     for color,model in zip(colors,models):
         d=noise[noise.Model==model].sort_values('Sigma')
         ax.errorbar(d.Sigma,d.AUC_Mean,yerr=d.AUC_SeedSD,label=model,color=color,marker='o',capsize=3)
-    ax.set(xlabel='Synthetic component smearing (fraction)',ylabel='AUC',title='Paired noise study: mean and SD across 3 training seeds')
+    count=len(report['protocol']['training_seeds'])
+    ax.set(xlabel='Synthetic component smearing (fraction)',ylabel='AUC',title=f'Paired noise study: mean and SD across {count} training seeds')
     ax.legend(frameon=False); ax.grid(alpha=.2); fig.tight_layout()
     fig.savefig(Path(destination)/'noise_auc.png',dpi=180); plt.close(fig)
     fig,ax=plt.subplots(figsize=(7.4,4.5))
     ax.bar(clean.Model,clean.Accuracy_Mean*100,yerr=clean.Accuracy_SeedSD*100,color=colors,capsize=4)
-    ax.set(ylabel='Accuracy (%)',ylim=(0,100),title='Full official test set: mean and SD across 3 training seeds')
+    ax.set(ylabel='Accuracy (%)',ylim=(0,100),title=f'Full official test set: mean and SD across {count} training seeds')
     fig.tight_layout(); fig.savefig(Path(destination)/'clean_accuracy.png',dpi=180); plt.close(fig)
 
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input',type=Path,required=True); parser.add_argument('--output',type=Path,required=True)
-    args=parser.parse_args(); summarize(args.input,args.output)
+    parser.add_argument('--five-seed-core',action='store_true',help='Verify the separately specified 50k core extension against Git source history')
+    parser.add_argument('--regenerated-partitions',action='store_true',help='Allow regenerated MAT headers only with identical source hashes, selections, code and settings')
+    args=parser.parse_args(); summarize(args.input,args.output,args.five_seed_core,args.regenerated_partitions)
