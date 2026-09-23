@@ -10,6 +10,7 @@ import pandas as pd
 from scipy.io import savemat
 from convert_dataset import PARTICLE_COLUMNS
 from download_dataset import download, verify
+from estimate_resources import estimate, enforce_budget
 
 
 def read_rows(path, start, stop):
@@ -31,10 +32,14 @@ def sha256(path):
     return digest.hexdigest()
 
 
-def prepare(directory, train_count=50000, val_count=10000, test_count=None, chunk_size=5000):
+def prepare(directory, train_count=50000, val_count=10000, test_count=None, chunk_size=5000,
+            output_dir=None, memory_budget_gib=None):
     directory = Path(directory)
-    destination = directory / 'official'
-    destination.mkdir(parents=True, exist_ok=False)
+    plan = estimate(train_count, val_count)
+    enforce_budget(plan, memory_budget_gib)
+    destination = Path(output_dir) if output_dir is not None else directory / 'official'
+    if destination.exists():
+        raise FileExistsError(f'Choose a fresh prepared output directory: {destination}')
     sources = {}
     for name in ['train','val','test']:
         path = directory / f'{name}.h5'
@@ -51,6 +56,7 @@ def prepare(directory, train_count=50000, val_count=10000, test_count=None, chun
             0 < val_count <= sources['val']['available_rows'] and
             0 < test_count <= sources['test']['available_rows'] and chunk_size > 0):
         raise ValueError('Requested counts must fit their official source partitions')
+    destination.mkdir(parents=True, exist_ok=False)
     manifest = {'dataset':'10.5281/zenodo.2603256','license':'CC-BY-4.0',
                 'selection':'First rows in source order; no cross-partition reassignment',
                 'sources':sources,'train_count':train_count,'val_count':val_count,
@@ -71,16 +77,34 @@ def prepare(directory, train_count=50000, val_count=10000, test_count=None, chun
         manifest['test_chunks'].append({'file':name,'start':start,'stop':stop,'sha256':sha256(destination/name)})
     manifest['fitting_sha256'] = sha256(destination/'fitting.mat')
     (destination/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
+    (destination/'resource_plan.json').write_text(json.dumps(plan,indent=2)+'\n')
     print(json.dumps(manifest,indent=2))
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--data-dir',type=Path,default=Path('data'))
+    parser.add_argument('--output-dir',type=Path)
+    parser.add_argument('--train-count',type=int,default=50000)
+    parser.add_argument('--val-count',type=int,default=10000)
+    parser.add_argument('--test-count',type=int,default=None,
+                        help='Default: every official test row; subsets are labeled in the manifest')
+    parser.add_argument('--chunk-size',type=int,default=5000)
+    parser.add_argument('--memory-budget-gib',type=float)
+    parser.add_argument('--plan-only',action='store_true',help='Estimate resources without downloading or writing data')
     args=parser.parse_args()
+    plan = estimate(args.train_count, args.val_count)
+    if args.plan_only:
+        print(json.dumps(plan,indent=2))
+        return
+    enforce_budget(plan, args.memory_budget_gib)
+    destination = args.output_dir or args.data_dir/'official'
+    if destination.exists():
+        parser.error(f'Choose a fresh output directory; {destination} already exists')
     with ThreadPoolExecutor(max_workers=3) as pool:
         list(pool.map(lambda p: download(args.data_dir/f'{p}.h5',p),['train','val','test']))
-    prepare(args.data_dir)
+    prepare(args.data_dir,args.train_count,args.val_count,args.test_count,args.chunk_size,
+            args.output_dir,args.memory_budget_gib)
 
 
 if __name__=='__main__':

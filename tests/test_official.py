@@ -124,6 +124,20 @@ class OfficialPartitions(unittest.TestCase):
                 rows.extend(data['sourceRows'].ravel())
                 self.assertTrue(np.all(data['particleData'][:,0]==300))
             self.assertEqual(rows,list(range(20)))
+            with patch('prepare_official.verify'), patch('builtins.print'):
+                prepare(root,train_count=8,val_count=6,test_count=14,chunk_size=7,
+                        output_dir=root/'smaller')
+            smaller=loadmat(root/'smaller/fitting.mat')
+            np.testing.assert_array_equal(smaller['particleData'][:8],fitting['particleData'][:8])
+            np.testing.assert_array_equal(smaller['particleData'][8:],fitting['particleData'][12:])
+            small_manifest=json.loads((root/'smaller/manifest.json').read_text())
+            self.assertFalse(small_manifest['full_official_test'])
+            self.assertEqual(small_manifest['train_count'],8)
+            with self.assertRaises(FileExistsError):
+                prepare(root,output_dir=root/'smaller')
+            with self.assertRaisesRegex(ValueError,'budget'):
+                prepare(root,output_dir=root/'too-large',memory_budget_gib=.01)
+            self.assertFalse((root/'too-large').exists())
             with self.assertRaises(ValueError):
                 read_rows(root/'train.h5',0,21)
 

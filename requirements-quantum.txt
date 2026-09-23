@@ -1,0 +1,6 @@
+# Optional simulator experiment; install separately from the MATLAB project.
+numpy==2.3.5
+scipy==1.17.0
+scikit-learn==1.8.0
+qiskit==2.5.2
+matplotlib>=3.8,<4
