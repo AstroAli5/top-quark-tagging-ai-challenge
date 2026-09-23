@@ -1,0 +1,54 @@
+name: Additional core training seeds
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [opened]
+    paths:
+      - '.github/workflows/additional-seeds.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  train:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: data/*.h5
+          key: zenodo-2603256-official-v1
+      - name: Rebuild the original fitting and test partitions
+        run: python scripts/prepare_official.py
+      - run: python scripts/verify_prepared.py
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox
+      - name: Fit and evaluate seeds 404 and 505
+        uses: matlab-actions/run-command@v2
+        with:
+          command: >-
+            run_experiment(404,'data/official','runs/core_404',struct('experimentModels',{{'CNN','GraphSAGE'}}));
+            run_experiment(505,'data/official','runs/core_505',struct('experimentModels',{{'CNN','GraphSAGE'}}));
+      # Results and trained weights use only the public, CC-BY-4.0 simulated
+      # dataset at https://zenodo.org/records/2603256. No source jets uploaded.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: additional-core-seeds
+          path: |
+            runs/core_404/results/
+            runs/core_404/models/
+            runs/core_505/results/
+            runs/core_505/models/
+          if-no-files-found: error
+          retention-days: 90
