@@ -1,0 +1,97 @@
+name: Explain 100k models and test graph edges
+
+on:
+  pull_request:
+    types: [opened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  explanations:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'codex/controlled-research'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: scaling-100000-seed-*
+          run-id: '35842565638'
+          github-token: ${{ github.token }}
+          path: downloads/scaling/
+      - name: Arrange the frozen checkpoints without modifying them
+        shell: bash
+        run: |
+          for seed in 101 202 303; do
+            cp -r "downloads/scaling/scaling-100000-seed-$seed/runs/scaling_$seed" "downloads/research-core-seed-$seed"
+          done
+      - name: Prepare only the checksum-verified explanation test sample
+        run: >-
+          python scripts/prepare_explanation_sample.py
+          --metadata downloads/research-core-seed-101/results/metadata.json
+          --output data/explanation-100k
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: >-
+            setupProject;
+            explainSavedModels({'downloads/research-core-seed-101','downloads/research-core-seed-202','downloads/research-core-seed-303'},'data/explanation-100k','results/explanations-100k');
+      - name: Verify every perturbation metric and checkpoint hash
+        run: python scripts/verify_explanations.py --input results/explanations-100k --core-input downloads
+      - uses: actions/upload-artifact@v4
+        with:
+          name: explanations-100k
+          path: results/explanations-100k/
+          if-no-files-found: error
+          retention-days: 90
+
+  edges:
+    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'codex/controlled-research'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        seed: [101, 202, 303]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: data/*.h5
+          key: zenodo-2603256-official-v1
+      - run: python scripts/prepare_official.py --train-count 100000 --output-dir data/ablation --memory-budget-gib 14
+      - run: python scripts/verify_prepared.py --data-dir data/ablation
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox
+      - name: Train the same GraphSAGE network with zero graph edges
+        uses: matlab-actions/run-command@v2
+        with:
+          command: >-
+            setupProject;
+            run_experiment(${{ matrix.seed }},'data/ablation','runs/no_edges_${{ matrix.seed }}',struct('kNeighbors',0,'experimentModels',{{'GraphSAGE'}}));
+      # Results and fitted models for the public CC-BY-4.0 simulated dataset.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: graph-no-edges-seed-${{ matrix.seed }}
+          path: |
+            runs/no_edges_${{ matrix.seed }}/models/
+            runs/no_edges_${{ matrix.seed }}/results/
+          if-no-files-found: error
+          retention-days: 90
