@@ -9,8 +9,10 @@ function summary = summarize_matlab(inputDir,outputDir)
     clean = readtable(fullfile(inputDir,'per_seed_clean.csv'),TextType='string');
     noise = readtable(fullfile(inputDir,'per_seed_noise.csv'),TextType='string');
     names = unique(clean.Model,'stable'); summary = table;
-    fig = figure('Visible','off'); cleanup = onCleanup(@() close(fig));
-    tiledlayout(1,2); first = nexttile; hold(first,'on');
+    fig = figure('Visible','off','Position',[100 100 1100 500]);
+    cleanup = onCleanup(@() close(fig));
+    tiledlayout(1,2,TileSpacing='compact',Padding='compact');
+    first = nexttile; hold(first,'on');
     second = nexttile; hold(second,'on');
     noisePerSeed = groupsummary(noise,{'Model','Seed','Sigma'},'mean',{'Accuracy','AUC'});
     for j = 1:numel(names)
@@ -34,11 +36,12 @@ function summary = summarize_matlab(inputDir,outputDir)
             '-o',LineWidth=1.5,DisplayName=names(j));
     end
     xticks(first,1:numel(names)); xticklabels(first,names); xtickangle(first,20);
-    ylabel(first,'Clean AUC'); title(first,'Mean ± training-seed SD'); grid(first,'on');
+    xlim(first,[.5 numel(names)+.5]);
+    ylabel(first,'Clean AUC'); title(first,'Clean test: mean ± seed SD'); grid(first,'on');
     xlabel(second,'Synthetic component smearing'); ylabel(second,'Noise-sample AUC');
-    title(second,'Noise repeats averaged within each seed'); grid(second,'on');
-    legend(second,Location='southwest');
-    sgtitle('MATLAB analysis of the recorded study (training subsets)');
+    title(second,'Noise: mean ± seed SD'); grid(second,'on');
+    key = legend(second,Orientation='horizontal'); key.Layout.Tile = 'south';
+    sgtitle('MATLAB analysis of the recorded study (training subsets)',FontSize=14);
     exportgraphics(fig,fullfile(outputDir,'matlab_study_summary.png'),Resolution=180);
     writetable(summary,fullfile(outputDir,'clean_summary_matlab.csv'));
     writetable(noisePerSeed,fullfile(outputDir,'noise_per_seed_matlab.csv'));

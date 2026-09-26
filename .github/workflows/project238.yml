@@ -11,6 +11,7 @@ on:
       - 'scripts/prepare_parquet.py'
       - 'scripts/verify_project238.py'
       - 'tests/TestProject238.m'
+      - 'summarize_matlab.m'
   workflow_dispatch:
 
 permissions:

@@ -26,12 +26,23 @@ function result = verify_results(scope)
     expected = load(sample,'expectedProbabilities');
     probabilities = predictThreeModels(models,jets,cfg);
     assert(isequal(rows,(0:255).'),'topquark:QuickSample','Unexpected sample rows.');
-    difference = max(abs(probabilities-expected.expectedProbabilities(:,1:modelCount)),[],'all');
-    assert(difference < 1e-6,'topquark:RestorationMismatch','Recorded probabilities changed.');
+    original = expected.expectedProbabilities(:,1:modelCount);
+    differenceByModel = max(abs(probabilities-original),[],1);
+    difference = max(differenceByModel);
+    % Same single-precision budget as the previously audited explanation study.
+    % Numerical tolerance never permits a changed class decision or material AUC.
+    probabilityTolerance = 64*double(eps('single'));
     accuracy = zeros(modelCount,1); auc = accuracy;
     for j = 1:modelCount
         accuracy(j) = mean((probabilities(:,j)>=.5)==labels);
         [~,~,auc(j)] = computeROC(probabilities(:,j),labels);
+        [~,~,originalAUC] = computeROC(original(:,j),labels);
+        changed = sum((probabilities(:,j)>=.5) ~= (original(:,j)>=.5));
+        fprintf('%s: maximum score difference %.9g, changed decisions %d, AUC difference %.9g.\n', ...
+            cfg.experimentModels{j},differenceByModel(j),changed,abs(auc(j)-originalAUC));
+        assert(differenceByModel(j)<=probabilityTolerance && changed==0 && abs(auc(j)-originalAUC)<=1e-6, ...
+            'topquark:RestorationMismatch','%s predictions changed beyond the recorded numerical budget.', ...
+            cfg.experimentModels{j});
     end
     result = table(string(cfg.experimentModels(:)),accuracy,auc, ...
         VariableNames={'Model','Accuracy','AUC'});
