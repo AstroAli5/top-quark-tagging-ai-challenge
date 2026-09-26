@@ -102,6 +102,29 @@ function testPoolPreservesGradients(testCase)
     verifyEqual(testCase,extractdata(grad),expected,'AbsTol',1e-12);
 end
 
+function testNoEdgesPreservesFeaturesAndRemovesNeighborGradients(testCase)
+    rng(124);
+    fv = [10 8 3 2;15 9 -4 6;8 5 2 -3];
+    [features,connected] = buildJetGraph(fv,6);
+    [sameFeatures,empty] = buildJetGraph(fv,0);
+    verifyEqual(testCase,sameFeatures,features);
+    verifyGreaterThan(testCase,nnz(connected),0);
+    verifyEqual(testCase,nnz(empty),0);
+    [X,A,counts,T] = preprocessGraphMiniBatch({features,features+0.2}, ...
+        {empty,empty},[0;1]);
+    parameters = initializeGraphSAGE(4,8);
+    [loss,grads] = dlfeval(@modelLossGraphSAGE,parameters,dlarray(X),A,counts,T);
+    verifyTrue(testCase,isfinite(extractdata(loss)));
+    selfMagnitude = 0;
+    for name = {'sage1','sage2','sage3'}
+        grad = extractdata(grads.(name{1}).Weights);
+        half = size(grad,1)/2;
+        verifyEqual(testCase,grad(half+1:end,:),zeros(size(grad(half+1:end,:))));
+        selfMagnitude = selfMagnitude+sum(abs(grad(1:half,:)),'all');
+    end
+    verifyGreaterThan(testCase,selfMagnitude,0);
+end
+
 function [loss,grad] = poolLoss(X)
     Y = globalMeanPool(X,[2;3]);
     loss = sum(Y,'all');

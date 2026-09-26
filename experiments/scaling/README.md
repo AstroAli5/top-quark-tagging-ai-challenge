@@ -35,7 +35,9 @@ Equal epochs also mean **more optimizer updates** at 100k. This measures the
 combined change in data and training budget. It does not isolate a pure data
 effect, compare equal compute, establish an architecture advantage, or form a
 complete learning curve. The original test results were known before this
-follow-up was designed. No 100k reference-model or explanation study was run.
+follow-up was designed. No 100k reference-model study was run. A separate
+[explanation study of these core checkpoints](../explanations-100k/) completed
+on 25 September and preserves this classification/noise report.
 
 ## Noise and resources
 

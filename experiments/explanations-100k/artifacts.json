@@ -1,0 +1,17 @@
+{
+  "verified_at": "2026-09-25",
+  "repository": "AstroAli5/top-quark-tagging-ai-challenge",
+  "artifacts": [
+    {
+      "name": "explanations-100k",
+      "id": 10875106783,
+      "workflow_run": 36158770932,
+      "code_commit": "c2c2b3eea29355162ce2776639a0620aa6d41920",
+      "sha256": "6bcd4e4c59e6b38f089c7200c5b8753f7234965325599c61487a1f870e4e23a2",
+      "size_in_bytes": 3941946,
+      "expires_at": "2026-12-24T16:07:50Z",
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10875106783"
+    }
+  ],
+  "source_checkpoint_artifacts": "../scaling/artifacts.json"
+}

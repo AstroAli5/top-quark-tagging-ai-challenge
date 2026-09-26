@@ -57,7 +57,22 @@ probabilities. Checkpoint hashes match the original models. Small floating-point
 differences in one restored model changed neither classifications nor clean AUC.
 
 These explanation plots are specific to the original three 50k-trained core
-models. They do not explain the additional seeds or the 100k checkpoints below.
+models. The separate 100k explanation study appears below; the additional
+50k seeds 404/505 are not part of either explanation study.
+
+## Explanation of the 100k models — verified MATLAB exports
+
+These new figures reuse all three CNN/GraphSAGE seed pairs trained on 100,000
+jets and explain the first 10,000 official test jets. Clean predictions were
+restored exactly; all six checkpoint hashes and all 51 perturbation measurements
+passed independent verification. MATLAB R2024a generated both PNGs.
+
+![100k GraphSAGE feature sensitivity](../experiments/explanations-100k/graphsage_feature_importance.png)
+![100k CNN radial occlusion](../experiments/explanations-100k/cnn_radial_occlusion.png)
+
+[Measured values and reproduction](../experiments/explanations-100k/). Error bars
+show SD across three trained seeds. Graph edges stay fixed during feature
+shuffling; the image-mask axis measures retained radius, not image area.
 
 ## Core follow-ups — verified MATLAB predictions, Python charts
 
@@ -152,3 +167,10 @@ disagreed with its CSVs. These are a historical record, not corrected benchmark 
 
 MATLAB training-progress windows were disabled for automated execution.
 The available images are exported research plots, not recordings of those windows.
+
+## Controlled graph edges, 100k training jets
+
+![Graph-edge comparison](../experiments/graph-edges/graph_edge_comparison.png)
+
+Python rendering from verified MATLAB predictions: 404,000 clean test jets,
+10,000 noise-test jets and three training seeds. [Report](../experiments/graph-edges/).

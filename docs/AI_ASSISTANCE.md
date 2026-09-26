@@ -16,6 +16,14 @@ recalculated the reported metrics and matched training-size comparison. These co
 being represented as unaided student work. Review [competition-specific
 requirements](COMPETITIONS.md) before using the repository in an entry.
 
+On 25 September, Codex also specified and launched the 100k checkpoint
+explanations and controlled graph-neighbor ablation, implemented the test-prefix
+preparer and comparison verifier, and prepared the full-data/hardware assessment.
+The recorded explanation and graph-control results were independently checked
+from saved scores. After the author supplied the 26 September review, Codex
+corrected its earlier focus on the wrong competition context and prioritized
+the actual Project 238 MATLAB big-data requirements.
+
 Measured scores must come from the linked execution records and saved
 predictions. A published winner's score is not a measurement of this code.
 Passing software tests does not establish the scientific conclusion.

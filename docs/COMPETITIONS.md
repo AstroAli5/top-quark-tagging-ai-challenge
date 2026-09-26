@@ -1,7 +1,12 @@
-# Competition options checked on 23 September 2026
+# Submission context and other competition options
 
-No application, registration, eligibility declaration, or submission has been
-made. A completed repository is evidence for a possible entry, not an entry.
+Updated 26 September 2026. The author supplied a review of their **MATLAB/Simulink
+Challenge Project Hub, Project 238** submission. It was not accepted at that time.
+See [the specific brief and repair map](PROJECT238.md). No acceptance or prize is
+claimed, and the assistant has not contacted the reviewers.
+
+The options below were checked on 23 September and concern other events. The
+closed AI Challenge 2025 must not be confused with the submitted Project Hub work.
 
 | Route | Current official information | Fit and next requirement |
 | --- | --- | --- |
@@ -32,14 +37,14 @@ question must be reviewed before describing this as competition-ready.
 | Evidence | Repository location |
 | --- | --- |
 | Original three-model study and uncertainty | [Results](RESULTS.md), [verified outputs](../experiments/official-study/) |
-| Explanations of the frozen final models | [Explanation report](../experiments/explanations/) |
-| Additional-seed design | [Seed extension](../experiments/seed-extension/PROTOCOL.md) |
-| Larger-subset design and resource controls | [Scaling protocol](../experiments/scaling/PROTOCOL.md), [instructions](SCALING.md) |
+| Explanations of frozen models | [50k explanation report](../experiments/explanations/), [100k explanation report](../experiments/explanations-100k/) |
+| Verified five-seed core study | [Seed extension](../experiments/seed-extension/) |
+| Measured larger-subset study and resource controls | [100k report](../experiments/scaling/), [instructions](SCALING.md) |
 | Measured quantum/classical pilot | [Pilot report](../experiments/quantum-pilot/) |
 | Figures with experiment labels | [Gallery](FIGURES.md) |
 | Dataset, implementation attribution, assistance | [Assistance and attribution](AI_ASSISTANCE.md) |
 
-Before an entry, the student needs to select a suitable event, confirm eligibility
+Before entering another event, the student needs to select a suitable event, confirm eligibility
 and local review requirements, explain their own contribution, and produce any
 student-authored written material that event requires. No contact has been made
 with organizers or teachers on the student's behalf.
