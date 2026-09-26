@@ -12,7 +12,16 @@ function report = run_project238(cfg)
     if isfolder(cfg.outputDir)
         error('topquark:ExistingRun','Choose a new outputDir to preserve existing results.');
     end
+    python = pyenv;
+    if python.Status == "Loaded" && python.ExecutionMode ~= "OutOfProcess"
+        error('topquark:PythonMode', ...
+            'Restart MATLAB and select pyenv(ExecutionMode="OutOfProcess") before using Python.');
+    end
+    if python.Status ~= "Loaded"
+        pyenv(ExecutionMode="OutOfProcess"); % isolate MATLAB/PyTables HDF5 libraries
+    end
     timer = tic;
+    fprintf('Preparing separate official partitions as bounded Parquet chunks.\n');
     counts = struct('train',cfg.trainCount,'val',cfg.validationCount,'test',cfg.testCount);
     % jsonencode maps Inf to null; Python interprets null as all source rows.
     scripts = fullfile(fileparts(mfilename('fullpath')),'scripts');
@@ -24,14 +33,21 @@ function report = run_project238(cfg)
         scripts=string(scripts),raw=string(cfg.rawDir),output=string(parquetDir), ...
         counts=string(jsonencode(counts)),chunk_rows=cfg.chunkRows);
     prepareSeconds = toc(timer);
+    progress = struct('completedStage','parquet','parquetPreparationSeconds',prepareSeconds);
+    writeProjectJSON(fullfile(cfg.dataDir,'stage_times.json'),progress);
+    fprintf('Parquet preparation: %.1f seconds. Creating labelled images with tall.\n',prepareSeconds);
     timer = tic;
     manifest = parquetJetsToImages(cfg);
     imageSeconds = toc(timer);
+    progress.completedStage = 'images'; progress.imagePreparationSeconds = imageSeconds;
+    writeProjectJSON(fullfile(cfg.dataDir,'stage_times.json'),progress);
+    fprintf('Image preparation: %.1f seconds. Training from imageDatastore.\n',imageSeconds);
     report = trainProject238(cfg,manifest);
     report.parquetPreparationSeconds = prepareSeconds;
     report.imagePreparationSeconds = imageSeconds;
     report.peakResidentKiB = [];
-    report.resourceMeasurement = 'Linux process VmHWM, including preparation and training';
+    report.resourceMeasurement = 'Linux MATLAB process VmHWM; excludes separate Python process';
+    report.pythonPeakResidentKiB = manifest.python_peak_resident_kib;
     if isfile('/proc/self/status')
         match = regexp(fileread('/proc/self/status'),'VmHWM:\s+(\d+)\s+kB','tokens','once');
         if ~isempty(match), report.peakResidentKiB = str2double(match{1}); end

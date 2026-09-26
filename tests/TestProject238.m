@@ -10,7 +10,11 @@ function setupOnce(testCase)
         testCase.applyFixture(matlab.unittest.fixtures.PathFixture(fullfile(root,'src',folder{1})));
     end
     pythonRoot = getenv('pythonLocation');
-    if ~isempty(pythonRoot), pyenv(Version=fullfile(pythonRoot,'bin','python')); end
+    if ~isempty(pythonRoot)
+        pyenv(Version=fullfile(pythonRoot,'bin','python'),ExecutionMode="OutOfProcess");
+    else
+        pyenv(ExecutionMode="OutOfProcess");
+    end
 end
 
 function testTallImagesAndDatastoreTraining(testCase)

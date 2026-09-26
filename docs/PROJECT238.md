@@ -40,8 +40,9 @@ but do not resolve these MATLAB workflow requirements. Their results remain in
   full-test or three-seed means.
 - `summarize_matlab` computes the original study mean/SD, Student-t intervals,
   and noise curves in MATLAB. Noise repeats are averaged within training seed.
-- `computeROC` now uses toolbox `rocmetrics`; the existing pairwise/ties tests
-  remain the numerical acceptance criteria.
+- `computeROC` uses `rocmetrics` when Statistics and Machine Learning Toolbox
+  is available, with the tested rank-based fallback for Deep Learning Toolbox
+  alone. Pairwise/ties tests remain the numerical acceptance criteria.
 - Prediction calls respect the configured execution environment. GPU execution
   remains untested; the GraphSAGE trainer remains a CPU implementation.
 - The original sensitivity stages use local random streams. Image accumulation
@@ -50,7 +51,8 @@ but do not resolve these MATLAB workflow requirements. Their results remain in
 `run_project238` defaults to all official training rows. The short demonstration
 uses 2,000/500/1,000 train/validation/test rows and one epoch; it proves execution,
 not a finished full-scale study. No full-data result is claimed before an actual
-run completes and its predictions are independently checked. Epoch model
+run completes and its predictions are independently checked. MATLAB calls Python in `OutOfProcess` mode to isolate their HDF5 libraries;
+MATLAB and Python peak memory are recorded separately on Linux. Epoch model
 checkpoints are saved, but exact optimizer/RNG training resume is not implemented.
 
 ## Participation and authorship

@@ -21,6 +21,12 @@ function testROCMatchesPairwiseDefinition(testCase)
     pairs = double(positives > negatives) + 0.5*double(positives == negatives);
     [tpr,fpr,auc] = computeROC(scores,labels);
     verifyEqual(testCase,auc,mean(pairs(:)),'AbsTol',1e-12);
+    [~,~,rankAUC] = computeROC(scores,labels,'rank');
+    verifyEqual(testCase,rankAUC,auc,'AbsTol',1e-12);
+    if ~isempty(ver('stats'))
+        [~,~,toolboxAUC] = computeROC(scores,labels,'toolbox');
+        verifyEqual(testCase,toolboxAUC,rankAUC,'AbsTol',1e-12);
+    end
     verifyEqual(testCase,[tpr(1) fpr(1) tpr(end) fpr(end)],[0 0 1 1]);
     [~,~,auc] = computeROC(ones(4,1),[1 1 0 0]);
     verifyEqual(testCase,auc,0.5);

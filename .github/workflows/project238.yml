@@ -33,12 +33,12 @@ jobs:
       - uses: matlab-actions/setup-matlab@v3
         with:
           release: R2024a
-          products: Deep_Learning_Toolbox
+          products: Deep_Learning_Toolbox Statistics_and_Machine_Learning_Toolbox
       - name: Verify shipped models and exercise the complete MATLAB data route
         uses: matlab-actions/run-command@v2
         with:
           command: >-
-            pyenv(Version=fullfile(getenv('pythonLocation'),'bin','python'));
+            pyenv(Version=fullfile(getenv('pythonLocation'),'bin','python'),ExecutionMode="OutOfProcess");
             verify_results;
             summarize_matlab('experiments/official-study','results/matlab-summary');
             cfg=project238Config;

@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import time
+import sys
 
 import numpy as np
 import pandas as pd
@@ -108,5 +109,9 @@ def prepare(raw_dir, output_dir, counts, chunk_rows=2000, download_sources=True)
             chunk_rows, verify_source=download_sources)
     manifest = dict(schema_version=1, dataset='10.5281/zenodo.2603256',
                     verified_official_source=download_sources, partitions=partitions)
+    manifest['python_peak_resident_kib'] = None
+    if sys.platform.startswith('linux'):
+        import resource
+        manifest['python_peak_resident_kib'] = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
     (output_dir/'manifest.json').write_text(json.dumps(manifest, indent=2)+'\n')
     return manifest

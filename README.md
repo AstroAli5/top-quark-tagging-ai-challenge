@@ -55,6 +55,8 @@ its separate report includes uncertainty and measured memory use.
 
 Requirements: **MATLAB R2024a+ and Deep Learning Toolbox**, with the JVM enabled
 (the normal desktop or batch session; do not use `-nojvm`).
+Statistics and Machine Learning Toolbox is optional for `rocmetrics`; the same
+tie-aware ROC calculation is available without it.
 
 Clone or download this repository and run in MATLAB:
 
@@ -71,7 +73,9 @@ The second command makes the study summary tables and figure in MATLAB.
 ## Run the MATLAB big-data route
 
 Install **Python 3.11** and the packages in `requirements.txt`, then configure
-MATLAB's `pyenv` to use that Python installation. MATLAB calls Python using
+MATLAB's `pyenv` to use that Python installation with
+`ExecutionMode="OutOfProcess"` (restart MATLAB first if Python is already loaded
+in-process). This isolates incompatible HDF5 libraries. MATLAB calls Python using
 `pyrun` to verify/download the official data and convert bounded blocks to Parquet.
 The pipeline then uses `parquetDatastore`, a tall image transform, and
 folder-labelled `imageDatastore` objects for CNN training and evaluation.
