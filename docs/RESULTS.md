@@ -156,8 +156,25 @@ Measured MATLAB-process peak RAM at 100k was 3.68–3.73 GiB. The
 [resource record](../experiments/scaling/resources.json) distinguishes this
 measurement from the conservative 12.33 GiB planning estimate. The reference
 has no 100k or five-seed result. The explanation study above applies only to
-the original three 50k core checkpoints. Neither follow-up uses all available
-training data or establishes competition placement.
+the original three 50k core checkpoints; the 100k explanation study below is
+separate. Neither follow-up uses all available training data or establishes
+competition placement.
+
+## Verified explanations of the 100k models
+
+[Completed MATLAB run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36158770932),
+25 September 2026. All three frozen 100k CNN/GraphSAGE checkpoint pairs were
+explained on 10,000 official test jets. Restored clean probabilities matched
+the source predictions exactly. All 36 feature-shuffle and 15 radial-mask
+measurements, along with six checkpoint hashes, passed independent verification.
+
+Mean graph AUC drops are **0.11071 for deltaEta**, **0.13822 for deltaPhi**,
+**0.10069 for log(pT)** and **0.01220 for log(E)**. For CNN, mean AUC changes
+from **0.97137** with the whole image to **0.97122** at half radius and
+**0.74756** at a 0.20 radius fraction. These are sensitivity measurements with
+normalization held fixed, not causal importances. The
+[complete report](../experiments/explanations-100k/) gives seed variability,
+per-repeat values, source provenance and the two actual MATLAB exports.
 
 ## Optional four-qubit simulator pilot
 
@@ -209,3 +226,11 @@ probability mapping and ROC issues.
 Those files are historical records, not validated evidence for the corrected
 code. The old and new runs also use different budgets and data selections, so
 their numbers do not support a fair before-and-after accuracy claim.
+
+## Controlled graph-neighbor study, 100k training jets
+
+[Verified report](../experiments/graph-edges/): clean mean AUC was 0.93460
+with six neighbors and 0.89371 with zero neighbors across the same three seeds.
+The zero-neighbor variant did better under 35% synthetic smearing. This tests
+message passing within one implementation; it does not isolate architecture
+across CNN and GraphSAGE.

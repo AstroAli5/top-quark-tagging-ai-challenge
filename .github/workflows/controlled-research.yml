@@ -1,8 +1,6 @@
 name: Explain 100k models and test graph edges
 
 on:
-  pull_request:
-    types: [opened]
   workflow_dispatch:
 
 permissions:
@@ -11,7 +9,6 @@ permissions:
 
 jobs:
   explanations:
-    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'codex/controlled-research'
     runs-on: ubuntu-22.04
     timeout-minutes: 60
     steps:
@@ -56,7 +53,6 @@ jobs:
           retention-days: 90
 
   edges:
-    if: github.event_name == 'workflow_dispatch' || github.head_ref == 'codex/controlled-research'
     runs-on: ubuntu-22.04
     timeout-minutes: 120
     strategy:

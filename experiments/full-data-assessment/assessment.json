@@ -1,0 +1,35 @@
+{
+  "assessed_at": "2026-09-25",
+  "training_rows": 1211000,
+  "validation_rows": 10000,
+  "current_in_memory_plan": {
+    "train_jets": 1211000,
+    "validation_jets": 10000,
+    "assumed_constituents_per_jet": 200,
+    "components_bytes": {
+      "double_four_vectors": 7814400000,
+      "single_images": 5001216000,
+      "single_node_features": 3907200000,
+      "sparse_graph_allowance": 50793600000
+    },
+    "planning_peak_gib": 126.75912475585938,
+    "fitting_particle_array_bytes": 3907200000,
+    "mat_v5_array_limit_ok": false,
+    "interpretation": "Conservative planning estimate using 200 particles per jet; not measured RAM, an exact upper bound, or a guarantee. Excludes the optional reference model."
+  },
+  "current_mat_v5_array_bytes": 3907200000,
+  "measured_100k_matlab_process_peak_gib": [
+    3.7331199645996094,
+    3.7165298461914062,
+    3.6812362670898438
+  ],
+  "available_experiment_runtime": "GitHub Actions, MATLAB R2024a, CPU",
+  "gpu_or_quantum_device_execution": "No usable connected hardware service found; no hardware jobs submitted",
+  "engineering_required": [
+    "Chunked/HDF5 fitting input and streamed image/graph representations",
+    "Streaming training normalization and documented shuffle order",
+    "Checkpoint/resume with optimizer and random-number state",
+    "Small-run equivalence, row-coverage and resume validation before a full-data protocol"
+  ],
+  "scope": "Assessment only. Conservative planning is not measured full-data memory or runtime. Full-data training remains unrun."
+}

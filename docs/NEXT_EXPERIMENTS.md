@@ -1,5 +1,9 @@
 # Next experiments and what they would establish
 
+**Priority after the 26 September review:** implement and demonstrate the
+[Project 238 MATLAB big-data steps](PROJECT238.md). The research extensions
+below do not replace those submission requirements.
+
 This roadmap distinguishes completed follow-ups from open research questions.
 The original 50,000-training-jet, three-model study remains unchanged. The
 [five-seed core extension](../experiments/seed-extension/),
@@ -12,19 +16,21 @@ and output directory. See [Project status](PROJECT_STATUS.md).
 | --- | --- | --- |
 | Too much code to navigate | A short reading path and one figure gallery | Optional code remains available without entering the main learning path |
 | Expensive reference | Research workflow defaults to the two core models; reference requires opting in | Same reference architecture still costs more when selected |
-| Missing final-model explanation plots | Completed and independently verified; [figures and evidence](../experiments/explanations/) | Broader perturbations or more test jets would be separate extensions |
+| Missing final-model explanation plots | Completed for both [50k](../experiments/explanations/) and [100k](../experiments/explanations-100k/) checkpoint sets | Broader perturbations or more test jets would be separate extensions |
 | Only three training seeds | Completed a separate five-seed CNN/GraphSAGE report | The reference still has three seeds; five core seeds remain modest |
 | Only 50,000 training jets | Completed 100k training with three matched seed labels and measured memory | Complete learning curve, equal-compute controls, and streamed full-data training |
 | Different representations | Describe results as comparisons of complete pipelines | Controlled ablations and matched constituent selections |
 | No quantum model | Completed a separate four-qubit simulator pilot with matched classical baselines | No quantum-device, noise, scalability or advantage result |
-| No competition entry | Keep the repository reproducible and attribution clear | Select an open, suitable competition and check its actual requirements |
+| Project 238 submission rejected at present | Map each reviewer point to code and evidence | Demonstrate the required MATLAB big-data route; acceptance remains the organizer’s decision |
 
 ## 1. Completed: explanations without training again
 
 The analysis below completed on 22 September 2026. See
 [the measured report](../experiments/explanations/README.md). These explanations
-are specific to the original 50k-trained models; the additional seeds and 100k
-checkpoints have no explanation study yet.
+are specific to the original 50k-trained models. A separate
+[100k explanation study](../experiments/explanations-100k/) completed on
+25 September with the same procedure and independent prediction checks. The
+additional 50k seeds 404/505 have not received explanation runs.
 
 Use the final CNN/GraphSAGE checkpoints for seeds 101, 202, and 303. Keep weights,
 normalization, class mapping, and test rows fixed. First reproduce the saved clean
@@ -69,6 +75,12 @@ simply increasing the row count is not a verified implementation of that study.
 
 ## 4. Isolate specific choices with ablations
 
+On 25 September, a [controlled graph-neighbor study](../experiments/graph-edges/PROTOCOL.md)
+was specified and launched: compare the 100k GraphSAGE baseline with zero edges
+while keeping node features and training settings fixed. Its [measured outcomes](../experiments/graph-edges/)
+have passed source, checkpoint and prediction verification. This tests message passing within one implementation;
+it cannot settle CNN-versus-graph architecture or effective-capacity differences.
+
 Start with one change at a time inside a model family: for example, the reference
 with/without channel attention, alignment, or radial features. Keep data,
 training seeds, optimizer rules, and checkpoint selection identical. A matched
@@ -87,5 +99,6 @@ quantum hardware, device noise and scaling are separate research questions.
 
 Competition entry depends on an organizer's current eligibility, dates, required
 format, and authorship rules. Repository completion does not create a submission
-or a prize. No entry has been made.
+or a prize. The author supplied a rejection review of a Project 238 submission
+on 26 September; earlier statements that no submission existed were incorrect.
 See [the current options and requirements](COMPETITIONS.md).

@@ -1,0 +1,205 @@
+{
+  "analysis_script_sha256": "30956d208b837c193a544b53da1f4a6e77efaa9c18fe594199a4473494252028",
+  "verified_source_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+  "protocol": {
+    "train_jets": 100000,
+    "validation_jets": 10000,
+    "test_jets": 404000,
+    "training_seeds": [
+      101,
+      202,
+      303
+    ],
+    "epochs": 12,
+    "noise_test_jets": 10000
+  },
+  "verification": [
+    {
+      "variant": "GraphSAGE (k=6)",
+      "seed": 101,
+      "workflow_run": "35842565638",
+      "code_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "source_sha256": "042090fff0e4d965589d0c6dbe380c633ea2fe47695f8b661012266e1a70f111",
+      "checkpoint_sha256": "b1b672cff020a9dff4f833999ce64e5827bf393d5aee12a083c5c8fa77de5a8c",
+      "metadata_sha256": "3045db1737683a7c7b50744f0bb540fbbab3b2a9966edd8cbe8d2618dcb04737",
+      "clean_predictions_sha256": "7a63f9dec127adff811156b67443cfb56ab73f80b64e379eead15f5f98f94074",
+      "noise_predictions_sha256": "38edd77873060532710e544a54fdb8cdff85b10a192b6f41744b149d8a9f34cf",
+      "verification": {
+        "training_seed": 101,
+        "test_rows_verified": 404000,
+        "noise_rows_verified": 10000,
+        "noise_metric_rows_verified": 30,
+        "maximum_noise_auc_rounding_difference": 4.001024700439615e-08
+      }
+    },
+    {
+      "variant": "GraphSAGE (k=6)",
+      "seed": 202,
+      "workflow_run": "35842565638",
+      "code_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "source_sha256": "042090fff0e4d965589d0c6dbe380c633ea2fe47695f8b661012266e1a70f111",
+      "checkpoint_sha256": "510967c56c17ac3dc1f6c612a3ee4467e97b211950dfc16810bb533ec9537c20",
+      "metadata_sha256": "e0f50e2896e098c49c444b7daabdbc828d7ffb56a9240db0d98a66ea1a475074",
+      "clean_predictions_sha256": "48a3588c7557e7be4eb874a5674a404cdbb789ca1f6a286a7a50560ea6be401a",
+      "noise_predictions_sha256": "7f1ae9b6e2a45b15a276571f404e41114e7c628475e49c9d592859ab873ff67d",
+      "verification": {
+        "training_seed": 202,
+        "test_rows_verified": 404000,
+        "noise_rows_verified": 10000,
+        "noise_metric_rows_verified": 30,
+        "maximum_noise_auc_rounding_difference": 2.0005124334865343e-08
+      }
+    },
+    {
+      "variant": "GraphSAGE (k=6)",
+      "seed": 303,
+      "workflow_run": "35842565638",
+      "code_commit": "0dec3b285672c5e6f8eb3bc89c1d646505387642",
+      "source_sha256": "042090fff0e4d965589d0c6dbe380c633ea2fe47695f8b661012266e1a70f111",
+      "checkpoint_sha256": "70cdd720ef467067cdc7ee0fc57f5fb685e34e6aeeb2ed1fa4bb1dbd7774b1a3",
+      "metadata_sha256": "b1dca050d5123444d975e0f335a26f87782aea719b9d69a8a221a0da9465ab19",
+      "clean_predictions_sha256": "ed30cc44bc245ca3b0fd79bd1fed031a55efdaf12f32236568987448546e56ac",
+      "noise_predictions_sha256": "d423770999293cf74144bea704bcfd591cf83c20af34b7e6db471e7fde9997e7",
+      "verification": {
+        "training_seed": 303,
+        "test_rows_verified": 404000,
+        "noise_rows_verified": 10000,
+        "noise_metric_rows_verified": 30,
+        "maximum_noise_auc_rounding_difference": 2.0005123668731528e-08
+      }
+    },
+    {
+      "variant": "No neighbors (k=0)",
+      "seed": 101,
+      "workflow_run": "36158770932",
+      "code_commit": "c2c2b3eea29355162ce2776639a0620aa6d41920",
+      "source_sha256": "042090fff0e4d965589d0c6dbe380c633ea2fe47695f8b661012266e1a70f111",
+      "checkpoint_sha256": "0b9df87f0dcd252267a1c4b8be69001dd20b39914d9ff0020a33eeee3f5f9036",
+      "metadata_sha256": "ab99c15de6c481a58ca9064514a815a8efa5ed4ca89b1ac95ef1f7efc2db7eca",
+      "clean_predictions_sha256": "9120c707e141abb9d98f6bf034490e2904ac09e4016a965291b672ccea9b8689",
+      "noise_predictions_sha256": "1862ba7ed2043f30c0210de3b2940315bdd29024565ee80df98bc82409472376",
+      "verification": {
+        "training_seed": 101,
+        "test_rows_verified": 404000,
+        "noise_rows_verified": 10000,
+        "noise_metric_rows_verified": 15,
+        "maximum_noise_auc_rounding_difference": 1.0002560690836049e-07
+      }
+    },
+    {
+      "variant": "No neighbors (k=0)",
+      "seed": 202,
+      "workflow_run": "36158770932",
+      "code_commit": "c2c2b3eea29355162ce2776639a0620aa6d41920",
+      "source_sha256": "042090fff0e4d965589d0c6dbe380c633ea2fe47695f8b661012266e1a70f111",
+      "checkpoint_sha256": "e875bdc8279142e2ef1000d1f48bf3efce4e33d17392447d709e38d102cc66c6",
+      "metadata_sha256": "8339dacb7c94f68c70628478b1fb3763e698fde3271e98fdf21532540f394530",
+      "clean_predictions_sha256": "f0fcfc7a0ed566593bfafdc194e22d8ad129b16ac543b6aac789bc611ad09eef",
+      "noise_predictions_sha256": "e871ff3d63bd8ec601472db7209bc9a9c06b9550a3c2cca3189f384fd1610d75",
+      "verification": {
+        "training_seed": 202,
+        "test_rows_verified": 404000,
+        "noise_rows_verified": 10000,
+        "noise_metric_rows_verified": 15,
+        "maximum_noise_auc_rounding_difference": 6.001536367872262e-08
+      }
+    },
+    {
+      "variant": "No neighbors (k=0)",
+      "seed": 303,
+      "workflow_run": "36158770932",
+      "code_commit": "c2c2b3eea29355162ce2776639a0620aa6d41920",
+      "source_sha256": "042090fff0e4d965589d0c6dbe380c633ea2fe47695f8b661012266e1a70f111",
+      "checkpoint_sha256": "5087148ebf1437e5c5c91ed519091729b48e2ce5d7ad0bbefc32f578486a94be",
+      "metadata_sha256": "1ebada3873f3804f429427a9e70f9027ee64024f6ca9feeae18c9e9797ce5ea1",
+      "clean_predictions_sha256": "e098935aca6ef9ea05a4a137225ec175af24b621d3b8b316a46afa697f7dc222",
+      "noise_predictions_sha256": "3fa8641207e2655168e4cb5de6d6b8acc850dbdcd640d1f979727971042371e8",
+      "verification": {
+        "training_seed": 303,
+        "test_rows_verified": 404000,
+        "noise_rows_verified": 10000,
+        "noise_metric_rows_verified": 15,
+        "maximum_noise_auc_rounding_difference": 6.001536456690104e-08
+      }
+    }
+  ],
+  "clean_summary": [
+    {
+      "Variant": "GraphSAGE (k=6)",
+      "Accuracy_Mean": 0.8740024752475248,
+      "Accuracy_SeedSD": 0.0026475187818826894,
+      "Accuracy_SeedCI_Low": 0.8674256739988827,
+      "Accuracy_SeedCI_High": 0.880579276496167,
+      "AUC_Mean": 0.9345983791692712,
+      "AUC_SeedSD": 0.0012209309642864233,
+      "AUC_SeedCI_Low": 0.9315654185174437,
+      "AUC_SeedCI_High": 0.9376313398210988
+    },
+    {
+      "Variant": "No neighbors (k=0)",
+      "Accuracy_Mean": 0.8376732673267328,
+      "Accuracy_SeedSD": 0.0019142915289060316,
+      "Accuracy_SeedCI_Low": 0.832917903548493,
+      "Accuracy_SeedCI_High": 0.8424286311049725,
+      "AUC_Mean": 0.8937147903370892,
+      "AUC_SeedSD": 0.0006120177899234358,
+      "AUC_SeedCI_Low": 0.8921944538648783,
+      "AUC_SeedCI_High": 0.8952351268093002
+    }
+  ],
+  "clean_paired_differences": [
+    {
+      "Metric": "Accuracy",
+      "Mean_Difference": -0.03632920792079205,
+      "SeedSD": 0.0034547566265500152,
+      "SeedCI_Low": -0.044911299141724294,
+      "SeedCI_High": -0.027747116699859804
+    },
+    {
+      "Metric": "AUC",
+      "Mean_Difference": -0.04088358883218209,
+      "SeedSD": 0.0016911063629534418,
+      "SeedCI_Low": -0.04508452992297568,
+      "SeedCI_High": -0.036682647741388505
+    }
+  ],
+  "noise_paired_differences": [
+    {
+      "Sigma": 0.0,
+      "Mean_AUC_Difference": -0.044655045024861985,
+      "SeedSD": 0.0015997554468614203,
+      "SeedCI_Low": -0.04862905785998844,
+      "SeedCI_High": -0.04068103218973553
+    },
+    {
+      "Sigma": 0.05,
+      "Mean_AUC_Difference": -0.04289519894871122,
+      "SeedSD": 0.0011933245086243394,
+      "SeedCI_Low": -0.045859581362940875,
+      "SeedCI_High": -0.03993081653448157
+    },
+    {
+      "Sigma": 0.1,
+      "Mean_AUC_Difference": -0.038189518739021766,
+      "SeedSD": 0.0004229725313868149,
+      "SeedCI_Low": -0.039240240755274255,
+      "SeedCI_High": -0.03713879672276928
+    },
+    {
+      "Sigma": 0.2,
+      "Mean_AUC_Difference": -0.012241902816010305,
+      "SeedSD": 0.005912322121468386,
+      "SeedCI_Low": -0.02692892516196564,
+      "SeedCI_High": 0.0024451195299450296
+    },
+    {
+      "Sigma": 0.35,
+      "Mean_AUC_Difference": 0.031562079892452376,
+      "SeedSD": 0.010306017894054002,
+      "SeedCI_Low": 0.005960512183859113,
+      "SeedCI_High": 0.05716364760104564
+    }
+  ],
+  "difference_direction": "No neighbors (k=0) minus GraphSAGE (k=6)",
+  "interpretation": "Only access to neighbor messages changes. Effective capacity differs. Three paired seed labels and a fixed test set; no CNN-versus-graph architecture claim."
+}

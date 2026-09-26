@@ -1,0 +1,63 @@
+{
+  "workflow_run": 36158770932,
+  "source_commit": "c2c2b3eea29355162ce2776639a0620aa6d41920",
+  "artifacts": [
+    {
+      "id": 10875208869,
+      "name": "graph-no-edges-seed-101",
+      "size_in_bytes": 3675346,
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10875208869",
+      "archive_download_url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10875208869/zip",
+      "expired": false,
+      "created_at": "2026-09-25T16:25:02Z",
+      "expires_at": "2026-12-24T16:07:50Z",
+      "updated_at": "2026-09-25T16:25:02Z",
+      "digest": "sha256:aba164a2dd3b40e2c62a17a7b6734f8b6aa3af00c6b9ee2c98ec8e5ff1c52633",
+      "workflow_run": {
+        "id": 36158770932,
+        "repository_id": 1304529533,
+        "head_repository_id": 1304529533,
+        "head_branch": "codex/controlled-research",
+        "head_sha": "c948aa4131644dcbe7c8ca1f5017a570b4f93531"
+      }
+    },
+    {
+      "id": 10874909751,
+      "name": "graph-no-edges-seed-202",
+      "size_in_bytes": 3679127,
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10874909751",
+      "archive_download_url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10874909751/zip",
+      "expired": false,
+      "created_at": "2026-09-25T16:27:37Z",
+      "expires_at": "2026-12-24T16:07:50Z",
+      "updated_at": "2026-09-25T16:27:37Z",
+      "digest": "sha256:e707d0cb0781f15618c5ab0555a76b0a338dd18998b6cc1bbbc33a57b8290885",
+      "workflow_run": {
+        "id": 36158770932,
+        "repository_id": 1304529533,
+        "head_repository_id": 1304529533,
+        "head_branch": "codex/controlled-research",
+        "head_sha": "c948aa4131644dcbe7c8ca1f5017a570b4f93531"
+      }
+    },
+    {
+      "id": 10875184988,
+      "name": "graph-no-edges-seed-303",
+      "size_in_bytes": 3675392,
+      "url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10875184988",
+      "archive_download_url": "https://api.github.com/repos/AstroAli5/top-quark-tagging-ai-challenge/actions/artifacts/10875184988/zip",
+      "expired": false,
+      "created_at": "2026-09-25T16:31:51Z",
+      "expires_at": "2026-12-24T16:07:50Z",
+      "updated_at": "2026-09-25T16:31:51Z",
+      "digest": "sha256:c71c5b3b920a0ec9e57728ac95e376ac13330d2990ad81807703b3000c311314",
+      "workflow_run": {
+        "id": 36158770932,
+        "repository_id": 1304529533,
+        "head_repository_id": 1304529533,
+        "head_branch": "codex/controlled-research",
+        "head_sha": "c948aa4131644dcbe7c8ca1f5017a570b4f93531"
+      }
+    }
+  ]
+}
