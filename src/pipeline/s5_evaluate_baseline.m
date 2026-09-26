@@ -11,7 +11,7 @@ function s5_evaluate_baseline(cfg)
         'Image and graph test splits must match.');
     labelsTest = images.labels(images.idxTest);
     probCNN = predictCNN(cnn.netCNN,images.jetImages(:,:,:,images.idxTest), ...
-        cnn.classNames,cfg.cnnBatchSize);
+        cnn.classNames,cfg.cnnBatchSize,cfg.executionEnvironment);
     probSAGE = predictGraphSAGE(sage.parameters,graphs.jetNodeFeatures(graphs.idxTest), ...
         graphs.jetAdjacency(graphs.idxTest),cfg.graphBatchSize);
     accCNN = mean((probCNN >= 0.5) == labelsTest);

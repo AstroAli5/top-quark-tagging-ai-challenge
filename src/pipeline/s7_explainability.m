@@ -18,11 +18,11 @@ function s7_explainability(cfg)
     % Stack only four feature columns, never a test-set-wide adjacency.
     nodeCounts = cellfun(@(x) size(x,1),features(:));
     allFeatures = vertcat(features{:});
-    rng(cfg.permutationSeed,'twister');
+    stream = RandStream('mt19937ar','Seed',cfg.permutationSeed);
     aucDrop = zeros(4,1);
     for f = 1:4
         shuffled = allFeatures;
-        shuffled(:,f) = shuffled(randperm(size(shuffled,1)),f);
+        shuffled(:,f) = shuffled(randperm(stream,size(shuffled,1)),f);
         perturbed = mat2cell(shuffled,nodeCounts,size(shuffled,2));
         p = predictGraphSAGE(sage.parameters,perturbed,adjacency,cfg.graphBatchSize);
         [~,~,aucPerturbed] = computeROC(p,labelsTest);
@@ -47,7 +47,7 @@ function s7_explainability(cfg)
     for i = 1:numel(radiusFractions)
         mask = radiusMap <= radiusFractions(i)*max(radiusMap(:));
         masked = XTest .* single(mask);
-        p = predictCNN(cnn.netCNN,masked,cnn.classNames,cfg.cnnBatchSize);
+        p = predictCNN(cnn.netCNN,masked,cnn.classNames,cfg.cnnBatchSize,cfg.executionEnvironment);
         [~,~,aucByRadius(i)] = computeROC(p,labelsImage);
     end
     radiusTable = table(radiusFractions,aucByRadius, ...

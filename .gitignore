@@ -12,3 +12,7 @@ __pycache__/
 /test-results/
 /runs/
 /downloads/
+
+# Small published reproducibility bundle
+!/checkpoints/seed-101/cnn_model.mat
+!/checkpoints/quick_test.mat

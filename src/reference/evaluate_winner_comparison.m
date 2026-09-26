@@ -25,9 +25,9 @@ function evaluate_winner_comparison(cfg)
             [features{j},adjacency{j}] = buildJetGraph(noisyJets{j},split.cfg.kNeighbors);
             features{j} = single(features{j}); adjacency{j} = sparse(adjacency{j});
         end
-        probabilities = [predictCNN(cnn.netCNN,images,cnn.classNames,cfg.cnnBatchSize), ...
+        probabilities = [predictCNN(cnn.netCNN,images,cnn.classNames,cfg.cnnBatchSize,cfg.executionEnvironment), ...
             predictGraphSAGE(sage.parameters,features,adjacency,cfg.graphBatchSize), ...
-            predictWinnerReference(winner,noisyJets,cfg.winnerBatchSize)];
+            predictWinnerReference(winner,noisyJets,cfg.winnerBatchSize,cfg.executionEnvironment)];
         for model = 1:3
             accuracy(level,model) = mean((probabilities(:,model) >= 0.5) == labelsTest);
             [tpr,fpr,auc(level,model)] = computeROC(probabilities(:,model),labelsTest);

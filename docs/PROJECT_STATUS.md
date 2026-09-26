@@ -26,7 +26,7 @@ results remain unchanged. The current check suite contains 17 Python tests
 
 ## What prevents calling the submission finished
 
-The submitted version does not implement the required MATLAB-hosted Parquet,
+The submitted version did not implement the required MATLAB-hosted Parquet,
 tall-array and folder-labelled imageDatastore route. It also needs accessible
 checkpoints, MATLAB reporting, measured justification of its training scope,
 and the smaller engineering fixes listed in [Project 238](PROJECT238.md).
@@ -38,3 +38,8 @@ describes limits of the existing MAT route; it does not establish a minimum
 hardware purchase or demonstrate a working big-data route.
 
 [Walkthrough](WALKTHROUGH.md) · [Results](RESULTS.md) · [MATLAB figure gallery](FIGURES.md) · [AI assistance and attribution](AI_ASSISTANCE.md)
+
+Repairs are implemented on the working branch and undergoing MATLAB execution
+checks. They include Parquet/tall/imageDatastore processing, a bundled CNN checkpoint
+with a quick sample verifier and links to the other saved models, and MATLAB reporting. Do not treat
+implementation alone as a verified full-data experiment.

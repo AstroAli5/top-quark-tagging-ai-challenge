@@ -14,12 +14,9 @@ function [tpr,fpr,auc] = computeROC(scores,labels)
     if numPos == 0 || numNeg == 0
         error('topquark:SingleClass','ROC/AUC requires both classes.');
     end
-    [sortedScores,order] = sort(scores,'descend');
-    sortedLabels = labels(order);
-    groupEnds = [find(diff(sortedScores) ~= 0); numel(scores)];
-    truePositives = cumsum(sortedLabels == 1);
-    falsePositives = cumsum(sortedLabels == 0);
-    tpr = [0; truePositives(groupEnds)/numPos];
-    fpr = [0; falsePositives(groupEnds)/numNeg];
+    metrics = rocmetrics(labels,scores,1);
+    tpr = metrics.Metrics.TruePositiveRate;
+    fpr = metrics.Metrics.FalsePositiveRate;
+    % R2024a has rocmetrics but predates its separate auc method.
     auc = trapz(fpr,tpr);
 end

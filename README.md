@@ -1,8 +1,11 @@
-# Top-quark tagging under synthetic detector noise
+# Top-quark detection with deep learning and big data
 
 [![Tests](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml/badge.svg)](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml)
 
-A MATLAB research project by **Ali Mohamed**.
+A MATLAB project by **Ali Mohamed**, developed for [Challenge Project 238](docs/PROJECT238.md).
+
+**Status:** the author’s submitted version was not accepted. The review identified
+missing MATLAB big-data steps. Repairs are being validated; no acceptance is claimed.
 
 **Question:** how do an image CNN and a particle GraphSAGE model respond when the
 same jets have their measured momenta perturbed?
@@ -48,37 +51,59 @@ the same three original seed labels gave mean accuracy of **91.63% for CNN**
 and **87.40% for GraphSAGE**. That experiment also uses more training updates;
 its separate report includes uncertainty and measured memory use.
 
-## Run the core project
+## Check the saved results first
 
-Requirements: **MATLAB R2024a+**, **Deep Learning Toolbox**, and **Python 3.11**.
-CPU execution is supported; a GPU is not required.
+Requirements: **MATLAB R2024a+ and Deep Learning Toolbox**, with the JVM enabled
+(the normal desktop or batch session; do not use `-nojvm`).
 
-```bash
-git clone https://github.com/AstroAli5/top-quark-tagging-ai-challenge.git
-cd top-quark-tagging-ai-challenge
-python -m pip install -r requirements.txt
-python scripts/download_dataset.py
-python scripts/convert_dataset.py --input data/train.h5 --output data/jets_real_50k.mat --max-jets 50000
-```
-
-Open this folder in MATLAB:
+Clone or download this repository and run in MATLAB:
 
 ```matlab
-cfg = projectConfig;
-run_all(cfg)
+verify_results
+summarize_matlab
 ```
 
-`run_all` prepares jets, builds representations, trains both models, evaluates
-clean and noisy inputs, and creates sensitivity plots. It writes to `data/`,
-`models/`, and `results/`; repeating it replaces those generated files.
+The [included seed-101 CNN and 256-jet sample](checkpoints/) require no extra
+data download or retraining. The first command verifies their hashes and restores
+the saved CNN predictions. Its printed scores describe only that small test sample.
+The second command makes the study summary tables and figure in MATLAB.
 
-This introductory run uses a **70%/15%/15% split inside the selected training
-subset**. It is useful for learning the pipeline. It does not use the official
-test partition. For a quick 2,000-jet example, see the
-[small benchmark](docs/WINNER_COMPARISON.md#run-all-three-models).
+## Run the MATLAB big-data route
 
-The reference is an optional extension. Run `run_winner_comparison(cfg)` only
-when you want that comparison; it is not required to understand the core project.
+Install **Python 3.11** and the packages in `requirements.txt`, then configure
+MATLAB's `pyenv` to use that Python installation. MATLAB calls Python using
+`pyrun` to verify/download the official data and convert bounded blocks to Parquet.
+The pipeline then uses `parquetDatastore`, a tall image transform, and
+folder-labelled `imageDatastore` objects for CNN training and evaluation.
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+A short real-data demonstration:
+
+```matlab
+cfg = project238Config;
+cfg.trainCount = 2000;
+cfg.validationCount = 500;
+cfg.testCount = 1000;
+cfg.epochs = 1;
+cfg.dataDir = fullfile(cfg.rootDir,'data','project238_demo');
+cfg.outputDir = fullfile(cfg.rootDir,'runs','project238_demo');
+run_project238(cfg)
+```
+
+The unmodified `project238Config` selects all 1,211,000 training rows, 10,000
+validation rows and all 404,000 test rows for 12 epochs. This configuration is an
+execution target, **not a claim that a full-data result has been completed**.
+Use the [requirements and validation record](docs/PROJECT238.md) for actual status.
+CPU is supported. The full route writes many image files and needs substantial
+disk/time; resources will be measured rather than assumed from the old MAT route.
+Existing fitted output folders are protected from accidental overwriting.
+
+The [original CNN/GraphSAGE stages](docs/WALKTHROUGH.md) remain available through
+`run_all`. Their in-memory MAT input is an educational/reproduction option.
+The optional reference and quantum studies are separate research extensions.
 
 ## Reproduce the larger study
 

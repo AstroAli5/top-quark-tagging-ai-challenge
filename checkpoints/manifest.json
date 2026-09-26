@@ -1,0 +1,38 @@
+{
+  "training_jets": 50000,
+  "validation_jets": 10000,
+  "seed": 101,
+  "sample_test_rows": [
+    0,
+    256
+  ],
+  "sample_scope": "first 256 official test jets; restoration check, not the full benchmark",
+  "dataset": "10.5281/zenodo.2603256",
+  "source_report": "../experiments/official-study/",
+  "files": [
+    {
+      "file": "seed-101/cnn_model.mat",
+      "sha256": "a166fe022fcc1cd0c21be7628eaa6360ad67d75754a27db8084cc825371aa3fe",
+      "bytes": 222336,
+      "source_artifact": "research-core-seed-101"
+    },
+    {
+      "file": "seed-101/graphsage_model.mat",
+      "sha256": "3bc00d7625cddeccadfe9b1060578b58f843c419ef4b841f7746d720fdb03710",
+      "bytes": 36716,
+      "source_artifact": "research-core-seed-101"
+    },
+    {
+      "file": "seed-101/winner_reference.mat",
+      "sha256": "1dc9b2164d866469834c6c81acbd7ddc40422c674857cb131ff05eabdb939471",
+      "bytes": 489600,
+      "source_artifact": "research-reference-seed-101"
+    },
+    {
+      "file": "quick_test.mat",
+      "sha256": "15d4fcce9f404fbbedf111ebacd00a1f6f8cdf64bba650a7eea6aa90aad7bc9a",
+      "bytes": 209289,
+      "source_artifact": "official test prefix and recorded seed-101 predictions"
+    }
+  ]
+}

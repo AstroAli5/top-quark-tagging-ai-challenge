@@ -71,6 +71,9 @@ function testAllSevenStagesFromAnotherDirectory(testCase)
         verifyNotEmpty(testCase,info);
         verifyGreaterThan(testCase,info.bytes,0);
     end
+    before = rng;
+    s6_robustness_test(cfg); s7_explainability(cfg);
+    verifyEqual(testCase,rng,before);
     run_winner_comparison(cfg);
     comparison = readtable(fullfile(cfg.resultsDir,'winner_comparison.csv'));
     threeNoise = readtable(fullfile(cfg.resultsDir,'winner_robustness.csv'));

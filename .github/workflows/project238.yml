@@ -1,0 +1,59 @@
+name: MATLAB big-data workflow
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/project238.yml'
+      - 'src/bigdata/**'
+      - 'src/core/**'
+      - 'run_project238.m'
+      - 'project238Config.m'
+      - 'scripts/prepare_parquet.py'
+      - 'scripts/verify_project238.py'
+      - 'tests/TestProject238.m'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  demo:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: data/*.h5
+          key: zenodo-2603256-official-v1
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox
+      - name: Verify shipped models and exercise the complete MATLAB data route
+        uses: matlab-actions/run-command@v2
+        with:
+          command: >-
+            pyenv(Version=fullfile(getenv('pythonLocation'),'bin','python'));
+            verify_results;
+            summarize_matlab('experiments/official-study','results/matlab-summary');
+            cfg=project238Config;
+            cfg.trainCount=2000; cfg.validationCount=500; cfg.testCount=1000;
+            cfg.epochs=1; cfg.dataDir=fullfile(pwd,'data','project238_demo');
+            cfg.outputDir=fullfile(pwd,'runs','project238_demo');
+            run_project238(cfg);
+      - name: Independently check scores and official row labels
+        run: python scripts/verify_project238.py --run runs/project238_demo --raw-test data/test.h5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: project238-datastore-demo
+          path: |
+            runs/project238_demo/
+            results/matlab-summary/
+          retention-days: 90
+          if-no-files-found: warn
