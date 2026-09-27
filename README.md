@@ -1,13 +1,18 @@
-# Top-quark tagging under synthetic detector noise
+# Top-quark detection with deep learning and big data
 
 [![Tests](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml/badge.svg)](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml)
 
-A MATLAB research project by **Ali Mohamed**.
+A MATLAB project by **Ali Mohamed**, developed for [Challenge Project 238](docs/PROJECT238.md).
+
+**Status:** the author’s submitted version was not accepted. The review identified
+missing MATLAB big-data steps. The new data route now passes a real-data
+demonstration and MATLAB tests; full-source training is still pending. No acceptance is claimed.
 
 **Question:** how do an image CNN and a particle GraphSAGE model respond when the
 same jets have their measured momenta perturbed?
 
-The central project is the CNN/GraphSAGE comparison. An optional, independently
+The required workflow is the MATLAB datastore CNN. The CNN/GraphSAGE comparison
+is the main research extension. An optional, independently
 implemented [ResNeXt-SE reference](docs/WINNER_COMPARISON.md) explores ideas from
 Adit Shah's 2025 winning project, with attribution.
 
@@ -15,6 +20,7 @@ Adit Shah's 2025 winning project, with attribution.
 | --- | --- |
 | See the MATLAB pictures and main findings | [Figure gallery](docs/FIGURES.md) · [Results](docs/RESULTS.md) |
 | Understand the project or present it | [Student walkthrough](docs/WALKTHROUGH.md) |
+| Run the required MATLAB data workflow | `run_project238` below · [Verified small demonstration](experiments/project238-demo/) |
 | Run the two core models | The short instructions below |
 | Reproduce or extend the research | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Next experiments](docs/NEXT_EXPERIMENTS.md) |
 | Inspect the optional quantum comparison or larger-data controls | [Measured Qiskit pilot](experiments/quantum-pilot/) · [Scaling](docs/SCALING.md) |
@@ -36,10 +42,11 @@ The reference has the highest clean score. GraphSAGE has the highest AUC under
 [results and uncertainty](docs/RESULTS.md) or inspect the
 [saved evidence](experiments/official-study/).
 
-![Noise sensitivity of the three final models](experiments/official-study/noise_auc.png)
+![MATLAB analysis of the three-model study](experiments/official-study/matlab_study_summary.png)
 
-This chart uses **10,000 official test jets and three training seeds**. It was
-rendered in Python from MATLAB predictions. The [gallery](docs/FIGURES.md)
+MATLAB generated this chart and its summary tables. Clean evaluation uses
+**404,000 test jets**; noise evaluation uses **10,000**; both use three training
+seeds. Noise repeats are averaged within each fitted seed. The [gallery](docs/FIGURES.md)
 labels the origin and experiment behind every available figure.
 
 **Verified follow-ups:** the [five-seed core report](experiments/seed-extension/)
@@ -48,37 +55,63 @@ the same three original seed labels gave mean accuracy of **91.63% for CNN**
 and **87.40% for GraphSAGE**. That experiment also uses more training updates;
 its separate report includes uncertainty and measured memory use.
 
-## Run the core project
+## Check the saved results first
 
-Requirements: **MATLAB R2024a+**, **Deep Learning Toolbox**, and **Python 3.11**.
-CPU execution is supported; a GPU is not required.
+Requirements: **MATLAB R2024a+ and Deep Learning Toolbox**, with the JVM enabled
+(the normal desktop or batch session; do not use `-nojvm`).
+Statistics and Machine Learning Toolbox is optional for `rocmetrics`; the same
+tie-aware ROC calculation is available without it.
 
-```bash
-git clone https://github.com/AstroAli5/top-quark-tagging-ai-challenge.git
-cd top-quark-tagging-ai-challenge
-python -m pip install -r requirements.txt
-python scripts/download_dataset.py
-python scripts/convert_dataset.py --input data/train.h5 --output data/jets_real_50k.mat --max-jets 50000
-```
-
-Open this folder in MATLAB:
+Clone or download this repository and run in MATLAB:
 
 ```matlab
-cfg = projectConfig;
-run_all(cfg)
+verify_results
+summarize_matlab
 ```
 
-`run_all` prepares jets, builds representations, trains both models, evaluates
-clean and noisy inputs, and creates sensitivity plots. It writes to `data/`,
-`models/`, and `results/`; repeating it replaces those generated files.
+The [included seed-101 CNN and 256-jet sample](checkpoints/) require no extra
+data download or retraining. The first command verifies their hashes and restores
+the saved CNN predictions. Its printed scores describe only that small test sample.
+The second command makes the study summary tables and figure in MATLAB.
 
-This introductory run uses a **70%/15%/15% split inside the selected training
-subset**. It is useful for learning the pipeline. It does not use the official
-test partition. For a quick 2,000-jet example, see the
-[small benchmark](docs/WINNER_COMPARISON.md#run-all-three-models).
+## Run the MATLAB big-data route
 
-The reference is an optional extension. Run `run_winner_comparison(cfg)` only
-when you want that comparison; it is not required to understand the core project.
+Install **Python 3.11** and the packages in `requirements.txt`, then configure
+MATLAB's `pyenv` to use that Python installation with
+`ExecutionMode="OutOfProcess"` (restart MATLAB first if Python is already loaded
+in-process). This isolates incompatible HDF5 libraries. MATLAB calls Python using
+`pyrun` to verify/download the official data and convert bounded blocks to Parquet.
+The pipeline then uses `parquetDatastore`, a tall image transform, and
+folder-labelled `imageDatastore` objects for CNN training and evaluation.
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+A short real-data demonstration (already [executed and independently checked](experiments/project238-demo/)):
+
+```matlab
+cfg = project238Config;
+cfg.trainCount = 2000;
+cfg.validationCount = 500;
+cfg.testCount = 1000;
+cfg.epochs = 1;
+cfg.dataDir = fullfile(cfg.rootDir,'data','project238_demo');
+cfg.outputDir = fullfile(cfg.rootDir,'runs','project238_demo');
+run_project238(cfg)
+```
+
+The unmodified `project238Config` selects all 1,211,000 training rows, 10,000
+validation rows and all 404,000 test rows for 12 epochs. This configuration is an
+execution target, **not a claim that a full-data result has been completed**.
+Use the [requirements and validation record](docs/PROJECT238.md) for actual status.
+CPU is supported. The full route writes many image files and needs substantial
+disk/time; resources will be measured rather than assumed from the old MAT route.
+Existing fitted output folders are protected from accidental overwriting.
+
+The [original CNN/GraphSAGE stages](docs/WALKTHROUGH.md) remain available through
+`run_all`. Their in-memory MAT input is an educational/reproduction option.
+The optional reference and quantum studies are separate research extensions.
 
 ## Reproduce the larger study
 

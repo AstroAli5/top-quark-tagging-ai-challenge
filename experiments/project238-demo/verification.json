@@ -1,0 +1,9 @@
+{
+  "verified": true,
+  "test_jets": 1000,
+  "accuracy": 0.854,
+  "auc": 0.9156920000000001,
+  "checkpoint_sha256": "d4af79e0efae9e96b3f87c0cf05e0726080c15a2389a2e5dc0a5f3f03ab237ca",
+  "predictions_sha256": "7c908dcee814afe79f2d80a5099f55ea8b2927ceedbe4cb87941d9dea1b48999",
+  "source_sha256": "cb799b78ba28c58e47616948261012bd9c74fd367a6a37ee11ac8e0b7e2b4859"
+}

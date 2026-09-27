@@ -42,14 +42,12 @@ function image = buildJetImage(fourVectors,imageSize,etaRange,phiRange)
     etaEdges = linspace(-etaRange,etaRange,imageSize+1);
     phiEdges = linspace(-phiRange,phiRange,imageSize+1);
 
-    image = zeros(imageSize,imageSize);
     etaBin = discretize(dEta,etaEdges);
     phiBin = discretize(dPhi,phiEdges);
 
-    valid = find(~isnan(etaBin) & ~isnan(phiBin))';
-    for i = valid
-        image(phiBin(i),etaBin(i)) = image(phiBin(i),etaBin(i)) + pT(i);
-    end
+    valid = ~isnan(etaBin) & ~isnan(phiBin);
+    image = accumarray([phiBin(valid),etaBin(valid)],pT(valid), ...
+        [imageSize,imageSize],@sum,0);
 
     % log-compress: pT spans orders of magnitude, and without this a
     % handful of very hot pixels would swamp everything else.

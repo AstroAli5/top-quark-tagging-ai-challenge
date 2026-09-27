@@ -4,7 +4,7 @@ function run_all(cfg)
 %   Input data must already exist; see scripts/convert_dataset.py.
     setupProject;
     if nargin < 1, cfg = projectConfig; end
-    if verLessThan('matlab','24.1') || isempty(ver('nnet'))
+    if isMATLABReleaseOlderThan('R2024a') || isempty(ver('nnet'))
         error('topquark:Requirements', ...
             'MATLAB R2024a or later and Deep Learning Toolbox are required.');
     end

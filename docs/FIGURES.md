@@ -3,6 +3,27 @@
 Every figure below is linked to its experiment. A small demonstration and a
 large evaluation can give different rankings; their pictures are not interchangeable.
 
+## Main study summary — verified MATLAB export
+
+MATLAB recomputed the 50k study's means, training-seed standard deviations and
+Student-t intervals from the recorded per-seed measurements. Python/SciPy
+independently checked the tables. Clean AUC uses all 404,000 test jets; noise AUC
+uses the first 10,000. Error bars below are seed SD across three fits.
+
+![MATLAB study summary](../experiments/official-study/matlab_study_summary.png)
+
+[Reproduction and verification](../experiments/official-study/README.md#matlab-analysis-and-figure).
+
+## Required data workflow — small verified MATLAB demonstration
+
+Parquet → tall image creation → folder-labelled imageDatastore → CNN. This
+one-epoch execution check selected 2,000 training / 500 validation / 1,000 test
+jets. It must not be mistaken for the larger study above.
+
+![MATLAB datastore demonstration](../experiments/project238-demo/matlab_evaluation.png)
+
+[Scores, resource measurements and verification](../experiments/project238-demo/).
+
 ## Final classification and noise study — verified
 
 **Training:** 50,000 official training jets; 10,000 validation jets; three

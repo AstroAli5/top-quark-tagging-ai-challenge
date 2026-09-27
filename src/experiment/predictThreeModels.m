@@ -7,7 +7,7 @@ function probabilities = predictThreeModels(models,jets,cfg)
         for j = 1:numel(jets)
             images(:,:,:,j) = single(buildJetImage(jets{j},n));
         end
-        probabilities(:,end+1) = predictCNN(models.cnn.netCNN,images,models.cnn.classNames,cfg.cnnBatchSize);
+        probabilities(:,end+1) = predictCNN(models.cnn.netCNN,images,models.cnn.classNames,cfg.cnnBatchSize,cfg.executionEnvironment);
     end
     if isfield(models,'sage')
         features = cell(size(jets)); adjacency = features;
@@ -18,6 +18,6 @@ function probabilities = predictThreeModels(models,jets,cfg)
         probabilities(:,end+1) = predictGraphSAGE(models.sage.parameters,features,adjacency,cfg.graphBatchSize);
     end
     if isfield(models,'reference')
-        probabilities(:,end+1) = predictWinnerReference(models.reference,jets,cfg.winnerBatchSize);
+        probabilities(:,end+1) = predictWinnerReference(models.reference,jets,cfg.winnerBatchSize,cfg.executionEnvironment);
     end
 end

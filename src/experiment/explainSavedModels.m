@@ -205,7 +205,7 @@ function p = cnnScores(cnn,images,cfg,blocks)
     p = zeros(size(images,4),1);
     for b = 1:numel(blocks)
         idx = blocks{b};
-        p(idx) = predictCNN(cnn.netCNN,images(:,:,:,idx),cnn.classNames,cfg.cnnBatchSize);
+        p(idx) = predictCNN(cnn.netCNN,images(:,:,:,idx),cnn.classNames,cfg.cnnBatchSize,cfg.executionEnvironment);
     end
 end
 
@@ -235,11 +235,5 @@ function verifySourceManifest(saved,current)
 end
 
 function value = fileSHA256(path)
-    fid = fopen(path,'rb'); assert(fid>=0,'Cannot open input file.');
-    cleanup = onCleanup(@() fclose(fid));
-    digest = java.security.MessageDigest.getInstance('SHA-256');
-    while ~feof(fid)
-        digest.update(fread(fid,1024*1024,'*int8'));
-    end
-    value = lower(reshape(dec2hex(typecast(digest.digest(),'uint8'),2).',1,[]));
+    value = projectFileSHA256(path);
 end

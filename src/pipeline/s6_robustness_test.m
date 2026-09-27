@@ -28,7 +28,7 @@ aucSAGEByNoise = zeros(size(noiseLevels));
 
 for n = 1:numel(noiseLevels)
     noiseLevel = noiseLevels(n);
-    rng(cfg.noiseSeed,'twister');
+    stream = RandStream('mt19937ar','Seed',cfg.noiseSeed);
     fprintf("Noise level %.2f...\n", noiseLevel);
 
     noisyImages = zeros(imageSize,imageSize,1,numTest,"single");
@@ -36,7 +36,7 @@ for n = 1:numel(noiseLevels)
     noisyAdjacency = cell(numTest,1);
 
     for j = 1:numTest
-        noisyFV = injectDetectorNoise(testFourVectors{j},noiseLevel);
+        noisyFV = injectDetectorNoise(testFourVectors{j},noiseLevel,stream);
         noisyImages(:,:,1,j) = single(buildJetImage(noisyFV,imageSize));
         [nf,adj] = buildJetGraph(noisyFV,kNeighbors);
         noisyNodeFeatures{j} = single(nf);
@@ -44,7 +44,7 @@ for n = 1:numel(noiseLevels)
     end
 
     % --- CNN ---
-    probCNN = predictCNN(cnn.netCNN,noisyImages,cnn.classNames,cfg.cnnBatchSize);
+    probCNN = predictCNN(cnn.netCNN,noisyImages,cnn.classNames,cfg.cnnBatchSize,cfg.executionEnvironment);
     predCNN = double(probCNN >= 0.5);
     accCNNByNoise(n) = mean(predCNN == testLabels);
     [~,~,aucCNNByNoise(n)] = computeROC(probCNN,testLabels);

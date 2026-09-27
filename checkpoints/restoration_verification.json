@@ -1,0 +1,29 @@
+{
+  "verified": true,
+  "workflow_run": 36280816690,
+  "matlab_job": 108512149379,
+  "code_commit": "b62d8676acd6867ac397e7605bba176db28081e9",
+  "test_rows": 256,
+  "training_seed": 101,
+  "models": [
+    "CNN",
+    "GraphSAGE",
+    "ResNeXt-SE reference"
+  ],
+  "max_probability_difference": [
+    0,
+    0,
+    0
+  ],
+  "changed_decisions": [
+    0,
+    0,
+    0
+  ],
+  "auc_difference": [
+    0,
+    0,
+    0
+  ],
+  "note": "Specific observed CPU run; cross-platform checks allow the documented floating-point budget."
+}

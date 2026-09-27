@@ -31,9 +31,11 @@ or exact upper bounds. Real graphs are often smaller. The optional reference
 model is excluded. Actual Linux MATLAB process peak resident memory is saved
 to `resources.json` after a successful scaled run.
 
-Full 1,211,000-row training is blocked by the present MAT-v5 array size limit.
-It needs a streamed/HDF5 input design and separate validation before claiming
-full-data training. Increasing a command-line number alone is insufficient.
+Full 1,211,000-row training is blocked by the original MAT-v5 array route's
+size limit. The new `run_project238` route addresses this with Parquet chunks,
+tall transforms and disk-backed image datastores. Its default selects all
+official training rows, but a configuration is not evidence of a completed
+full-data fit. See [Project 238 execution status](PROJECT238.md).
 
 The default core path remains CPU-based. No GPU acceleration result has been
 measured. A future GPU path must move both data and custom GraphSAGE parameters

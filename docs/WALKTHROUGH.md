@@ -91,3 +91,30 @@ was measured, including weak or unstable results.
 For more detail, read [Concepts](CONCEPTS.md) and the
 [fixed protocol](EXPERIMENT_PROTOCOL.md). To run the project, return to the
 [README](../README.md).
+
+## The big-data route added after review
+
+Start with `verify_results`: it restores saved models on a small official sample,
+so you can check predictions before attempting another training run.
+
+The new training route has four data-handling steps:
+
+1. `run_project238` calls Python from MATLAB. HDF5 rows are read in small blocks
+   and written to Parquet, preserving official train/validation/test separation.
+2. `parquetJetsToImages` creates a tall table. MATLAB evaluates one block at a
+   time and converts each jet to a grayscale image with `buildJetImage`.
+3. Images are stored as lossless floating-point TIFFs in background/signal
+   folders. `imageDatastore` gets each label from its folder. No image is
+   quantized to an 8-bit display picture.
+4. `trainProject238` reads minibatches from those files, selects its CNN using
+   validation loss, and evaluates the untouched test partition. Only small
+   prediction/label arrays, not every jet image, are kept for the final metrics.
+
+Normalization is fitted using training images only. Source row IDs stay in the
+filenames so missing, duplicate or reordered test rows can be detected. A small
+CPU demonstration checks execution; full-training results need their own run.
+
+You should be able to explain why the validation partition selects the model,
+why the final test partition cannot be used for tuning, what ROC AUC measures,
+and why our noise model is only a simplified sensitivity experiment. The
+[AI disclosure](AI_ASSISTANCE.md) records the assistance in these changes.

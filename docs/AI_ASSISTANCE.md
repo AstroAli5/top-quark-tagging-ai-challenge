@@ -44,3 +44,12 @@ the repository's MIT license applies to its code.
 The author remains responsible for reviewing and understanding the code,
 attribution, measurements, and claims. This disclosure does not assert that
 author review or a competition submission has occurred.
+
+## Project Hub requirements checked on 26 September
+
+The [official AI guidelines](https://github.com/mathworks/MATLAB-Simulink-Challenge-Project-Hub/wiki/Generative-AI-Guidelines)
+allow assistance but require the author to understand, explain, verify and
+acknowledge the work. Tests executed by an assistant do not demonstrate the
+author's own understanding. No such understanding or organizer acceptance is
+claimed here. The Parquet/tall/datastore workflow, quick checkpoint verifier,
+MATLAB reporting and associated tests also received substantial Codex assistance.
