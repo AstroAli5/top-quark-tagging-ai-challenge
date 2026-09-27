@@ -1,0 +1,9 @@
+{
+  "workflow_run": 36280538500,
+  "artifact_id": 10919145176,
+  "artifact_sha256": "b4488d4951a87d10caad1763befbf0fb3075931cfc291aa681b097c483f21371",
+  "expires_at": "2026-12-25T23:47:40Z",
+  "branch_commit": "128a9941422a61718f8e57fedf526579a29526e0",
+  "executed_merge_commit": "b9fcfcdef3eb819612d85e90253dfde1add0b160",
+  "local_recheck": "AUC recomputed with SciPy average ranks; saved labels match the previously verified official test chunk; accuracy and checkpoint checksum agree."
+}

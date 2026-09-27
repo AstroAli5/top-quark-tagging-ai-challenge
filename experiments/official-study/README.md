@@ -32,6 +32,18 @@ and their SHA-256 digests.
 
 ## Recalculate from saved predictions
 
+### MATLAB analysis and figure
+
+Run `summarize_matlab` from the repository root to recreate the summary directly
+in MATLAB. [The MATLAB figure](matlab_study_summary.png),
+[clean summary](clean_summary_matlab.csv), and
+[noise means within each seed](noise_per_seed_matlab.csv) are committed here.
+[Independent verification](matlab_summary_verification.json) checked every
+mean, sample SD, Student-t interval and grouped noise mean against SciPy/Pandas.
+The figure shows seed SD, while the table also contains 95% seed intervals.
+
+### Prediction-level recalculation
+
 Download the three `research-core-seed-*` artifacts from the core evaluation
 and the three `research-reference-seed-*` artifacts from the reference evaluation.
 Keep each artifact's own directory under a new `downloads/` folder. With the

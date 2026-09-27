@@ -1,0 +1,9 @@
+{
+  "verified": true,
+  "workflow_run": 36280816685,
+  "artifact_id": 10919130447,
+  "artifact_sha256": "d915e430fc705fc24edf6697853b7d0c265c674ec1a8b57336a6de32a3173cf0",
+  "code_commit": "b62d8676acd6867ac397e7605bba176db28081e9",
+  "renderer": "MATLAB R2024a",
+  "independent_recheck": "SciPy Student-t ppf, sample SD and Pandas grouped means; all table values agree within 2e-14. Error bars are seed SD, not confidence intervals."
+}

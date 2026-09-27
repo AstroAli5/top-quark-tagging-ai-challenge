@@ -5,12 +5,14 @@
 A MATLAB project by **Ali Mohamed**, developed for [Challenge Project 238](docs/PROJECT238.md).
 
 **Status:** the author’s submitted version was not accepted. The review identified
-missing MATLAB big-data steps. Repairs are being validated; no acceptance is claimed.
+missing MATLAB big-data steps. The new data route now passes a real-data
+demonstration and MATLAB tests; full-source training is still pending. No acceptance is claimed.
 
 **Question:** how do an image CNN and a particle GraphSAGE model respond when the
 same jets have their measured momenta perturbed?
 
-The central project is the CNN/GraphSAGE comparison. An optional, independently
+The required workflow is the MATLAB datastore CNN. The CNN/GraphSAGE comparison
+is the main research extension. An optional, independently
 implemented [ResNeXt-SE reference](docs/WINNER_COMPARISON.md) explores ideas from
 Adit Shah's 2025 winning project, with attribution.
 
@@ -18,6 +20,7 @@ Adit Shah's 2025 winning project, with attribution.
 | --- | --- |
 | See the MATLAB pictures and main findings | [Figure gallery](docs/FIGURES.md) · [Results](docs/RESULTS.md) |
 | Understand the project or present it | [Student walkthrough](docs/WALKTHROUGH.md) |
+| Run the required MATLAB data workflow | `run_project238` below · [Verified small demonstration](experiments/project238-demo/) |
 | Run the two core models | The short instructions below |
 | Reproduce or extend the research | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Next experiments](docs/NEXT_EXPERIMENTS.md) |
 | Inspect the optional quantum comparison or larger-data controls | [Measured Qiskit pilot](experiments/quantum-pilot/) · [Scaling](docs/SCALING.md) |
@@ -39,10 +42,11 @@ The reference has the highest clean score. GraphSAGE has the highest AUC under
 [results and uncertainty](docs/RESULTS.md) or inspect the
 [saved evidence](experiments/official-study/).
 
-![Noise sensitivity of the three final models](experiments/official-study/noise_auc.png)
+![MATLAB analysis of the three-model study](experiments/official-study/matlab_study_summary.png)
 
-This chart uses **10,000 official test jets and three training seeds**. It was
-rendered in Python from MATLAB predictions. The [gallery](docs/FIGURES.md)
+MATLAB generated this chart and its summary tables. Clean evaluation uses
+**404,000 test jets**; noise evaluation uses **10,000**; both use three training
+seeds. Noise repeats are averaged within each fitted seed. The [gallery](docs/FIGURES.md)
 labels the origin and experiment behind every available figure.
 
 **Verified follow-ups:** the [five-seed core report](experiments/seed-extension/)
@@ -84,7 +88,7 @@ folder-labelled `imageDatastore` objects for CNN training and evaluation.
 python -m pip install -r requirements.txt
 ```
 
-A short real-data demonstration:
+A short real-data demonstration (already [executed and independently checked](experiments/project238-demo/)):
 
 ```matlab
 cfg = project238Config;

@@ -21,25 +21,43 @@ Project Hub; the assistant did not make that submission or contact the reviewers
 | Qiskit pilot | [Four-qubit CPU simulator](../experiments/quantum-pilot/); the classical RBF SVM performed better |
 
 These results were checked against saved predictions and provenance. Historical
-results remain unchanged. The current check suite contains 17 Python tests
-(including four optional quantum checks) and 16 MATLAB tests.
+results remain unchanged. The current check suite contains 20 Python tests
+(including four optional quantum checks) and 18 MATLAB tests.
 
-## What prevents calling the submission finished
+## Verified response to the review
 
-The submitted version did not implement the required MATLAB-hosted Parquet,
-tall-array and folder-labelled imageDatastore route. It also needs accessible
-checkpoints, MATLAB reporting, measured justification of its training scope,
-and the smaller engineering fixes listed in [Project 238](PROJECT238.md).
-Completing research extensions does not satisfy these missing requirements.
+The new [MATLAB data route](../experiments/project238-demo/) executes MATLAB-hosted
+Python HDF5 → Parquet conversion, tall image creation, folder-labelled
+imageDatastore training and test evaluation. Its small real-data run selected
+2,000 training / 500 validation / 1,000 test jets. All test predictions, row IDs,
+source labels, metrics and the saved model hash passed independent checks.
 
-Full-source training, a broad architecture study, GPU and quantum-device runs
-remain unrun. The [earlier resource assessment](../experiments/full-data-assessment/)
-describes limits of the existing MAT route; it does not establish a minimum
-hardware purchase or demonstrate a working big-data route.
+The original CNN checkpoint and a 256-jet verification sample are included in
+Git. `verify_results` needs no training or data download. CI also restores the
+other two seed-101 models from their existing public artifacts; all three had
+zero score difference on the latest verification run. Their permanent Git
+copies still await upload approval.
 
-[Walkthrough](WALKTHROUGH.md) · [Results](RESULTS.md) · [MATLAB figure gallery](FIGURES.md) · [AI assistance and attribution](AI_ASSISTANCE.md)
+`summarize_matlab` now computes and exports the original study's statistics and
+[summary figure](../experiments/official-study/matlab_study_summary.png) in MATLAB.
+Those tables were independently checked. Prediction execution settings, local
+noise/explanation random streams, release checks, JVM handling and vectorized
+image creation are covered by the passing MATLAB suite.
 
-Repairs are implemented on the working branch and undergoing MATLAB execution
-checks. They include Parquet/tall/imageDatastore processing, a bundled CNN checkpoint
-with a quick sample verifier and links to the other saved models, and MATLAB reporting. Do not treat
-implementation alone as a verified full-data experiment.
+## What still remains
+
+Full-source training has not completed. The old MAT-v5 array limit is avoided
+by the new disk-backed route, but that alone is not evidence of a successful
+large fit. A full-source run must be measured, not inferred from this demo.
+
+Broad architecture comparisons, GPU and quantum-device experiments are still
+unrun. ResNet18 and FPGA are optional brief extensions. The existing graph-edge
+control is a narrower experiment, and the Qiskit result is a CPU simulation.
+
+The author still needs to understand and explain the work, with AI assistance
+acknowledged. Reviewer acceptance or permission to revise the rejected
+submission has not been confirmed; the assistant has not contacted them.
+
+[Requirements map](PROJECT238.md) · [Walkthrough](WALKTHROUGH.md) ·
+[Results](RESULTS.md) · [MATLAB figure gallery](FIGURES.md) ·
+[AI assistance and attribution](AI_ASSISTANCE.md)

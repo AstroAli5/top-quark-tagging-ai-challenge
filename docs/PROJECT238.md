@@ -14,10 +14,10 @@ The original seven research stages are not the seven steps in this brief.
 | 1. Learn MATLAB deep learning | [Student walkthrough](WALKTHROUGH.md), toolbox examples linked in the brief |
 | 2. Study the real-time top-quark example | Brief links the MathWorks example; current implementation is separately attributed |
 | 3. Obtain the public dataset | Verified official HDF5 downloader, checksums and split manifests |
-| 4. MATLAB calls Python for HDF5 → Parquet | Implemented in `run_project238` and `prepare_parquet.py`; validation in progress |
-| 5. Parquet datastore and tall preprocessing into images | Implemented with a pure tall block transform and lossless single-precision TIFFs; validation in progress |
-| 6. Train a CNN in MATLAB | Prior subset studies verified; new `trainProject238` consumes image datastores |
-| 7. Test with folder-labelled image datastores | New folder-labelled datastore validates source row coverage; official-data execution pending |
+| 4. MATLAB calls Python for HDF5 → Parquet | Verified real-data execution in `run_project238` and `prepare_parquet.py` |
+| 5. Parquet datastore and tall preprocessing into images | Verified tall block transform and lossless single-precision TIFF round trip |
+| 6. Train a CNN in MATLAB | New datastore fit executed on 2,000 selected training jets; prior larger research studies retained |
+| 7. Test with folder-labelled image datastores | All 1,000 selected test rows independently checked against official labels and saved scores |
 
 Additional requested repairs: measured training-size justification, publicly
 retrievable checkpoints and a quick verification command, MATLAB summary figures
@@ -32,7 +32,12 @@ The earlier explanation and graph-control studies are scientifically useful,
 but do not resolve these MATLAB workflow requirements. Their results remain in
 [experiments](../experiments/) with the original protocols and provenance.
 
-## Repairs being validated
+## Verified repairs
+
+The [small real-data run](../experiments/project238-demo/) and
+[18-test MATLAB suite](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36280816690)
+pass. This proves the implemented route executes; it does not prove a full-data
+fit, student understanding, or reviewer acceptance.
 
 - `verify_results` uses the included seed-101 CNN checkpoint and 256 official
   test jets, checking every restored score. The other two models are available
@@ -40,6 +45,7 @@ but do not resolve these MATLAB workflow requirements. Their results remain in
   full-test or three-seed means.
 - `summarize_matlab` computes the original study mean/SD, Student-t intervals,
   and noise curves in MATLAB. Noise repeats are averaged within training seed.
+  [Exported figure and independent verification](../experiments/official-study/matlab_summary_verification.json).
 - `computeROC` uses `rocmetrics` when Statistics and Machine Learning Toolbox
   is available, with the tested rank-based fallback for Deep Learning Toolbox
   alone. Pairwise/ties tests remain the numerical acceptance criteria.
