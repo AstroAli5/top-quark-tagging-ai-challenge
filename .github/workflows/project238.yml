@@ -12,7 +12,13 @@ on:
       - 'scripts/verify_project238.py'
       - 'tests/TestProject238.m'
       - 'summarize_matlab.m'
+      - 'experiments/project238-full/PROTOCOL.md'
   workflow_dispatch:
+    inputs:
+      full:
+        description: Also attempt the full-source, one-epoch CPU feasibility run
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -56,5 +62,102 @@ jobs:
           path: |
             runs/project238_demo/
             results/matlab-summary/
+          retention-days: 90
+          if-no-files-found: warn
+
+  scale-check:
+    needs: demo
+    if: inputs.full == true || startsWith(github.head_ref, 'codex/project238-full-')
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: data/*.h5
+          key: zenodo-2603256-official-v1
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox Statistics_and_Machine_Learning_Toolbox
+      - name: Measure the repaired route on 100,000 training images
+        timeout-minutes: 30
+        uses: matlab-actions/run-command@v2
+        with:
+          command: >-
+            pyenv(Version=fullfile(getenv('pythonLocation'),'bin','python'),ExecutionMode="OutOfProcess");
+            cfg=project238Config; cfg.epochs=1; cfg.batchSize=100;
+            cfg.trainCount=100000; cfg.validationCount=1000; cfg.testCount=1000;
+            cfg.dataDir=fullfile(pwd,'data','project238_scale_check');
+            cfg.outputDir=fullfile(pwd,'runs','project238_scale_check');
+            run_project238(cfg);
+      - run: python scripts/verify_project238.py --run runs/project238_scale_check --raw-test data/test.h5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: project238-scale-check
+          path: |
+            runs/project238_scale_check/
+            data/project238_scale_check/stage_times.json
+            data/project238_scale_check/image_progress.json
+          retention-days: 90
+          if-no-files-found: warn
+
+  full-source:
+    needs: scale-check
+    if: inputs.full == true || (github.event.action == 'opened' && startsWith(github.head_ref, 'codex/project238-full-'))
+    runs-on: ubuntu-22.04
+    timeout-minutes: 330
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: data/*.h5
+          key: zenodo-2603256-official-v1
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox Statistics_and_Machine_Learning_Toolbox
+      - name: Record available CPU, memory and disk
+        run: |
+          mkdir -p results/project238-full
+          python - <<'PY'
+          import json, os, platform, shutil
+          from pathlib import Path
+          data = dict(cpu_count=os.cpu_count(), platform=platform.platform(),
+                      meminfo=Path('/proc/meminfo').read_text(),
+                      disk_bytes=shutil.disk_usage('.')._asdict())
+          Path('results/project238-full/runner.json').write_text(json.dumps(data,indent=2)+'\n')
+          PY
+      - name: Fit all official training rows for one recorded epoch
+        timeout-minutes: 305
+        uses: matlab-actions/run-command@v2
+        with:
+          command: >-
+            pyenv(Version=fullfile(getenv('pythonLocation'),'bin','python'),ExecutionMode="OutOfProcess");
+            cfg=project238Config; cfg.epochs=1; cfg.batchSize=100;
+            cfg.dataDir=fullfile(pwd,'data','project238_full');
+            cfg.outputDir=fullfile(pwd,'runs','project238_full');
+            run_project238(cfg);
+      - name: Independently verify all official test predictions
+        run: python scripts/verify_project238.py --run runs/project238_full --raw-test data/test.h5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: project238-full-source-one-epoch
+          path: |
+            runs/project238_full/
+            results/project238-full/
+            data/project238_full/stage_times.json
+            data/project238_full/image_progress.json
+            data/project238_full/parquet/manifest.json
           retention-days: 90
           if-no-files-found: warn

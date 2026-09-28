@@ -1,0 +1,22 @@
+{
+  "verified": true,
+  "test_jets": 1000,
+  "accuracy": 0.908,
+  "auc": 0.966324,
+  "auc_method": "SciPy average-rank Mann-Whitney statistic, independent of project metric code",
+  "local_label_check": "All 1000 rows match the previously checksum-verified official test MAT chunk",
+  "raw_source_check": "Workflow independently checked the original official HDF5 checksum and labels",
+  "archive_sha256": "0f6bb73e3f7d9fbe42d9bae86d886e0f13f522c6a64ac31055342530f993c017",
+  "checkpoint_sha256": "525323cbe4fb8b3a676f1056765ed72d1fa2a4125fd7949762b8497e79a40ee9",
+  "predictions_csv_sha256": "55587b4f76134f01aa0f057e693176e63ab34b253ab919179a8e2795bac152be",
+  "confusion_matrix": [
+    [
+      437,
+      63
+    ],
+    [
+      29,
+      471
+    ]
+  ]
+}

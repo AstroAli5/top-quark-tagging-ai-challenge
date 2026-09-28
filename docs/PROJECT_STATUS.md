@@ -1,4 +1,4 @@
-# Project status — 26 September 2026
+# Project status — 28 September 2026
 
 The author supplied a review of their **MATLAB Challenge Project 238** submission.
 It was not accepted at that time. The review identifies missing MATLAB big-data
@@ -32,6 +32,12 @@ imageDatastore training and test evaluation. Its small real-data run selected
 2,000 training / 500 validation / 1,000 test jets. All test predictions, row IDs,
 source labels, metrics and the saved model hash passed independent checks.
 
+The repaired route also passed a [100k training / 1k validation / 1k test,
+one-epoch check](../experiments/project238-full/scale-check/): 73.28 seconds for
+image preparation and 124.94 seconds for training. Every saved test prediction
+was independently checked. This execution probe is separate from the earlier
+three-seed 100k research study.
+
 The original CNN checkpoint and a 256-jet verification sample are included in
 Git. `verify_results` needs no training or data download. CI also restores the
 other two seed-101 models from their existing public artifacts; all three had
@@ -45,6 +51,13 @@ noise/explanation random streams, release checks, JVM handling and vectorized
 image creation are covered by the passing MATLAB suite.
 
 ## What still remains
+
+The [first full-source attempt](../experiments/project238-full/) reached all-row
+Parquet conversion in 185.72 seconds, then exceeded its 305-minute limit during
+image preparation/validation. It did not reach training and produced no full-data
+accuracy. A cached file-list repair and finer timing checkpoints now pass the
+100k execution probe; opening and validating those training filenames took 3.3
+seconds. This supports a retry but does not prove full-source completion.
 
 Full-source training has not completed. The old MAT-v5 array limit is avoided
 by the new disk-backed route, but that alone is not evidence of a successful

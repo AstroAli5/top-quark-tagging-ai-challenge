@@ -5,9 +5,10 @@ function output = jetTableToImages(input,imageSize)
     for p = 0:199
         for c = 1:4, columns{4*p+c} = sprintf('%s_%d',components{c},p); end
     end
+    values = input{:,columns}; % one bounded block; avoid 800 table lookups per jet
     pixels = cell(height(input),1);
     for i = 1:height(input)
-        particles = reshape(double(input{i,columns}),4,[]).';
+        particles = reshape(double(values(i,:)),4,[]).';
         if any(~isfinite(particles),'all') || any(particles(:,1) < 0)
             error('topquark:InvalidParticles','Invalid values at source row %d.',input.SourceRow(i));
         end

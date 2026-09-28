@@ -16,7 +16,7 @@ The original seven research stages are not the seven steps in this brief.
 | 3. Obtain the public dataset | Verified official HDF5 downloader, checksums and split manifests |
 | 4. MATLAB calls Python for HDF5 → Parquet | Verified real-data execution in `run_project238` and `prepare_parquet.py` |
 | 5. Parquet datastore and tall preprocessing into images | Verified tall block transform and lossless single-precision TIFF round trip |
-| 6. Train a CNN in MATLAB | New datastore fit executed on 2,000 selected training jets; prior larger research studies retained |
+| 6. Train a CNN in MATLAB | New datastore fit verified on 100,000 selected training jets for one epoch; prior larger research studies retained |
 | 7. Test with folder-labelled image datastores | All 1,000 selected test rows independently checked against official labels and saved scores |
 
 Additional requested repairs: measured training-size justification, publicly
@@ -36,8 +36,10 @@ but do not resolve these MATLAB workflow requirements. Their results remain in
 
 The [small real-data run](../experiments/project238-demo/) and
 [18-test MATLAB suite](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36280816690)
-pass. This proves the implemented route executes; it does not prove a full-data
-fit, student understanding, or reviewer acceptance.
+pass. The subsequent [100k execution check](../experiments/project238-full/scale-check/)
+also passed, including independent verification of all 1,000 selected test jets.
+This proves the implemented route executes at that size; it does not prove a
+full-data fit, student understanding, or reviewer acceptance.
 
 - `verify_results` uses the included seed-101 CNN checkpoint and 256 official
   test jets, checking every restored score. The other two models are available

@@ -24,6 +24,17 @@ jets. It must not be mistaken for the larger study above.
 
 [Scores, resource measurements and verification](../experiments/project238-demo/).
 
+## Required data workflow — verified 100k scaling check
+
+The repaired datastore route completed one epoch on 100,000 training jets with
+1,000 validation and 1,000 test jets. MATLAB exported this ROC and confusion
+matrix; independent checks confirmed all selected test predictions. This is an
+execution probe, separate from the three-seed 100k research study below.
+
+![MATLAB 100k datastore scaling check](../experiments/project238-full/scale-check/matlab_evaluation.png)
+
+[Measurements, scores and verification](../experiments/project238-full/scale-check/).
+
 ## Final classification and noise study — verified
 
 **Training:** 50,000 official training jets; 10,000 validation jets; three
