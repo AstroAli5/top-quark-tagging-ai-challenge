@@ -111,8 +111,11 @@ The new training route has four data-handling steps:
    prediction/label arrays, not every jet image, are kept for the final metrics.
 
 Normalization is fitted using training images only. Source row IDs stay in the
-filenames so missing, duplicate or reordered test rows can be detected. A small
-CPU demonstration checks execution; full-training results need their own run.
+filenames so missing, duplicate or reordered test rows can be detected. The
+[verified full-source CPU run](../experiments/project238-full/) completed one
+epoch on all 1,211,000 training jets and evaluated all 404,000 test jets. It proves
+the data route works at that size; one epoch and one seed do not prove convergence
+or statistical consistency across training runs.
 
 You should be able to explain why the validation partition selects the model,
 why the final test partition cannot be used for tuning, what ROC AUC measures,

@@ -38,6 +38,12 @@ image preparation and 124.94 seconds for training. Every saved test prediction
 was independently checked. This execution probe is separate from the earlier
 three-seed 100k research study.
 
+The [second full-source attempt](../experiments/project238-full/) then completed
+one epoch on all 1,211,000 training jets and tested all 404,000 test jets. All
+12,110 training iterations completed; accuracy is 90.2267% and AUC 0.9739505904.
+Saved predictions, source labels, row IDs and model hash passed independent
+checks. MATLAB generated the ROC/confusion-matrix figure in the central gallery.
+
 The original CNN checkpoint and a 256-jet verification sample are included in
 Git. `verify_results` needs no training or data download. CI also restores the
 other two seed-101 models from their existing public artifacts; all three had
@@ -52,16 +58,17 @@ image creation are covered by the passing MATLAB suite.
 
 ## What still remains
 
-The [first full-source attempt](../experiments/project238-full/) reached all-row
-Parquet conversion in 185.72 seconds, then exceeded its 305-minute limit during
-image preparation/validation. It did not reach training and produced no full-data
-accuracy. A cached file-list repair and finer timing checkpoints now pass the
-100k execution probe; opening and validating those training filenames took 3.3
-seconds. This supports a retry but does not prove full-source completion.
+Full-source execution is now verified for one epoch and one seed. A longer fit
+with convergence checks and repeated full-data seeds remains unrun, including
+the configuration's 12-epoch default. The full-source CNN has no explanation
+study yet; existing explanations cover the original 50k/100k checkpoints.
+Its model and per-jet predictions are retained in the public workflow artifact,
+which expires on 27 December 2026; hashes and compact evidence are retained in Git.
 
-Full-source training has not completed. The old MAT-v5 array limit is avoided
-by the new disk-backed route, but that alone is not evidence of a successful
-large fit. A full-source run must be measured, not inferred from this demo.
+The original failed attempt remains documented. The successful repaired run
+measured 20.61 minutes for image preparation, 35.32 minutes for training and
+4.76 GiB MATLAB peak memory, plus a separately measured 0.47 GiB Python peak.
+These are observations under one runner's conditions, not minimum requirements.
 
 Broad architecture comparisons, GPU and quantum-device experiments are still
 unrun. ResNet18 and FPGA are optional brief extensions. The existing graph-edge

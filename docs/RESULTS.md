@@ -1,5 +1,20 @@
 # Results and evidence
 
+## Required MATLAB workflow: full-source execution verified
+
+The [28 September datastore CNN run](../experiments/project238-full/) completed
+one epoch on all 1,211,000 official training jets, using 10,000 validation jets
+and all 404,000 test jets. Its single-seed accuracy at threshold 0.5 is
+**90.2267%**, with **AUC 0.9739505904**. Every saved prediction passed the workflow's
+source-label and row checks; independent local calculations reproduce both metrics.
+MATLAB produced its ROC/confusion-matrix figure in the [gallery](FIGURES.md).
+
+This closes the full-source execution gap. It is a separate pipeline and training
+budget from the research comparisons below, so differences cannot be attributed
+to dataset size alone. One epoch and one seed do not establish convergence,
+training-seed uncertainty or reviewer acceptance. The original study values below
+remain unchanged.
+
 ## Larger official-partition study
 
 The three-model study is complete. The [core evaluation](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/35095505566)

@@ -14,6 +14,17 @@ uses the first 10,000. Error bars below are seed SD across three fits.
 
 [Reproduction and verification](../experiments/official-study/README.md#matlab-analysis-and-figure).
 
+## Required data workflow — verified full-source MATLAB run
+
+One epoch on **all 1,211,000 training jets**, 10,000 validation jets and
+**all 404,000 official test jets**, seed 101, CPU. MATLAB exported this ROC and
+confusion matrix; saved predictions passed independent checks. This run proves
+full-source execution, not convergence or a multi-seed architecture comparison.
+
+![MATLAB full-source datastore CNN](../experiments/project238-full/attempt2/matlab_evaluation.png)
+
+[Scores, resource measurements, limitations and verification](../experiments/project238-full/).
+
 ## Required data workflow — small verified MATLAB demonstration
 
 Parquet → tall image creation → folder-labelled imageDatastore → CNN. This

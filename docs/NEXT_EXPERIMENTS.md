@@ -1,8 +1,8 @@
 # Next experiments and what they would establish
 
-**Priority after the 26 September review:** implement and demonstrate the
-[Project 238 MATLAB big-data steps](PROJECT238.md). The research extensions
-below do not replace those submission requirements.
+The [Project 238 MATLAB big-data steps](PROJECT238.md) now execute at full
+training/test size in a verified one-epoch CPU run. Longer full-data studies,
+author understanding and reviewer acceptance are separate next steps.
 
 This roadmap distinguishes completed follow-ups from open research questions.
 The original 50,000-training-jet, three-model study remains unchanged. The
@@ -18,10 +18,10 @@ and output directory. See [Project status](PROJECT_STATUS.md).
 | Expensive reference | Research workflow defaults to the two core models; reference requires opting in | Same reference architecture still costs more when selected |
 | Missing final-model explanation plots | Completed for both [50k](../experiments/explanations/) and [100k](../experiments/explanations-100k/) checkpoint sets | Broader perturbations or more test jets would be separate extensions |
 | Only three training seeds | Completed a separate five-seed CNN/GraphSAGE report | The reference still has three seeds; five core seeds remain modest |
-| Only 50,000 training jets | Completed 100k training with three matched seed labels and measured memory | Complete learning curve, equal-compute controls, and streamed full-data training |
+| Only 50,000 training jets | Completed three-seed 100k core study and a separate one-epoch full-source datastore CNN | Longer/multi-seed full-source fits, complete learning curve and equal-compute controls |
 | Different representations | Describe results as comparisons of complete pipelines | Controlled ablations and matched constituent selections |
 | No quantum model | Completed a separate four-qubit simulator pilot with matched classical baselines | No quantum-device, noise, scalability or advantage result |
-| Project 238 submission rejected at present | Map each reviewer point to code and evidence | Demonstrate the required MATLAB big-data route; acceptance remains the organizer’s decision |
+| Project 238 submission rejected at present | Required MATLAB big-data route now verified at full training/test size | Author explanation and reviewer confirmation; acceptance remains the organizer’s decision |
 
 ## 1. Completed: explanations without training again
 
@@ -68,10 +68,12 @@ validation performance for development decisions and keep final testing separate
 Record any new design as a follow-up informed by the existing studies, not as an
 experiment preregistered before the original test results were seen.
 
-The 10k/25k points and an equal-update control have not been run. The current
-trainer materializes representations in memory. Full training on
-1,211,000 jets requires a memory/runtime assessment and likely streamed input;
-simply increasing the row count is not a verified implementation of that study.
+The 10k/25k points and an equal-update control have not been run. The original
+core trainer materializes representations in memory. A separate disk-backed
+datastore CNN now has a [verified full-source result](../experiments/project238-full/)
+with measured runtime and memory. It used one epoch and a different pipeline,
+so it does not complete the core models' controlled learning curve. Longer fits,
+repeated full-data seeds and explanations for this new checkpoint remain open.
 
 ## 4. Isolate specific choices with ablations
 

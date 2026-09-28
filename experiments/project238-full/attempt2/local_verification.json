@@ -1,0 +1,138 @@
+{
+  "verified": true,
+  "test_jets": 404000,
+  "accuracy": 0.9022673267326733,
+  "auc": 0.9739505903670858,
+  "auc_method": "SciPy average-rank Mann-Whitney statistic, independent of project metric code",
+  "all_source_rows_and_mat_csv_scores_agree": true,
+  "source_label_check": {
+    "workflow_raw_hdf5_rows_verified": 404000,
+    "local_previously_verified_mat_rows_rechecked": 80000,
+    "local_chunks": [
+      {
+        "file": "test_000000.mat",
+        "start": 0,
+        "stop": 5000,
+        "sha256": "5d0c19d09ab39f4054e242094770373170426f6de5f7c7b271644dbb00bec961"
+      },
+      {
+        "file": "test_005000.mat",
+        "start": 5000,
+        "stop": 10000,
+        "sha256": "9b8c9284044608d089254cb70351abd99b9abcc2d8fd31e2fea5dc6b0b1ed3eb"
+      },
+      {
+        "file": "test_010000.mat",
+        "start": 10000,
+        "stop": 15000,
+        "sha256": "afa484f9374f28e75cf7405af3ca39e2cfaeee8b63db4078f85dfd15f6994bd0"
+      },
+      {
+        "file": "test_015000.mat",
+        "start": 15000,
+        "stop": 20000,
+        "sha256": "3ad4cb56c2e40324a5ba66fe7798817e8590e64a4994d5850492e85739e7402c"
+      },
+      {
+        "file": "test_020000.mat",
+        "start": 20000,
+        "stop": 25000,
+        "sha256": "c1b0900c3f55fa5ab52f01a82c3de075bf3cc10ff9d77f6374f75e074ac5a2d6"
+      },
+      {
+        "file": "test_025000.mat",
+        "start": 25000,
+        "stop": 30000,
+        "sha256": "61308ebc96ab4a2984804dbf1811ead83e93b849552f92cc51dbffb415242afb"
+      },
+      {
+        "file": "test_030000.mat",
+        "start": 30000,
+        "stop": 35000,
+        "sha256": "b00a954ec9ecd1f2dde155a8be704c73534a28aa04b95b2a9843fd6d72ccf3f7"
+      },
+      {
+        "file": "test_035000.mat",
+        "start": 35000,
+        "stop": 40000,
+        "sha256": "45ff9f6fc481d3be6bf38617b7d27a666a91bb7375a834e81980fbaa381138e2"
+      },
+      {
+        "file": "test_040000.mat",
+        "start": 40000,
+        "stop": 45000,
+        "sha256": "8fefd1f4f74396835c5be1beb3a0cf6427f03511056ad51999044f8296c3c38f"
+      },
+      {
+        "file": "test_045000.mat",
+        "start": 45000,
+        "stop": 50000,
+        "sha256": "ebb7d378e676fb089ed5168a41a9277cde59708f32731a887792f5abeebde1b1"
+      },
+      {
+        "file": "test_050000.mat",
+        "start": 50000,
+        "stop": 55000,
+        "sha256": "3ad21689b569885dfee3241ea0f7fc24d8539efff8e037cd14d892744d5a6584"
+      },
+      {
+        "file": "test_055000.mat",
+        "start": 55000,
+        "stop": 60000,
+        "sha256": "a5cda2463457760a5828455b6c5515ac9b1a1ed6b5415aa37db156ecdd01daeb"
+      },
+      {
+        "file": "test_060000.mat",
+        "start": 60000,
+        "stop": 65000,
+        "sha256": "9f49f09fa23c983d6e97bc174a1164be77d934961012d8c95dcc73c24dcd300c"
+      },
+      {
+        "file": "test_070000.mat",
+        "start": 70000,
+        "stop": 75000,
+        "sha256": "c01a2602b8ed271396087c189b92a69127fb93b4b000ff10356195d6935e8a36"
+      },
+      {
+        "file": "test_075000.mat",
+        "start": 75000,
+        "stop": 80000,
+        "sha256": "2af3605451becdabf881b28cd7b5f7212c0307eaf852e70b9b5f3b6523afb486"
+      },
+      {
+        "file": "test_080000.mat",
+        "start": 80000,
+        "stop": 85000,
+        "sha256": "4c62ceef7260ac16602e6542ebdaa2fbc8fd47433c5711653c99386f88c3306e"
+      }
+    ],
+    "excluded_untrusted_scratch_cache": [
+      {
+        "file": "test_065000.mat",
+        "expected_sha256": "e7df1743244cdb1c1f63733cc1a0d47c34e8dc6f1c41aa7920ddd611002205c0",
+        "actual_sha256": "6f7c24c7575e5898f71501d75a669b668dea559f9e676d6d5c37038ebad5f69c",
+        "bytes": 575488
+      }
+    ],
+    "note": "All raw test labels were checked in the successful workflow. The optional local cross-check uses only checksum-matching recovered chunks; excluded cache files were not inputs to this run."
+  },
+  "checkpoint_sha256": "42325af5aba03ba5f93c5c495e84b4a5681e8d322eeaf4e829e8a13509ea12a3",
+  "predictions_mat_sha256": "422bbcde3a16dadfccf4e88fcedeceb05787482cc43ec6ef0daed6695f21cc61",
+  "predictions_csv_sha256": "59646423411280b1bc6b3f8282df54842153136eb74209626e64d23b60568271",
+  "report_sha256": "9f8ae2ce49c98cc69e5762560f7ce8c15cde5321e876ffeb4b17926d8fc167d5",
+  "confusion_matrix": [
+    [
+      166581,
+      35333
+    ],
+    [
+      4151,
+      197935
+    ]
+  ],
+  "official_source_sha256": {
+    "train": "443b452d5ecaf959a1e6f975736cce0a2034a5e39a1e564e4427a004c3b258e9",
+    "val": "3abe6b0b7d98392695d1fcdd5486a6d4d886c285c4a05d547ac8525b60aaccd6",
+    "test": "cb799b78ba28c58e47616948261012bd9c74fd367a6a37ee11ac8e0b7e2b4859"
+  }
+}

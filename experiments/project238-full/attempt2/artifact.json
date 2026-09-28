@@ -1,0 +1,38 @@
+{
+  "status": "completed_and_independently_verified",
+  "workflow_run": 36390331331,
+  "job_id": 108831285975,
+  "branch_commit": "1267d01a8fde61250d0b2f4bb9da74c96ce1f8cc",
+  "executed_merge_commit": "dcb7fddc0b00000928707b296961996c29581917",
+  "artifact_id": 10959232836,
+  "artifact_sha256": "c0a9a1d7b9c3043b46707c5a3f3cf81ff46433c5542789ca9ae51dc8b536283c",
+  "artifact_expires_at": "2026-12-27T07:11:46Z",
+  "training_epochs_completed": 1,
+  "training_iterations_completed": 12110,
+  "training_stop_reason": "Max epochs completed",
+  "training_image_write_seconds_rounded": 870.1,
+  "training_datastore_validation_seconds_rounded": 46.9,
+  "test_datastore_validation_seconds_rounded": 16.4,
+  "log_measurement_note": "Iterations and rounded stage timings transcribed from the completed MATLAB job log.",
+  "started_pipeline_utc": "2026-09-28T07:37:58.1441226Z",
+  "report_printed_utc": "2026-09-28T08:44:24.3690637Z",
+  "cpu_count": 4,
+  "memory_total_kib": 16371456,
+  "disk_free_bytes_before_run": 84343959552,
+  "accuracy": 0.9022673267326733,
+  "auc": 0.9739505903670858,
+  "retained_in_artifact": {
+    "cnn_model.mat": {
+      "sha256": "42325af5aba03ba5f93c5c495e84b4a5681e8d322eeaf4e829e8a13509ea12a3",
+      "bytes": 310380
+    },
+    "test_predictions.mat": {
+      "sha256": "422bbcde3a16dadfccf4e88fcedeceb05787482cc43ec6ef0daed6695f21cc61",
+      "bytes": 2314741
+    },
+    "test_predictions.csv": {
+      "sha256": "59646423411280b1bc6b3f8282df54842153136eb74209626e64d23b60568271",
+      "bytes": 10950492
+    }
+  }
+}

@@ -16,8 +16,8 @@ The original seven research stages are not the seven steps in this brief.
 | 3. Obtain the public dataset | Verified official HDF5 downloader, checksums and split manifests |
 | 4. MATLAB calls Python for HDF5 → Parquet | Verified real-data execution in `run_project238` and `prepare_parquet.py` |
 | 5. Parquet datastore and tall preprocessing into images | Verified tall block transform and lossless single-precision TIFF round trip |
-| 6. Train a CNN in MATLAB | New datastore fit verified on 100,000 selected training jets for one epoch; prior larger research studies retained |
-| 7. Test with folder-labelled image datastores | All 1,000 selected test rows independently checked against official labels and saved scores |
+| 6. Train a CNN in MATLAB | Datastore fit completed all 1,211,000 official training jets for one epoch; 12,110 minibatches |
+| 7. Test with folder-labelled image datastores | All 404,000 official test rows independently checked against source labels and saved scores |
 
 Additional requested repairs: measured training-size justification, publicly
 retrievable checkpoints and a quick verification command, MATLAB summary figures
@@ -38,8 +38,10 @@ The [small real-data run](../experiments/project238-demo/) and
 [18-test MATLAB suite](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36280816690)
 pass. The subsequent [100k execution check](../experiments/project238-full/scale-check/)
 also passed, including independent verification of all 1,000 selected test jets.
-This proves the implemented route executes at that size; it does not prove a
-full-data fit, student understanding, or reviewer acceptance.
+The [full-source retry](../experiments/project238-full/) then passed: one epoch
+on all training rows and independently checked predictions on every official
+test row. This establishes the data route at full size, not model convergence,
+student understanding, or reviewer acceptance.
 
 - `verify_results` uses the included seed-101 CNN checkpoint and 256 official
   test jets, checking every restored score. The other two models are available
@@ -58,8 +60,10 @@ full-data fit, student understanding, or reviewer acceptance.
 
 `run_project238` defaults to all official training rows. The short demonstration
 uses 2,000/500/1,000 train/validation/test rows and one epoch; it proves execution,
-not a finished full-scale study. No full-data result is claimed before an actual
-run completes and its predictions are independently checked. MATLAB calls Python in `OutOfProcess` mode to isolate their HDF5 libraries;
+not a finished full-scale study. The separately verified full-source run used
+one epoch, batch size 100 and 10,000 validation rows, with 90.2267% test accuracy
+and AUC 0.9739505904. The 12-epoch default and repeated full-data seeds remain
+unrun. MATLAB calls Python in `OutOfProcess` mode to isolate their HDF5 libraries;
 MATLAB and Python peak memory are recorded separately on Linux. Epoch model
 checkpoints are saved, but exact optimizer/RNG training resume is not implemented.
 

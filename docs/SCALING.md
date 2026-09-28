@@ -31,11 +31,15 @@ or exact upper bounds. Real graphs are often smaller. The optional reference
 model is excluded. Actual Linux MATLAB process peak resident memory is saved
 to `resources.json` after a successful scaled run.
 
-Full 1,211,000-row training is blocked by the original MAT-v5 array route's
-size limit. The new `run_project238` route addresses this with Parquet chunks,
-tall transforms and disk-backed image datastores. Its default selects all
-official training rows, but a configuration is not evidence of a completed
-full-data fit. See [Project 238 execution status](PROJECT238.md).
+The original MAT-v5 array route cannot hold the full training matrix. The new
+`run_project238` route uses Parquet chunks, tall transforms and disk-backed
+image datastores instead. Its [verified full-source run](../experiments/project238-full/)
+completed all 1,211,000 training and 404,000 test rows on 28 September: one epoch,
+seed 101, batch size 100, CPU. Training took 35.32 minutes after 20.61 minutes of
+image preparation. MATLAB peak memory was 4.76 GiB; the separate Python process
+peaked at 0.47 GiB. These peaks are not an exact combined value.
+Longer full-data fits and repeated seeds remain unrun; this compact CNN is a
+separate pipeline from the earlier core-model studies.
 
 The default core path remains CPU-based. No GPU acceleration result has been
 measured. A future GPU path must move both data and custom GraphSAGE parameters
