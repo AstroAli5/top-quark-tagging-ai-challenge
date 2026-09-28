@@ -68,14 +68,16 @@ tie-aware ROC calculation is available without it.
 Clone or download this repository and run in MATLAB:
 
 ```matlab
-verify_results
-summarize_matlab
+run_submission
 ```
 
 The [included seed-101 CNN and 256-jet sample](checkpoints/) require no extra
-data download or retraining. The first command verifies their hashes and restores
-the saved CNN predictions. Its printed scores describe only that small test sample.
-The second command makes the study summary tables and figure in MATLAB.
+data download or retraining. This single reviewer command verifies their hashes,
+restores the saved CNN predictions, and exports MATLAB accuracy/AUC/noise figures,
+seed confidence intervals and paired model comparisons. The restored model scores
+describe the 256-jet sample; the separate study tables summarize the recorded
+full-test results across three training seeds. They are clearly labelled.
+Use `verify_results` or `summarize_matlab` separately for either part.
 
 ## Run the MATLAB big-data route
 

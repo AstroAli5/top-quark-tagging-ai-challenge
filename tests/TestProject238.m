@@ -64,9 +64,26 @@ function testShippedCheckpointPredictionsAndMatlabSummary(testCase)
     verifySize(testCase,result,[3 3]);
     folder = tempname; mkdir(folder); cleanup = onCleanup(@() rmdir(folder,'s'));
     input = fullfile(testCase.TestData.root,'experiments','official-study');
-    summary = summarize_matlab(input,folder);
+    review = run_submission(folder);
+    summary = review.study;
     cnn = summary(summary.Model=="CNN",:);
     verifyEqual(testCase,cnn.AccuracyMean,0.9105866336633662,'AbsTol',1e-12);
     verifyEqual(testCase,cnn.AUCMean,0.9692862903638857,'AbsTol',1e-12);
+    oracle = readtable(fullfile(input,'paired_auc.csv'),TextType='string');
+    verifyEqual(testCase,review.paired.Difference,oracle.Difference);
+    verifyEqual(testCase,review.paired.MeanAUCDifference,oracle.MeanAUC_Difference,'AbsTol',1e-12);
+    verifyEqual(testCase,review.paired.AUCSeedCI_Low,oracle.TrainingSeedCI_Low,'AbsTol',1e-12);
+    verifyEqual(testCase,review.paired.AUCSeedCI_High,oracle.TrainingSeedCI_High,'AbsTol',1e-12);
     verifyTrue(testCase,isfile(fullfile(folder,'matlab_study_summary.png')));
+end
+
+function testSummaryRejectsUnmatchedSeeds(testCase)
+    folder = tempname; mkdir(folder); cleanup = onCleanup(@() rmdir(folder,'s'));
+    input = fullfile(testCase.TestData.root,'experiments','official-study');
+    clean = readtable(fullfile(input,'per_seed_clean.csv'),TextType='string');
+    clean(clean.Model=="GraphSAGE" & clean.Seed==101,:) = [];
+    writetable(clean,fullfile(folder,'per_seed_clean.csv'));
+    copyfile(fullfile(input,'per_seed_noise.csv'),fullfile(folder,'per_seed_noise.csv'));
+    verifyError(testCase,@() summarize_matlab(folder,fullfile(folder,'output')), ...
+        'topquark:UnpairedSeeds');
 end

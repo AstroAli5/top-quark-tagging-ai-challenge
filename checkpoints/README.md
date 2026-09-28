@@ -8,11 +8,10 @@ Git LFS or expiring artifact links.
 In MATLAB R2024a+ with Deep Learning Toolbox and the JVM enabled:
 
 ```matlab
-verify_results
-summarize_matlab
+run_submission
 ```
 
-The first command checks hashes, loads the CNN checkpoint, runs the first
+The command checks hashes, loads the CNN checkpoint, runs the first
 **256 official test jets**, and compares every probability with the saved
 full-study predictions. It prints the sample accuracy and AUC. These are sample
 scores, not the full 404,000-test-jet or three-seed mean scores.
@@ -20,7 +19,9 @@ The check allows at most `64*eps(single)` (about 0.00000763) probability
 difference, matching the previously audited explanation study's floating-point
 budget. It also requires unchanged class decisions and AUC agreement within
 0.000001, and prints the observed differences separately for every model.
-The second command recreates the full study summary tables and figure in MATLAB.
+It also recreates the full study summary tables, paired seed comparisons, and
+accuracy/AUC/noise figure in MATLAB. Call `verify_results` or `summarize_matlab`
+separately if only one part is needed.
 
 [File identities and scope](manifest.json). The GraphSAGE and reference weights, and the other seeds, remain available
 through the original study's artifact records. The sample is from the
