@@ -6,7 +6,9 @@ A MATLAB project by **Ali Mohamed**, developed for [Challenge Project 238](docs/
 
 **Status:** the author’s submitted version was not accepted. The review identified
 missing MATLAB big-data steps. The new data route now passes a real-data
-demonstration and MATLAB tests; full-source training is still pending. No acceptance is claimed.
+demonstration and MATLAB tests. The [first full-source attempt](experiments/project238-full/)
+timed out before training; its image-datastore scaling repair is being checked.
+No acceptance is claimed.
 
 **Question:** how do an image CNN and a particle GraphSAGE model respond when the
 same jets have their measured momenta perturbed?

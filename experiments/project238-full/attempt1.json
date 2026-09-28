@@ -1,0 +1,54 @@
+{
+  "status": "incomplete",
+  "reason": "MATLAB step exceeded its predeclared 305-minute time limit",
+  "workflow_run": 36281531930,
+  "job_id": 108514805763,
+  "code_commit": "effe493390a4bf138d4216d5c360ea55b33f8f85",
+  "artifact_id": 10924471255,
+  "artifact_sha256": "5fa06201703450ed0e987780d7f47bedcda2546a8d90336344afe27a205713f3",
+  "artifact_expires_at": "2026-12-26T00:07:15Z",
+  "parquet_preparation_seconds": 185.715946,
+  "verified_official_source": true,
+  "partitions": {
+    "train": {
+      "available_rows": 1211000,
+      "selected_rows": 1211000,
+      "source_sha256": "443b452d5ecaf959a1e6f975736cce0a2034a5e39a1e564e4427a004c3b258e9",
+      "class_counts": [
+        605523,
+        605477
+      ]
+    },
+    "val": {
+      "available_rows": 403000,
+      "selected_rows": 10000,
+      "source_sha256": "3abe6b0b7d98392695d1fcdd5486a6d4d886c285c4a05d547ac8525b60aaccd6",
+      "class_counts": [
+        4840,
+        5160
+      ]
+    },
+    "test": {
+      "available_rows": 404000,
+      "selected_rows": 404000,
+      "source_sha256": "cb799b78ba28c58e47616948261012bd9c74fd367a6a37ee11ac8e0b7e2b4859",
+      "class_counts": [
+        201914,
+        202086
+      ]
+    }
+  },
+  "training_started": false,
+  "training_epochs_completed": 0,
+  "test_predictions_available": false,
+  "accuracy": null,
+  "auc": null,
+  "cpu_count": 4,
+  "memory_total_kib": 16372468,
+  "disk_free_bytes_before_run": 84344365056,
+  "tall_evaluation_reported_seconds": 1128,
+  "last_tall_completion_utc": "2026-09-27T00:36:05.153699Z",
+  "timeout_utc": "2026-09-27T05:18:56.973775Z",
+  "last_persisted_stage": "parquet",
+  "diagnosis": "Tall evaluation reported completion, but the first training image partition never passed coverage validation before timeout. Final write bookkeeping versus datastore construction/validation cannot be separated from the original logs."
+}

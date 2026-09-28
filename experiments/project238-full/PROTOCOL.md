@@ -50,3 +50,17 @@ remains unrun unless separately executed and verified. If execution fails or
 exceeds the budget, retain the actual cause and completed stage measurements as
 a concrete resource limitation; do not substitute a small-demo extrapolation
 for an observed full-data result.
+
+## Revision recorded 28 September 2026, before the second attempt
+
+The first attempt timed out before training; preserve its failed outcome in
+`attempt1.json`. Cache the datastore file list once during row validation and
+add timing checkpoints to localize any remaining delay. The pixel transform,
+full-source selections, one-epoch fit, seed and batch size remain unchanged.
+
+First validate the revised path with 100,000 training, 1,000 validation and
+1,000 test rows, one epoch and batch size 100. Its MATLAB step is limited to
+30 minutes; record predictions and independently verify the metrics. This probe
+is not the full-source result. A full run then retains the original 305-minute
+MATLAB limit. Full runs occur only on explicit workflow dispatch or opening a
+dedicated full-run pull request; publishing later evidence does not retrain it.
