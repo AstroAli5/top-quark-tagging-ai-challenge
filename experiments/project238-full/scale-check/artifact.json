@@ -1,0 +1,17 @@
+{
+  "workflow_run": 36388169653,
+  "run_attempt": 2,
+  "job_id": 108820459016,
+  "artifact_id": 10955491659,
+  "artifact_sha256": "0f6bb73e3f7d9fbe42d9bae86d886e0f13f522c6a64ac31055342530f993c017",
+  "expires_at": "2026-12-27T06:56:47Z",
+  "branch_commit": "648a947cc447573fa408ecfee52feb32299c1413",
+  "executed_merge_commit": "eadccd50920a234807b5de0a6efe341949878fa6",
+  "training_iterations_completed": 1000,
+  "training_epochs_completed": 1,
+  "training_stop_reason": "Max epochs completed",
+  "training_image_write_seconds_rounded": 66.5,
+  "training_image_datastore_validation_seconds_rounded": 3.3,
+  "log_measurement_note": "Rounded stage values and completed iterations transcribed from the linked MATLAB job log.",
+  "retry_note": "Attempt 1 failed during MATLAB installation before project code ran; rerunning the failed job succeeded."
+}

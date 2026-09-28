@@ -23,7 +23,7 @@ The original diagnostics archive is identified by ID, SHA-256 and expiry in the
 record. The original logs do not distinguish final write bookkeeping from
 image-datastore construction and validation.
 
-## Repair under validation
+## Repair validated on 100,000 training rows
 
 The row-validation loop previously requested `ds.Files` for every jet. The
 repair retrieves this complete datastore property once, then indexes the local
@@ -31,7 +31,14 @@ list. Repeated property access is a suspected scaling bottleneck; the original
 logs alone do not establish its share of the delay.
 
 New timings separate image-writing return, datastore opening, row parsing and
-completed validation. A separately labelled 100,000-training-row, one-epoch
-check must pass before another full-source attempt. Its validation and test
-prefixes each contain 1,000 rows. These execution probes do not establish model
+completed validation. The [100,000-training-row check](scale-check/) passed on
+28 September: image preparation took 73.28 seconds, training took 124.94 seconds,
+and all 1,000 training iterations completed. Opening and validating the training
+datastore took 3.3 seconds. All 1,000 selected test predictions passed independent
+checks: accuracy 90.80%, AUC 0.966324.
+
+This validates the repair at the measured subset size and supports a full retry.
+It does not establish a speedup factor relative to the old full-data attempt,
+which used more rows and did not record these internal timings. Full-source
+training has not yet completed. These execution probes do not establish model
 convergence, multi-seed uncertainty or reviewer acceptance.
