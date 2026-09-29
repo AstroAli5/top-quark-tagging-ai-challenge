@@ -1,0 +1,6 @@
+{
+  "partition": "test",
+  "expectedRows": 404000,
+  "stage": "complete",
+  "elapsedSeconds": 310.481507
+}

@@ -7,6 +7,7 @@ on:
       - 'src/bigdata/**'
       - 'src/core/**'
       - 'run_project238.m'
+      - 'run_submission.m'
       - 'project238Config.m'
       - 'scripts/prepare_parquet.py'
       - 'scripts/verify_project238.py'
@@ -46,8 +47,7 @@ jobs:
         with:
           command: >-
             pyenv(Version=fullfile(getenv('pythonLocation'),'bin','python'),ExecutionMode="OutOfProcess");
-            verify_results;
-            summarize_matlab('experiments/official-study','results/matlab-summary');
+            run_submission;
             cfg=project238Config;
             cfg.trainCount=2000; cfg.validationCount=500; cfg.testCount=1000;
             cfg.epochs=1; cfg.dataDir=fullfile(pwd,'data','project238_demo');

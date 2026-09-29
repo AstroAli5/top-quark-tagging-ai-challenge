@@ -1,0 +1,10 @@
+{
+  "cpu_count": 4,
+  "platform": "Linux-6.8.0-1064-azure-x86_64-with-glibc2.35",
+  "meminfo": "MemTotal:       16371456 kB\nMemFree:         4053660 kB\nMemAvailable:   15305716 kB\nBuffers:          242760 kB\nCached:         10736200 kB\nSwapCached:            0 kB\nActive:           767228 kB\nInactive:       10496236 kB\nActive(anon):     342936 kB\nInactive(anon):        0 kB\nActive(file):     424292 kB\nInactive(file): 10496236 kB\nUnevictable:       47112 kB\nMlocked:           44040 kB\nSwapTotal:       3145724 kB\nSwapFree:        3145724 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:           1189496 kB\nWriteback:         22912 kB\nAnonPages:        331700 kB\nMapped:           368912 kB\nShmem:             49360 kB\nKReclaimable:     677444 kB\nSlab:             833884 kB\nSReclaimable:     677444 kB\nSUnreclaim:       156440 kB\nKernelStack:        4032 kB\nPageTables:         6088 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:    11331452 kB\nCommitted_AS:    2138940 kB\nVmallocTotal:   13743895347199 kB\nVmallocUsed:       38292 kB\nVmallocChunk:          0 kB\nPercpu:             2496 kB\nHardwareCorrupted:     0 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:         0 kB\nFilePmdMapped:         0 kB\nUnaccepted:            0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:      132224 kB\nDirectMap2M:     4057088 kB\nDirectMap1G:    14680064 kB\n",
+  "disk_bytes": {
+    "total": 155897610240,
+    "used": 71536873472,
+    "free": 84343959552
+  }
+}

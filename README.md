@@ -5,11 +5,11 @@
 A MATLAB project by **Ali Mohamed**, developed for [Challenge Project 238](docs/PROJECT238.md).
 
 **Status:** the author’s submitted version was not accepted. The review identified
-missing MATLAB big-data steps. The new data route now passes a real-data
-demonstration and MATLAB tests. The [first full-source attempt](experiments/project238-full/)
-timed out before training; its repair now passes a [100k scaling check](experiments/project238-full/scale-check/).
-Full-source training is still unverified.
-No acceptance is claimed.
+missing MATLAB big-data steps. The repaired route now completes a
+[verified one-epoch run](experiments/project238-full/) on **all 1,211,000 training
+and 404,000 test jets**: accuracy **90.23%**, AUC **0.97395**. Tests and independent
+prediction checks pass. This establishes full-data execution; a longer,
+multi-seed full-data study and reviewer acceptance remain unconfirmed.
 
 **Question:** how do an image CNN and a particle GraphSAGE model respond when the
 same jets have their measured momenta perturbed?
@@ -23,7 +23,8 @@ Adit Shah's 2025 winning project, with attribution.
 | --- | --- |
 | See the MATLAB pictures and main findings | [Figure gallery](docs/FIGURES.md) · [Results](docs/RESULTS.md) |
 | Understand the project or present it | [Student walkthrough](docs/WALKTHROUGH.md) |
-| Run the required MATLAB data workflow | `run_project238` below · [Verified small demonstration](experiments/project238-demo/) |
+| Check every reviewer request before resubmitting | [Submission checklist and remaining actions](docs/SUBMISSION_CHECKLIST.md) |
+| Run the required MATLAB data workflow | `run_project238` below · [Verified full-source run](experiments/project238-full/) · [Small demonstration](experiments/project238-demo/) |
 | Run the two core models | The short instructions below |
 | Reproduce or extend the research | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Next experiments](docs/NEXT_EXPERIMENTS.md) |
 | Inspect the optional quantum comparison or larger-data controls | [Measured Qiskit pilot](experiments/quantum-pilot/) · [Scaling](docs/SCALING.md) |
@@ -47,7 +48,8 @@ The reference has the highest clean score. GraphSAGE has the highest AUC under
 
 ![MATLAB analysis of the three-model study](experiments/official-study/matlab_study_summary.png)
 
-MATLAB generated this chart and its summary tables. Clean evaluation uses
+MATLAB generated this accuracy/AUC/noise chart and its summary tables, including
+[paired seed comparisons](experiments/official-study/paired_summary_matlab.csv). Clean evaluation uses
 **404,000 test jets**; noise evaluation uses **10,000**; both use three training
 seeds. Noise repeats are averaged within each fitted seed. The [gallery](docs/FIGURES.md)
 labels the origin and experiment behind every available figure.
@@ -68,14 +70,19 @@ tie-aware ROC calculation is available without it.
 Clone or download this repository and run in MATLAB:
 
 ```matlab
-verify_results
-summarize_matlab
+run_submission
 ```
 
-The [included seed-101 CNN and 256-jet sample](checkpoints/) require no extra
-data download or retraining. The first command verifies their hashes and restores
-the saved CNN predictions. Its printed scores describe only that small test sample.
-The second command makes the study summary tables and figure in MATLAB.
+The [included seed-101 CNN, GraphSAGE, reference and 256-jet sample](checkpoints/) require no extra
+data download or retraining. This single reviewer command verifies their hashes,
+restores all three models' predictions, and exports MATLAB accuracy/AUC/noise figures,
+seed confidence intervals and paired model comparisons. The restored model scores
+describe the 256-jet sample; the separate study tables summarize the recorded
+full-test results across three training seeds. They are clearly labelled.
+Use `verify_results("all")` or `summarize_matlab` separately for either part.
+The command prints its elapsed time. Model files are included in normal clones;
+no Git LFS or Actions-artifact download is needed. See the
+[verification details](docs/SUBMISSION_CHECKLIST.md#quick-reviewer-route).
 
 ## Run the MATLAB big-data route
 
@@ -105,11 +112,14 @@ run_project238(cfg)
 ```
 
 The unmodified `project238Config` selects all 1,211,000 training rows, 10,000
-validation rows and all 404,000 test rows for 12 epochs. This configuration is an
-execution target, **not a claim that a full-data result has been completed**.
-Use the [requirements and validation record](docs/PROJECT238.md) for actual status.
-CPU is supported. The full route writes many image files and needs substantial
-disk/time; resources will be measured rather than assumed from the old MAT route.
+validation rows and all 404,000 test rows for 12 epochs. The verified full-source
+run used **one epoch and batch size 100**; the 12-epoch default remains unrun.
+Its CPU measurements were 20.61 minutes for image preparation, 35.32 minutes for
+training, and 4.76 GiB MATLAB-process peak memory, with a separate 0.47 GiB Python
+peak. These are measured conditions, not minimum hardware requirements.
+See the [full result and reproduction command](experiments/project238-full/) and
+[requirements map](docs/PROJECT238.md). The route writes many image files and
+needs substantial disk/time.
 Existing fitted output folders are protected from accidental overwriting.
 
 The [original CNN/GraphSAGE stages](docs/WALKTHROUGH.md) remain available through

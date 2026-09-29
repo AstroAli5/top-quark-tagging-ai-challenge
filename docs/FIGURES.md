@@ -5,14 +5,26 @@ large evaluation can give different rankings; their pictures are not interchange
 
 ## Main study summary — verified MATLAB export
 
-MATLAB recomputed the 50k study's means, training-seed standard deviations and
-Student-t intervals from the recorded per-seed measurements. Python/SciPy
-independently checked the tables. Clean AUC uses all 404,000 test jets; noise AUC
+MATLAB recomputed the 50k study's means, training-seed standard deviations,
+Student-t intervals and paired seed differences from the recorded per-seed
+measurements. Python/SciPy independently checked the tables. Clean accuracy
+and clean AUC use all 404,000 test jets; noise AUC
 uses the first 10,000. Error bars below are seed SD across three fits.
 
 ![MATLAB study summary](../experiments/official-study/matlab_study_summary.png)
 
 [Reproduction and verification](../experiments/official-study/README.md#matlab-analysis-and-figure).
+
+## Required data workflow — verified full-source MATLAB run
+
+One epoch on **all 1,211,000 training jets**, 10,000 validation jets and
+**all 404,000 official test jets**, seed 101, CPU. MATLAB exported this ROC and
+confusion matrix; saved predictions passed independent checks. This run proves
+full-source execution, not convergence or a multi-seed architecture comparison.
+
+![MATLAB full-source datastore CNN](../experiments/project238-full/attempt2/matlab_evaluation.png)
+
+[Scores, resource measurements, limitations and verification](../experiments/project238-full/).
 
 ## Required data workflow — small verified MATLAB demonstration
 

@@ -1,9 +1,22 @@
 {
   "verified": true,
-  "workflow_run": 36280816685,
-  "artifact_id": 10919130447,
-  "artifact_sha256": "d915e430fc705fc24edf6697853b7d0c265c674ec1a8b57336a6de32a3173cf0",
-  "code_commit": "b62d8676acd6867ac397e7605bba176db28081e9",
+  "workflow_run": 36425844137,
+  "job_id": 108939470310,
+  "artifact_id": 10971543339,
+  "artifact_sha256": "ac25483f1a19aebc7dd2832cb38ee5ac24c5c9c1b041daf69a427cf454124b8f",
+  "code_commit": "0034412e0f442d838fe42af276d41c82dfadf6cc",
   "renderer": "MATLAB R2024a",
-  "independent_recheck": "SciPy Student-t ppf, sample SD and Pandas grouped means; all table values agree within 2e-14. Error bars are seed SD, not confidence intervals."
+  "independent_recheck": "SciPy Student-t ppf, sample SD, matched-seed differences and Pandas grouped means; original study inputs unchanged.",
+  "maximum_absolute_table_difference": 4.440892098500626e-16,
+  "paired_model_comparisons": 3,
+  "quick_entry_seconds_in_fresh_matlab_process": 11.52,
+  "quick_entry_scope": "Included seed-101 CNN restoration on 256 test jets, followed by summary of recorded full-test study measurements; no retraining or new data download.",
+  "matlab_tests_passed": 19,
+  "python_tests_passed": 20,
+  "outputs_sha256": {
+    "paired_summary_matlab.csv": "e180066097977b4e7375127a2dbb7a2d98c49298dbdddda690b99775dc319117",
+    "clean_summary_matlab.csv": "e89ac8fab4163f06209a9abc41601a4c70f1b175949d170c74bd1497d0aae095",
+    "matlab_study_summary.png": "9dbfc5e9ba48e17468bb703e9569aeb2ea4d13c8d02f655f913de4978c04c868",
+    "noise_per_seed_matlab.csv": "47908d8731afc385fa5eda69896005d0f42c090f6ee29169f8dfa7e13ece2faf"
+  }
 }

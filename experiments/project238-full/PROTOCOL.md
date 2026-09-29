@@ -64,3 +64,14 @@ First validate the revised path with 100,000 training, 1,000 validation and
 is not the full-source result. A full run then retains the original 305-minute
 MATLAB limit. Full runs occur only on explicit workflow dispatch or opening a
 dedicated full-run pull request; publishing later evidence does not retrain it.
+
+## Second full-source attempt authorized for execution, 28 September 2026
+
+The required 100k scaling check passed in workflow 36388169653, attempt 2.
+Its complete predictions, independently checked metrics, timings and MATLAB
+figure are recorded under `scale-check/`. The implementation and evidence were
+merged in PR #8. Opening the dedicated `codex/project238-full-retry-2` pull
+request starts the second full-source attempt after the workflow's small and
+100k checks. No model, preprocessing, selection, seed, epoch count, batch size
+or timeout changes are introduced for this retry. Record its actual outcome
+separately from the failed first attempt; do not replace `attempt1.json`.

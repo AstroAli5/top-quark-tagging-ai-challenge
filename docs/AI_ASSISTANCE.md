@@ -53,3 +53,10 @@ acknowledge the work. Tests executed by an assistant do not demonstrate the
 author's own understanding. No such understanding or organizer acceptance is
 claimed here. The Parquet/tall/datastore workflow, quick checkpoint verifier,
 MATLAB reporting and associated tests also received substantial Codex assistance.
+
+On 28 September, Codex diagnosed the full-source timeout, implemented cached
+datastore-file validation and timing checkpoints, and ran the 100k probe and
+second full-source CPU attempt. Codex independently checked saved predictions,
+metrics, source identities and resource evidence, then documented the successful
+one-epoch full-source result and its remaining limits. This work is not presented
+as unaided student implementation or as organizer acceptance.
