@@ -1,9 +1,10 @@
-# Project status — 28 September 2026
+# Project status — 29 September 2026
 
 The author supplied a review of their **MATLAB Challenge Project 238** submission.
 It was not accepted at that time. The review identifies missing MATLAB big-data
 steps and other repairs; it invites discussion but does not promise acceptance
-following changes. [Specific requirements and gaps](PROJECT238.md).
+following changes. [Specific requirements and gaps](PROJECT238.md) and
+[one-by-one email/submission checklist](SUBMISSION_CHECKLIST.md).
 
 Earlier documentation incorrectly stated that no submission existed and focused
 on the closed 2025 AI Challenge, a different event. The author submitted to the
@@ -22,7 +23,8 @@ Project Hub; the assistant did not make that submission or contact the reviewers
 
 These results were checked against saved predictions and provenance. Historical
 results remain unchanged. The current check suite contains 20 Python tests
-(including four optional quantum checks) and 18 MATLAB tests.
+(including four optional quantum checks) and 19 MATLAB tests, all passing in
+[the reviewer-update test run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36425844079).
 
 ## Verified response to the review
 
@@ -45,14 +47,18 @@ Saved predictions, source labels, row IDs and model hash passed independent
 checks. MATLAB generated the ROC/confusion-matrix figure in the central gallery.
 
 The original CNN checkpoint and a 256-jet verification sample are included in
-Git. `verify_results` needs no training or data download. CI also restores the
+Git. `run_submission` verifies this checkpoint and recreates the MATLAB study
+summary without training or a data download. It completed in 11.52 seconds in a
+fresh MATLAB process on the runner, excluding MATLAB startup. CI also restores the
 other two seed-101 models from their existing public artifacts; all three had
 zero score difference on the latest verification run. Their permanent Git
 copies still await upload approval.
 
-`summarize_matlab` now computes and exports the original study's statistics and
+`summarize_matlab` now computes and exports the original study's means, sample
+SDs, Student-t intervals, matched-seed accuracy/AUC differences and
 [summary figure](../experiments/official-study/matlab_study_summary.png) in MATLAB.
-Those tables were independently checked. Prediction execution settings, local
+Those tables were independently checked against SciPy/Pandas; the maximum
+absolute difference was 4.45e-16. Prediction execution settings, local
 noise/explanation random streams, release checks, JVM handling and vectorized
 image creation are covered by the passing MATLAB suite.
 

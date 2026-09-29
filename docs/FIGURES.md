@@ -5,9 +5,10 @@ large evaluation can give different rankings; their pictures are not interchange
 
 ## Main study summary — verified MATLAB export
 
-MATLAB recomputed the 50k study's means, training-seed standard deviations and
-Student-t intervals from the recorded per-seed measurements. Python/SciPy
-independently checked the tables. Clean AUC uses all 404,000 test jets; noise AUC
+MATLAB recomputed the 50k study's means, training-seed standard deviations,
+Student-t intervals and paired seed differences from the recorded per-seed
+measurements. Python/SciPy independently checked the tables. Clean accuracy
+and clean AUC use all 404,000 test jets; noise AUC
 uses the first 10,000. Error bars below are seed SD across three fits.
 
 ![MATLAB study summary](../experiments/official-study/matlab_study_summary.png)

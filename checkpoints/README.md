@@ -23,6 +23,10 @@ It also recreates the full study summary tables, paired seed comparisons, and
 accuracy/AUC/noise figure in MATLAB. Call `verify_results` or `summarize_matlab`
 separately if only one part is needed.
 
+The complete command took **11.52 seconds**, excluding MATLAB startup, in a
+fresh process on the [MATLAB R2024a runner](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36425844137).
+Every restored CNN score matched exactly. Runtime depends on the machine.
+
 [File identities and scope](manifest.json). The GraphSAGE and reference weights, and the other seeds, remain available
 through the original study's artifact records. The sample is from the
 [Top Quark Tagging Reference Dataset](https://doi.org/10.5281/zenodo.2603256)

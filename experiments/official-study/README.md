@@ -36,11 +36,21 @@ and their SHA-256 digests.
 
 Run `summarize_matlab` from the repository root to recreate the summary directly
 in MATLAB. [The MATLAB figure](matlab_study_summary.png),
-[clean summary](clean_summary_matlab.csv), and
+[clean summary](clean_summary_matlab.csv),
+[matched-seed comparisons](paired_summary_matlab.csv), and
 [noise means within each seed](noise_per_seed_matlab.csv) are committed here.
 [Independent verification](matlab_summary_verification.json) checked every
-mean, sample SD, Student-t interval and grouped noise mean against SciPy/Pandas.
-The figure shows seed SD, while the table also contains 95% seed intervals.
+mean, sample SD, Student-t interval, matched-seed difference and grouped noise
+mean against SciPy/Pandas. The maximum absolute difference was 4.45e-16.
+The figure shows clean accuracy, clean AUC and noise AUC with seed SD error bars;
+the tables also contain 95% seed intervals. Paired comparisons require matching
+seed labels and report both accuracy and AUC differences.
+
+The single reviewer command `run_submission` first restores the included CNN
+on 256 test jets, then runs this summary. It took 11.52 seconds in a fresh MATLAB
+process on the [verified runner](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36425844137),
+excluding MATLAB startup. The sample check and recorded full-study summary are
+labelled separately; no full-test inference or training is performed by this command.
 
 ### Prediction-level recalculation
 

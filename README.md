@@ -23,6 +23,7 @@ Adit Shah's 2025 winning project, with attribution.
 | --- | --- |
 | See the MATLAB pictures and main findings | [Figure gallery](docs/FIGURES.md) · [Results](docs/RESULTS.md) |
 | Understand the project or present it | [Student walkthrough](docs/WALKTHROUGH.md) |
+| Check every reviewer request before resubmitting | [Submission checklist and remaining actions](docs/SUBMISSION_CHECKLIST.md) |
 | Run the required MATLAB data workflow | `run_project238` below · [Verified full-source run](experiments/project238-full/) · [Small demonstration](experiments/project238-demo/) |
 | Run the two core models | The short instructions below |
 | Reproduce or extend the research | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Next experiments](docs/NEXT_EXPERIMENTS.md) |
@@ -47,7 +48,8 @@ The reference has the highest clean score. GraphSAGE has the highest AUC under
 
 ![MATLAB analysis of the three-model study](experiments/official-study/matlab_study_summary.png)
 
-MATLAB generated this chart and its summary tables. Clean evaluation uses
+MATLAB generated this accuracy/AUC/noise chart and its summary tables, including
+[paired seed comparisons](experiments/official-study/paired_summary_matlab.csv). Clean evaluation uses
 **404,000 test jets**; noise evaluation uses **10,000**; both use three training
 seeds. Noise repeats are averaged within each fitted seed. The [gallery](docs/FIGURES.md)
 labels the origin and experiment behind every available figure.
@@ -78,6 +80,9 @@ seed confidence intervals and paired model comparisons. The restored model score
 describe the 256-jet sample; the separate study tables summarize the recorded
 full-test results across three training seeds. They are clearly labelled.
 Use `verify_results` or `summarize_matlab` separately for either part.
+The complete command took **11.52 seconds** on the verified MATLAB runner,
+excluding MATLAB startup. All **19 MATLAB and 20 Python tests** passed;
+[verification details](docs/SUBMISSION_CHECKLIST.md#quick-reviewer-route).
 
 ## Run the MATLAB big-data route
 

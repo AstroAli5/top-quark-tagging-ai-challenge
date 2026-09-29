@@ -8,6 +8,8 @@ The author supplied a review email on 26 September: the current submission was
 not accepted. The corrections below track its technical requests. This is not
 an acceptance claim, a new submission, or a promise that revisions will qualify.
 The original seven research stages are not the seven steps in this brief.
+The [submission checklist](SUBMISSION_CHECKLIST.md) tracks every email request,
+its verification evidence and the remaining publication actions.
 
 | Brief step | Current evidence or gap |
 | --- | --- |
@@ -35,7 +37,7 @@ but do not resolve these MATLAB workflow requirements. Their results remain in
 ## Verified repairs
 
 The [small real-data run](../experiments/project238-demo/) and
-[18-test MATLAB suite](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36280816690)
+[19-test MATLAB suite](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36425844079)
 pass. The subsequent [100k execution check](../experiments/project238-full/scale-check/)
 also passed, including independent verification of all 1,000 selected test jets.
 The [full-source retry](../experiments/project238-full/) then passed: one epoch
@@ -43,12 +45,14 @@ on all training rows and independently checked predictions on every official
 test row. This establishes the data route at full size, not model convergence,
 student understanding, or reviewer acceptance.
 
-- `verify_results` uses the included seed-101 CNN checkpoint and 256 official
+- `run_submission` calls `verify_results` with the included seed-101 CNN checkpoint and 256 official
   test jets, checking every restored score. The other two models are available
   through the original Actions artifacts; their permanent Git copies await approval. It does not substitute sample scores for
-  full-test or three-seed means.
+  full-test or three-seed means. The combined verification and MATLAB summary
+  completed in 11.52 seconds on the runner, excluding MATLAB startup.
 - `summarize_matlab` computes the original study mean/SD, Student-t intervals,
-  and noise curves in MATLAB. Noise repeats are averaged within training seed.
+  matched-seed accuracy/AUC differences, and clean accuracy/AUC and noise curves
+  in MATLAB. Noise repeats are averaged within training seed.
   [Exported figure and independent verification](../experiments/official-study/matlab_summary_verification.json).
 - `computeROC` uses `rocmetrics` when Statistics and Machine Learning Toolbox
   is available, with the tested rank-based fallback for Deep Learning Toolbox
