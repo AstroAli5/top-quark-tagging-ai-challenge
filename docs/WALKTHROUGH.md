@@ -94,8 +94,9 @@ For more detail, read [Concepts](CONCEPTS.md) and the
 
 ## The big-data route added after review
 
-Start with `verify_results`: it restores saved models on a small official sample,
-so you can check predictions before attempting another training run.
+Start with `run_submission`: it restores all three included seed-101 models on a
+small official sample and recreates the MATLAB study report, so you can check
+predictions before attempting another training run.
 
 The new training route has four data-handling steps:
 

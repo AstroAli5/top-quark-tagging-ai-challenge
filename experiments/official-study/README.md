@@ -46,8 +46,9 @@ The figure shows clean accuracy, clean AUC and noise AUC with seed SD error bars
 the tables also contain 95% seed intervals. Paired comparisons require matching
 seed labels and report both accuracy and AUC differences.
 
-The single reviewer command `run_submission` first restores the included CNN
-on 256 test jets, then runs this summary. It took 11.52 seconds in a fresh MATLAB
+The single reviewer command `run_submission` now restores all three included
+seed-101 models on 256 test jets, then runs this summary. Its earlier CNN-only
+version took 11.52 seconds in a fresh MATLAB
 process on the [verified runner](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36425844137),
 excluding MATLAB startup. The sample check and recorded full-study summary are
 labelled separately; no full-test inference or training is performed by this command.

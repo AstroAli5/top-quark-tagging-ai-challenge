@@ -60,11 +60,11 @@ function testTallImagesAndDatastoreTraining(testCase)
 end
 
 function testShippedCheckpointPredictionsAndMatlabSummary(testCase)
-    result = verify_results("all");
-    verifySize(testCase,result,[3 3]);
     folder = tempname; mkdir(folder); cleanup = onCleanup(@() rmdir(folder,'s'));
     input = fullfile(testCase.TestData.root,'experiments','official-study');
     review = run_submission(folder);
+    verifySize(testCase,review.sample,[3 3]);
+    verifyEqual(testCase,review.sample.Model,["CNN";"GraphSAGE";"ResNeXt-SE reference"]);
     summary = review.study;
     cnn = summary(summary.Model=="CNN",:);
     verifyEqual(testCase,cnn.AccuracyMean,0.9105866336633662,'AbsTol',1e-12);

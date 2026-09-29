@@ -45,11 +45,11 @@ on all training rows and independently checked predictions on every official
 test row. This establishes the data route at full size, not model convergence,
 student understanding, or reviewer acceptance.
 
-- `run_submission` calls `verify_results` with the included seed-101 CNN checkpoint and 256 official
-  test jets, checking every restored score. The other two models are available
-  through the original Actions artifacts; their permanent Git copies await approval. It does not substitute sample scores for
-  full-test or three-seed means. The combined verification and MATLAB summary
-  completed in 11.52 seconds on the runner, excluding MATLAB startup.
+- `run_submission` calls `verify_results("all")` with the included seed-101 CNN,
+  GraphSAGE and reference checkpoints and 256 official test jets, checking every
+  restored score. All three models are included in Git, with verified hashes
+  and no artifact-download requirement. It does not substitute sample scores
+  for full-test or three-seed means. The command also recreates the MATLAB summary.
 - `summarize_matlab` computes the original study mean/SD, Student-t intervals,
   matched-seed accuracy/AUC differences, and clean accuracy/AUC and noise curves
   in MATLAB. Noise repeats are averaged within training seed.

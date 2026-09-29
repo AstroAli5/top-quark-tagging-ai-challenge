@@ -46,13 +46,12 @@ one epoch on all 1,211,000 training jets and tested all 404,000 test jets. All
 Saved predictions, source labels, row IDs and model hash passed independent
 checks. MATLAB generated the ROC/confusion-matrix figure in the central gallery.
 
-The original CNN checkpoint and a 256-jet verification sample are included in
-Git. `run_submission` verifies this checkpoint and recreates the MATLAB study
-summary without training or a data download. It completed in 11.52 seconds in a
-fresh MATLAB process on the runner, excluding MATLAB startup. CI also restores the
-other two seed-101 models from their existing public artifacts; all three had
-zero score difference on the latest verification run. Their permanent Git
-copies still await upload approval.
+The original seed-101 CNN, GraphSAGE and reference checkpoints and a 256-jet
+verification sample are included in Git. `run_submission` verifies all three
+checkpoints and recreates the MATLAB study summary without training or a data
+download. The published files match the original manifest hashes. CI uses the
+included files directly, with no dependency on expiring checkpoint artifacts.
+The author approved permanent publication and the PR #9 merge on 29 September.
 
 `summarize_matlab` now computes and exports the original study's means, sample
 SDs, Student-t intervals, matched-seed accuracy/AUC differences and

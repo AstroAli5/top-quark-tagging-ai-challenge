@@ -6,10 +6,11 @@ completed on 29 September. This is a technical
 readiness audit, not organizer acceptance or a claim of student understanding.
 The email itself is not republished here.
 
-**Candidate:** PR #9, including the verified full-source result and the reviewer
-entry/reporting updates. The default `main` branch does not yet contain this
-complete candidate. The requested permanent GraphSAGE/reference checkpoint
-uploads and the PR merge still require explicit publication approval.
+**Repository package:** [PR #9](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/pull/9)
+tracks the verified full-source result, reviewer entry/reporting updates and all
+three included seed-101 checkpoints. The author approved permanent publication
+of the GraphSAGE/reference files and the merge on 29 September. The PR page
+records publication/merge status. No revised submission has been sent here.
 
 ## Each point in the email
 
@@ -19,7 +20,7 @@ uploads and the PR merge still require explicit publication approval.
 | `parquetDatastore` + tall preprocessing, without fitting every image in RAM | Satisfied | [`parquetJetsToImages`](../src/bigdata/parquetJetsToImages.m) transforms bounded tall blocks and writes floating-point TIFFs. The full run completed with a measured 4.76 GiB MATLAB peak and separate 0.47 GiB Python peak. |
 | Folder-labelled `imageDatastore` for training and testing | Satisfied | [`jetImageDatastore`](../src/bigdata/jetImageDatastore.m) reads signal/background labels, verifies row coverage, and supplies [`trainProject238`](../src/bigdata/trainProject238.m). `trainnet` and `minibatchpredict` consume datastores directly. |
 | At least one study using the full training dataset, or a measured subset justification | Satisfied | [Verified full-source study](../experiments/project238-full/): all 1,211,000 training jets, 10,000 validation jets, all 404,000 test jets, one epoch, seed 101; all 12,110 training iterations completed. |
-| Seed-101 CNN, GraphSAGE and reference weights, plus a quick verification command | Partly satisfied; publication remains | The CNN and 256-jet sample are in Git. All three models passed restored-prediction checks, but the other two permanent Git copies remain blocked. Existing artifact links expire and can require sign-in. [`verify_results("all")`](../verify_results.m) works when all three verified files are present. See [checkpoint instructions](../checkpoints/). |
+| Seed-101 CNN, GraphSAGE and reference weights, plus a quick verification command | Satisfied | All three original model files and the 256-jet sample are included in Git, with hashes checked against the original manifest. [`run_submission`](../run_submission.m) checks every restored probability for all three models, then recreates the MATLAB study report. CI uses included files directly. See [checkpoint instructions](../checkpoints/). |
 | Use `rocmetrics` and retain the tie-handling test | Satisfied with documented compatibility fallback | [`computeROC`](../src/core/computeROC.m) uses `rocmetrics` in the tested toolbox environment and a tested rank-based fallback otherwise. Pairwise/tie checks remain. Optional bootstrap analysis is not claimed. |
 | MATLAB statistics, paired seed differences and headline figures | Satisfied and independently verified | [`summarize_matlab`](../summarize_matlab.m) computes means, sample SD, Student-t intervals, matched-seed accuracy/AUC differences, and noise means within each fitted seed. The updated figure includes clean accuracy, clean AUC and noise AUC. Independent SciPy/Pandas recalculation agrees within 4.45e-16; [verification record](../experiments/official-study/matlab_summary_verification.json). |
 | Named `resnet18` variation | Not implemented; optional in the email | The custom ResNeXt-SE reference is not represented as a named ResNet18 implementation. This extension is excluded from the base submission's claims. |
@@ -29,7 +30,7 @@ uploads and the PR merge still require explicit publication approval.
 | Avoid changing the caller's random state in stages 6 and 7 | Satisfied | [`s6_robustness_test`](../src/pipeline/s6_robustness_test.m) and [`s7_explainability`](../src/pipeline/s7_explainability.m) use local `RandStream` instances; preservation is covered by MATLAB tests. |
 | Remove Java hashing or document the JVM requirement | Satisfied through the offered documentation option | The main README states the JVM requirement beside MATLAB R2024a; hashing gives a clear error under `-nojvm`. JVM-free operation is not claimed. |
 | Fix the release check and class-index length check | Satisfied | `run_all` uses `isMATLABReleaseOlderThan`; `predictWinnerReference` uses `isscalar`. |
-| Align the repository with Project 238 and acknowledge the actual submission | Satisfied in the candidate | README identifies Project 238; [seven-step map](PROJECT238.md), [status](PROJECT_STATUS.md), and [submission context](COMPETITIONS.md) acknowledge that the author submitted and received a rejection review. The assistant has not submitted or contacted reviewers. |
+| Align the repository with Project 238 and acknowledge the actual submission | Satisfied | README identifies Project 238; [seven-step map](PROJECT238.md), [status](PROJECT_STATUS.md), and [submission context](COMPETITIONS.md) acknowledge that the author submitted and received a rejection review. The assistant has not submitted or contacted reviewers. |
 
 ## Quick reviewer route
 
@@ -40,13 +41,15 @@ JVM, clone/download the repository and run this at the repository root:
 run_submission
 ```
 
-This loads the included original CNN, checks its checksum and every restored
-probability on 256 official test jets, then recreates the recorded study's
+This loads the included original CNN, GraphSAGE and reference, checks their
+checksums and every restored probability on 256 official test jets, then recreates the recorded study's
 MATLAB tables and figures. It needs no Python, new dataset download or retraining.
-Outputs are written to `results/matlab-summary/`. In a fresh MATLAB process on
-the CI runner, this command completed in **11.52 seconds**, excluding MATLAB
-startup. Every restored CNN probability matched exactly. This is a measured
-runner result, not a runtime guarantee for every machine.
+Outputs are written to `results/matlab-summary/`, and the command prints its
+elapsed time. Its earlier CNN-only version completed in **11.52 seconds** in a
+fresh MATLAB process on the runner, excluding startup; that measurement does
+not include the two models subsequently added to the default command. Runtime
+depends on the machine. Check the [current CI results](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml)
+for verification of the complete shipped bundle.
 
 The [test run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36425844079)
 passed **19 MATLAB tests and 20 Python tests** (including four quantum checks).
@@ -68,19 +71,17 @@ from those original three models. Its verified accuracy is 90.2267%, AUC
 | Public repository with MIT or BSD 2-Clause license | Public repository and root MIT license confirmed. |
 | Clear main entry point, setup and dependencies | `run_submission` is the quick reviewer entry; `run_project238` is the documented datastore training route. MATLAB/JVM/Python/toolbox requirements are in the README. |
 | Small input sample and expected outputs | The included sample is `checkpoints/quick_test.mat`, with source rows, reference probabilities and hashes. Figures, full reports and protocols are linked. |
-| Trained models can be loaded without fitting | Included CNN works now; permanent publication of the other two requested seed-101 checkpoints is still unresolved. |
-| Executable, tested MATLAB solution | Full-source execution passed; the updated entry/reporting code passed all 19 MATLAB and 20 Python checks. The quick command completed in 11.52 seconds on the runner. |
+| Trained models can be loaded without fitting | All three requested seed-101 models are included in Git and checked by `run_submission`, without downloading old artifacts or training. |
+| Executable, tested MATLAB solution | Full-source execution passed; the reviewer-entry/reporting suite contains 19 MATLAB and 20 Python checks. The current entry checks all three included models. |
 | Explain and acknowledge AI assistance | [Disclosure](AI_ASSISTANCE.md) is present. The author must personally understand and explain the solution; assistant-run tests cannot certify that. Use the [walkthrough](WALKTHROUGH.md). |
 | Submit through the Project 238 form using the original registration email | The official project page links the form. No revised form has been submitted here. The original registration details must be supplied by the author. |
 
 ## Remaining actions before resubmitting
 
-1. Publish the two requested historical model files permanently and merge the
-   reviewed candidate into `main`, after explicit approval for those actions.
-2. The author reviews the walkthrough, runs the quick command, and can explain
+1. The author reviews the walkthrough, runs the quick command, and can explain
    the input representation, split isolation, normalization, AUC, uncertainty,
    data-volume choice, AI assistance and remaining limitations.
-3. Use the original review thread to clarify their preferred reconsideration
+2. Use the original review thread to clarify their preferred reconsideration
    route if needed; the published instructions use the project submission form
    and the same email used at registration. The rejection email invites discussion
    but does not explicitly guarantee reconsideration or acceptance.

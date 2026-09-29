@@ -73,15 +73,15 @@ Clone or download this repository and run in MATLAB:
 run_submission
 ```
 
-The [included seed-101 CNN and 256-jet sample](checkpoints/) require no extra
+The [included seed-101 CNN, GraphSAGE, reference and 256-jet sample](checkpoints/) require no extra
 data download or retraining. This single reviewer command verifies their hashes,
-restores the saved CNN predictions, and exports MATLAB accuracy/AUC/noise figures,
+restores all three models' predictions, and exports MATLAB accuracy/AUC/noise figures,
 seed confidence intervals and paired model comparisons. The restored model scores
 describe the 256-jet sample; the separate study tables summarize the recorded
 full-test results across three training seeds. They are clearly labelled.
-Use `verify_results` or `summarize_matlab` separately for either part.
-The complete command took **11.52 seconds** on the verified MATLAB runner,
-excluding MATLAB startup. All **19 MATLAB and 20 Python tests** passed;
+Use `verify_results("all")` or `summarize_matlab` separately for either part.
+The command prints its elapsed time. Model files are included in normal clones;
+no Git LFS or Actions-artifact download is needed. See the
 [verification details](docs/SUBMISSION_CHECKLIST.md#quick-reviewer-route).
 
 ## Run the MATLAB big-data route

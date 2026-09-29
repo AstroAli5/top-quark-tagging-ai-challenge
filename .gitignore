@@ -15,4 +15,6 @@ __pycache__/
 
 # Small published reproducibility bundle
 !/checkpoints/seed-101/cnn_model.mat
+!/checkpoints/seed-101/graphsage_model.mat
+!/checkpoints/seed-101/winner_reference.mat
 !/checkpoints/quick_test.mat
