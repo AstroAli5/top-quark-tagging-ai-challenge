@@ -1,0 +1,32 @@
+{
+  "matlabVersion": "24.1.0.3303086 (R2024a) Update 9",
+  "products": [
+    {
+      "Name": "Deep Learning HDL Toolbox",
+      "Version": "24.1",
+      "Release": "(R2024a)",
+      "Date": "12-Jan-2024"
+    },
+    {
+      "Name": "Deep Learning Toolbox",
+      "Version": "24.1",
+      "Release": "(R2024a)",
+      "Date": "28-Dec-2023"
+    },
+    {
+      "Name": "MATLAB",
+      "Version": "24.1",
+      "Release": "(R2024a)",
+      "Date": "19-Nov-2023"
+    }
+  ],
+  "workflowRun": "36697779857",
+  "status": "blocked",
+  "hardwareExecuted": false,
+  "hdlGenerated": false,
+  "scope": "Processor-model estimate only; no physical FPGA or vendor synthesis tools",
+  "codeCommit": "d9e5e13c49bdaf4616fc4e6ced22866d358e8c05",
+  "checkpointSHA256": "a166fe022fcc1cd0c21be7628eaa6360ad67d75754a27db8084cc825371aa3fe",
+  "errorIdentifier": "dnnfpga:workflow:SupportPackageMissingShared",
+  "errorMessage": "Either the 'Deep Learning HDL Toolbox Support Package for Intel FPGA and SoC Devices' or the 'Deep Learning HDL Toolbox Support Package for Xilinx FPGA and SoC Devices' support package must be installed."
+}

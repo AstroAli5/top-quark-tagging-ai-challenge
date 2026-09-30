@@ -1,0 +1,34 @@
+{
+  "matlabVersion": "24.1.0.3303086 (R2024a) Update 9",
+  "products": [
+    {
+      "Name": "Deep Learning HDL Toolbox",
+      "Version": "24.1",
+      "Release": "(R2024a)",
+      "Date": "12-Jan-2024"
+    },
+    {
+      "Name": "Deep Learning Toolbox",
+      "Version": "24.1",
+      "Release": "(R2024a)",
+      "Date": "28-Dec-2023"
+    },
+    {
+      "Name": "MATLAB",
+      "Version": "24.1",
+      "Release": "(R2024a)",
+      "Date": "19-Nov-2023"
+    }
+  ],
+  "workflowRun": "36701925315",
+  "status": "estimated",
+  "hardwareExecuted": false,
+  "hdlGenerated": false,
+  "scope": "Processor-model estimate only; no physical FPGA or vendor synthesis tools",
+  "codeCommit": "9f77de9dfadbc3a10c979b4262e57c94d13f8709",
+  "checkpointSHA256": "a166fe022fcc1cd0c21be7628eaa6360ad67d75754a27db8084cc825371aa3fe",
+  "targetPlatform": "Xilinx Zynq UltraScale+ MPSoC ZCU102 Evaluation Kit",
+  "targetFrequencyMHz": 200,
+  "processorDataType": "single",
+  "estimatorAssumptions": "Toolbox model assumes dedicated programmable-logic DDR access; does not establish host preprocessing, transfer, contention or end-to-end latency."
+}

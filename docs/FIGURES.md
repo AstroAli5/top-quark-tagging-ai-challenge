@@ -218,3 +218,15 @@ The available images are exported research plots, not recordings of those window
 
 Python rendering from verified MATLAB predictions: 404,000 clean test jets,
 10,000 noise-test jets and three training seeds. [Report](../experiments/graph-edges/).
+
+## Named ResNet18 pilot, matched image inputs
+
+The optional comparison uses 10,000 training jets, 2,000 validation jets and
+10,000 test jets, three epochs and one seed. Both are MATLAB exports.
+
+| Compact CNN | Named ResNet18 |
+| --- | --- |
+| [ROC and confusion matrix](../experiments/resnet18-pilot/compact/matlab_evaluation.png) | [ROC and confusion matrix](../experiments/resnet18-pilot/resnet18/matlab_evaluation.png) |
+
+[Verified report and scope](../experiments/resnet18-pilot/). The shared figure
+title says CNN; the linked model folders distinguish the two architectures.

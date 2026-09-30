@@ -1,0 +1,77 @@
+name: Optional reviewer experiments
+
+on:
+  # The frozen study is already recorded. Refit explicitly, not on doc updates.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  resnet18:
+    name: Matched compact CNN and named ResNet18 pilot
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -r requirements.txt
+      - uses: actions/cache@v4
+        with:
+          path: data/*.h5
+          key: zenodo-2603256-official-v1
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: Deep_Learning_Toolbox Statistics_and_Machine_Learning_Toolbox
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: >-
+            pyenv(Version=fullfile(getenv('pythonLocation'),'bin','python'),ExecutionMode="OutOfProcess");
+            run_resnet18_study;
+      - name: Independently check both models against the official test rows
+        run: |
+          python scripts/verify_project238.py --run runs/resnet18-pilot/compact --raw-test data/test.h5
+          python scripts/verify_project238.py --run runs/resnet18-pilot/resnet18 --raw-test data/test.h5
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resnet18-pilot
+          path: runs/resnet18-pilot/
+          retention-days: 90
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: resnet18-pilot-reports
+          path: |
+            runs/resnet18-pilot/*/*.json
+            runs/resnet18-pilot/*/*.csv
+            runs/resnet18-pilot/*/*.png
+          retention-days: 90
+          if-no-files-found: warn
+
+  hdl:
+    name: HDL processor-model assessment (no hardware)
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: matlab-actions/setup-matlab@v3
+        with:
+          release: R2024a
+          products: >-
+            Deep_Learning_Toolbox Deep_Learning_HDL_Toolbox
+            Deep_Learning_HDL_Toolbox_Support_Package_for_Xilinx_FPGA_and_SoC_Devices
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: run_hdl_assessment;
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hdl-assessment
+          path: runs/hdl-assessment/
+          retention-days: 90
+          if-no-files-found: warn

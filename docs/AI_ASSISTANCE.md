@@ -60,3 +60,10 @@ second full-source CPU attempt. Codex independently checked saved predictions,
 metrics, source identities and resource evidence, then documented the successful
 one-epoch full-source result and its remaining limits. This work is not presented
 as unaided student implementation or as organizer acceptance.
+
+On 30 September, Codex added the seven-step table directly to the README,
+implemented and ran the named ResNet18 pilot with a matched compact CNN,
+attempted the HDL processor assessment, and prepared the revision response and
+reviewer practice guide. These additions retain the same disclosure: measured
+software execution does not demonstrate the author's personal understanding
+or establish organizer acceptance.

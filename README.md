@@ -100,6 +100,7 @@ protocol, measured results and verification evidence.
 | Larger training subset | Three core seeds at 100k jets; mean accuracy **91.63% CNN / 87.40% GraphSAGE**, evaluated on all 404k test jets | [Scaling study](experiments/scaling/) |
 | Model explanations | Feature shuffling and radial image occlusion for both the 50k and 100k core checkpoints; **51 independently checked perturbation measurements per study** | [50k explanations](experiments/explanations/) · [100k explanations](experiments/explanations-100k/) |
 | Graph-neighbor control | Matched three-seed comparison of six neighbors versus zero; edges improve clean AUC, while zero edges perform better at the strongest tested smearing | [Graph-edge study](experiments/graph-edges/) |
+| Named ResNet18 variation | Same images and fixed training settings as the compact CNN; 10k training jets, three epochs and one seed, with independently checked predictions | [Matched pilot](experiments/resnet18-pilot/) |
 | Quantum/classical pilot | Four-qubit Qiskit CPU simulation against matched linear/RBF baselines; the classical RBF model performs better | [Kernel comparison](experiments/quantum-pilot/) |
 
 ## Data pipeline and reproduction
@@ -114,7 +115,19 @@ partitions throughout:
 4. Evaluation saves probabilities, source row IDs, labels, configuration and hashes
    for independent checks.
 
-[Seven-step Project 238 map](docs/PROJECT238.md) ·
+### Seven-step Project 238 implementation
+
+| Project step | Implementation and evidence |
+| --- | --- |
+| 1. Learn MATLAB deep learning | [Student walkthrough](docs/WALKTHROUGH.md), model explanations and runnable examples; the author must be able to explain the code |
+| 2. Study the real-time top-quark example | [Official project brief and example](docs/PROJECT238.md); this CPU study does not claim real-time hardware deployment |
+| 3. Obtain the public dataset | [Official downloader](scripts/prepare_parquet.py), verified source checksums and separate train/validation/test manifests |
+| 4. Call Python from MATLAB to convert HDF5 to Parquet | [`run_project238`](run_project238.m) uses `pyrun` with bounded row blocks |
+| 5. Use Parquet datastore and tall preprocessing | [`parquetJetsToImages`](src/bigdata/parquetJetsToImages.m) writes lossless floating-point jet images in bounded blocks |
+| 6. Train a CNN in MATLAB | [`trainProject238`](src/bigdata/trainProject238.m) uses `trainnet`; [one complete epoch on 1,211,000 jets](experiments/project238-full/) is verified |
+| 7. Test using labelled image datastores | [`jetImageDatastore`](src/bigdata/jetImageDatastore.m) and `minibatchpredict`; saved scores cover all 404,000 official test rows and pass [independent checks](scripts/verify_project238.py) |
+
+[Project 238 requirements and review](docs/PROJECT238.md) ·
 [MATLAB, Colab and Qiskit setup](docs/PLATFORMS.md)
 
 <details>
@@ -191,8 +204,8 @@ above reproduce all three. Existing fitted outputs are protected from overwritin
 
 ## Verification and research scope
 
-The [verified implementation](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36529745938)
-passed **19 MATLAB tests and 20 Python tests**, including the optional quantum
+The [verified implementation](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36701925222)
+passed **20 MATLAB tests and 20 Python tests**, including the optional quantum
 checks. Tests cover data boundaries, probability mapping, tied-score AUC, graph
 batching, random-state preservation and execution of the data pipeline.
 Saved research predictions receive separate metric, source-row and checksum checks.
@@ -205,12 +218,17 @@ Interpret the results within their measured scope:
   representations and preprocessing make these comparisons of complete pipelines.
 - Synthetic smearing is a controlled stress test; explanation plots measure model
   sensitivity. Neither establishes a calibrated detector response or causal physics.
-- GPU, FPGA and quantum-hardware experiments remain unrun. The Qiskit result is a
-  CPU simulation with a stronger classical baseline.
+- GPU, FPGA deployment and quantum-hardware experiments remain unrun. The
+  [HDL processor assessment](experiments/hdl-assessment/) is a latency estimate,
+  not a physical measurement. The Qiskit result is a CPU simulation with a
+  stronger classical baseline.
 
 The original Project 238 submission was not accepted. The
 [submission checklist](docs/SUBMISSION_CHECKLIST.md) records the completed
-technical revisions, review history and remaining submission steps.
+technical revisions, review history and remaining submission steps. A
+[revision response](docs/REVIEW_RESPONSE.md) and
+[reviewer practice guide](docs/WALKTHROUGH.md#prepare-to-explain-the-revision-to-a-reviewer)
+are prepared; the revised submission has not been sent.
 
 ## Documentation and attribution
 

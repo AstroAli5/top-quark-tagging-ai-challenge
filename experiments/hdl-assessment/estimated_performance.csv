@@ -1,0 +1,11 @@
+Row,Latency(cycles),Latency(seconds),NumFrames,Total Latency(cycles),Frame/s
+Network,90629,0.000453145,1,90629,2206.7991
+____imageinput_norm_add,5520,2.76e-05,,,
+____imageinput_norm,3353,1.6765e-05,,,
+____conv_1,13697,6.8485e-05,,,
+____maxpool_1,13526,6.763e-05,,,
+____conv_2,17261,8.6305e-05,,,
+____maxpool_2,10346,5.173e-05,,,
+____conv_3,18157,9.0785e-05,,,
+____gap,8466,4.233e-05,,,
+____fc,303,1.515e-06,,,
