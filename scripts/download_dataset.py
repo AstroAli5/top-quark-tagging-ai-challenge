@@ -24,7 +24,8 @@ def verify(path, partition='train'):
             digest.update(block)
     expected_bytes, expected_md5 = PARTITIONS[partition]
     if Path(path).stat().st_size != expected_bytes or digest.hexdigest() != expected_md5:
-        raise ValueError("Dataset size/checksum does not match the published training file")
+        raise ValueError(
+            f"Dataset size/checksum does not match the published {partition}.h5 file: {path}")
 
 
 def download(destination, partition='train'):

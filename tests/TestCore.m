@@ -143,3 +143,29 @@ function testDatasetMismatchIsRejected(testCase)
     verifyError(testCase,@() verifyDatasetIds(a,b),'topquark:DatasetMismatch');
     verifyError(testCase,@() verifyDatasetIds(a,struct()),'topquark:DatasetMismatch');
 end
+
+function testToolboxPreflightExplainsWhatIsMissing(testCase)
+    % Both branches are forced, so this covers installations either way.
+    verifyError(testCase,@() requireToolboxes("restore",false,false),'topquark:Requirements');
+    verifyError(testCase,@() requireToolboxes("restore",true,true),'topquark:Requirements');
+    missing = '';
+    try
+        requireToolboxes("restore the saved models",false,false);
+    catch err
+        missing = err.message;
+    end
+    verifySubstring(testCase,missing,'Deep Learning Toolbox');
+    verifySubstring(testCase,missing,'restore the saved models');
+    % The message must name the toolbox-free alternative a reviewer can run.
+    verifySubstring(testCase,missing,'summarize_matlab');
+    old = '';
+    try
+        requireToolboxes("restore",true,true);
+    catch err
+        old = err.message;
+    end
+    verifySubstring(testCase,old,'R2024a');
+    % A satisfied environment returns quietly, whatever this session has.
+    requireToolboxes("restore",true,false);
+    requireToolboxes("",true,false);
+end

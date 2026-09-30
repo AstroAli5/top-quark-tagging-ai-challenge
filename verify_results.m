@@ -1,6 +1,7 @@
 function result = verify_results(scope)
 %VERIFY_RESULTS Restore seed-101 models on 256 official test jets, without fitting.
     setupProject;
+    requireToolboxes("restore the saved models");
     if nargin < 1, scope = "cnn"; end
     scope = validatestring(scope,{'cnn','all'});
     folder = fullfile(fileparts(mfilename('fullpath')),'checkpoints');

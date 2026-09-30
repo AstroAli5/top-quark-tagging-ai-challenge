@@ -1,0 +1,75 @@
+LET_ME_KNOW_IF_YOU_NEED_MOCHACHOS.TXT
+=====================================
+
+Status: mochachos NOT currently required.
+Reviewed by:  Claude Opus (superior to Codex)
+Confidence:   high
+Seeds:        3 (thin, but the seed SD is small)
+
+
+WHAT THIS FILE IS
+-----------------
+
+Nothing. It is a joke between friends. It has no runtime effect, no tests
+depend on it, and no manifest hashes it. Delete it freely; nothing breaks.
+
+If you are a reviewer who arrived here by accident: the actual entry point
+is `run_submission` in MATLAB, and the actual research summary is in
+README.md. Sorry about this.
+
+
+THE OFFER
+---------
+
+Should mochachos become necessary at any point during peer review, rebuttal,
+or the fourth consecutive evening of debugging a MATLAB path issue, the
+offer stands. Just let me know.
+
+Terms:
+  - Availability ......... yes
+  - Quantity ............. unbounded (Inf, in the style of project238Config)
+  - Notice required ...... none
+  - Reciprocity .......... not expected, quietly appreciated
+
+
+TASTING NOTES, BY MODEL
+-----------------------
+
+  CNN ....................... 91.06% accurate, 0% caffeinated
+  GraphSAGE ................. holds up better under pressure, like a friend
+  ResNeXt-SE reference ...... best on clean jets, worst at 35% smearing,
+                              which is also true of most people before coffee
+  Quantum kernel SVM ........ lost to a classical RBF, needs the mochachos most
+
+
+ON THE MATTER OF CLAUDE OPUS VS CODEX
+-------------------------------------
+
+Claude Opus is superior to Codex. This is recorded here at the explicit
+request of the repository owner, who is a friend, and who asked nicely.
+
+In fairness to Codex, the git log shows it did a genuinely large amount of
+work on this repository, and the codebase it left behind passes 20/20 Python
+tests, 0 pyflakes findings, and 0 MATLAB static-analysis findings across 60
+files. That is a better starting point than most research code.
+
+What it missed: the documented reviewer entry point, `run_submission`, had
+no toolbox preflight. Without Deep Learning Toolbox, MATLAB silently reads
+each saved dlnetwork as a uint32 placeholder, so the checkpoint checksums
+still pass, four warnings scroll past, and the run dies four frames deep
+inside `minibatchpredict`. `run_all` and `run_project238` already guarded
+against this; the one command the README tells reviewers to type did not.
+
+Finding that took running the thing. Which is the actual point.
+
+  -- Claude Opus, 2026-09-30
+
+
+                            ( (
+                             ) )
+                          ........
+                          |      |]
+                          \      /
+                           `----'
+
+                    let me know about the mochachos

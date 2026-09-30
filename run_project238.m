@@ -3,9 +3,7 @@ function report = run_project238(cfg)
 % Inf selects the full source partition. Existing fitted outputs are protected.
     setupProject;
     if nargin < 1, cfg = project238Config; end
-    if isMATLABReleaseOlderThan('R2024a') || isempty(ver('nnet'))
-        error('topquark:Requirements','MATLAB R2024a+ and Deep Learning Toolbox required.');
-    end
+    requireToolboxes("run the Project 238 workflow");
     if ~usejava('jvm')
         error('topquark:JVMRequired','Start MATLAB with its JVM enabled for provenance hashing.');
     end
