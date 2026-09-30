@@ -221,6 +221,7 @@ technical revisions, review history and remaining submission steps.
 | [Figure gallery](docs/FIGURES.md) | Browse MATLAB exports and other labelled research plots |
 | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) | Reproduce the data selections, seeds and evaluation |
 | [Project status](docs/PROJECT_STATUS.md) | Distinguish completed work from future experiments |
+| [Publishing this as research](docs/PUBLISHING_RESEARCH.md) | Venues, referee objections and the gaps to close before submitting |
 
 Dataset: [Top Quark Tagging Reference Dataset](https://doi.org/10.5281/zenodo.2603256)
 by Kasieczka, Plehn, Thompson and Russel, **CC BY 4.0**.

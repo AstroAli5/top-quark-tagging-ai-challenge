@@ -4,10 +4,7 @@ function run_all(cfg)
 %   Input data must already exist; see scripts/convert_dataset.py.
     setupProject;
     if nargin < 1, cfg = projectConfig; end
-    if isMATLABReleaseOlderThan('R2024a') || isempty(ver('nnet'))
-        error('topquark:Requirements', ...
-            'MATLAB R2024a or later and Deep Learning Toolbox are required.');
-    end
+    requireToolboxes("run the seven-stage pipeline");
     startedAt = char(datetime('now','TimeZone','UTC'));
     stages = {@s1_prepare_data,@s2_build_representations,@s3_train_cnn, ...
         @s4_train_graphsage,@s5_evaluate_baseline,@s6_robustness_test,@s7_explainability};

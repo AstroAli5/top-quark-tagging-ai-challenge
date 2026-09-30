@@ -2,6 +2,7 @@ function run_experiment(seed,officialDir,outputRoot,overrides)
 %RUN_EXPERIMENT Fit on official train/val, then evaluate official test chunks.
 %   run_experiment(101) uses data prepared by scripts/prepare_official.py.
     setupProject;
+    requireToolboxes("train and evaluate the three models");
     root = fileparts(mfilename('fullpath'));
     if nargin < 1, seed = 101; end
     if nargin < 2, officialDir = fullfile(root,'data','official'); end

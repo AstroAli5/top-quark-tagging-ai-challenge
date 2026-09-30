@@ -2,6 +2,7 @@ function run_winner_comparison(cfg)
 %RUN_WINNER_COMPARISON Train reference, compare all three on the shared holdout.
 % Run run_all(cfg) first to prepare jets and train the original two models.
     setupProject;
+    requireToolboxes("train and compare the reference model");
     if nargin < 1, cfg = projectConfig; end
     split = load(fullfile(cfg.dataDir,'jet_split.mat'));
     cnn = load(fullfile(cfg.modelsDir,'cnn_model.mat'));
