@@ -1,4 +1,4 @@
-# Project status — 29 September 2026
+# Project status — 30 September 2026
 
 The author supplied a review of their **MATLAB Challenge Project 238** submission.
 It was not accepted at that time. The review identifies missing MATLAB big-data
@@ -19,12 +19,13 @@ Project Hub; the assistant did not make that submission or contact the reviewers
 | Larger subset | [100k training, three core seeds](../experiments/scaling/); all official test jets; measured MATLAB peak RAM 3.68–3.73 GiB |
 | Final-model explanations | Both [50k](../experiments/explanations/) and [100k](../experiments/explanations-100k/) checkpoint sets; each verifies 51 perturbation measurements and six checkpoint hashes |
 | Controlled graph edges | [Three-seed comparison](../experiments/graph-edges/); edges improve clean AUC, zero edges improve AUC at the strongest tested smearing |
+| Named ResNet18 pilot | [Matched compact CNN comparison](../experiments/resnet18-pilot/); identical 10k/2k/10k image selections, three epochs, one seed; independently checked |
 | Qiskit pilot | [Four-qubit CPU simulator](../experiments/quantum-pilot/); the classical RBF SVM performed better |
 
 These results were checked against saved predictions and provenance. Historical
 results remain unchanged. The current check suite contains 20 Python tests
-(including four optional quantum checks) and 19 MATLAB tests, all passing in
-[the reviewer-update test run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36425844079).
+(including four optional quantum checks) and 20 MATLAB tests, all passing in
+[the reviewer-update test run](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36701925222).
 
 ## Verified response to the review
 
@@ -76,12 +77,16 @@ measured 20.61 minutes for image preparation, 35.32 minutes for training and
 These are observations under one runner's conditions, not minimum requirements.
 
 Broad architecture comparisons, GPU and quantum-device experiments are still
-unrun. ResNet18 and FPGA are optional brief extensions. The existing graph-edge
-control is a narrower experiment, and the Qiskit result is a CPU simulation.
+unrun. The named ResNet18 pilot now provides one narrow comparison with matched
+images and settings; it does not replace a broad repeated-seed architecture study.
+The [HDL processor estimate](../experiments/hdl-assessment/) also completed;
+FPGA deployment remains an optional extension without board validation. The graph-edge control is another
+narrower experiment, and the Qiskit result is a CPU simulation.
 
 The author still needs to understand and explain the work, with AI assistance
 acknowledged. Reviewer acceptance or permission to revise the rejected
-submission has not been confirmed; the assistant has not contacted them.
+submission has not been confirmed; the assistant has not contacted them. The
+[revision response](REVIEW_RESPONSE.md) is prepared but has not been sent.
 
 [Requirements map](PROJECT238.md) · [Walkthrough](WALKTHROUGH.md) ·
 [Results](RESULTS.md) · [MATLAB figure gallery](FIGURES.md) ·

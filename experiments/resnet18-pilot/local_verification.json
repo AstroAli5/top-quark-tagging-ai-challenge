@@ -1,0 +1,27 @@
+{
+  "verified": true,
+  "method": "Local SciPy average-rank Mann-Whitney AUC and threshold-0.5 accuracy; compare exported MATLAB and CI-verifier reports",
+  "source_label_check": "Official HDF5 row labels and source checksums checked by scripts/verify_project238.py in workflow 36701925315; local pass uses the published CSVs",
+  "matched_manifest_and_training_settings": true,
+  "training_seeds": 1,
+  "measurements": [
+    {
+      "Model": "compact",
+      "Accuracy": 0.8903,
+      "AUC": 0.9522039242045964,
+      "TrainingSeconds": 61.019271,
+      "EvaluationSeconds": 7.221837,
+      "PredictionCSVSHA256": "bdbee1ea32c34e9ed7b8ec996b1a94a83d9f6f1b8ef6ca5d25dcfdc670f9e521",
+      "CheckpointSHA256": "576ae943745b330265b59aeae6d7859f6fa13a3b6aea53cbe17bcc6a7c0429af"
+    },
+    {
+      "Model": "resnet18",
+      "Accuracy": 0.8887,
+      "AUC": 0.9488333213302605,
+      "TrainingSeconds": 486.625633,
+      "EvaluationSeconds": 31.758733,
+      "PredictionCSVSHA256": "d30857d64a926ef2d586811379f9fb8f5fb66dd92a415e7e2c3ec24fd18c316f",
+      "CheckpointSHA256": "de3902b546bfa3964c8fd1995f53984ced72fdeb20ff921045c3d2561a870eb7"
+    }
+  ]
+}

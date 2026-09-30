@@ -1,14 +1,7 @@
 name: Optional reviewer experiments
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/optional-review.yml'
-      - 'run_resnet18_study.m'
-      - 'run_hdl_assessment.m'
-      - 'src/bigdata/project238Network.m'
-      - 'src/bigdata/trainProject238.m'
-      - 'experiments/resnet18-pilot/PROTOCOL.md'
+  # The frozen study is already recorded. Refit explicitly, not on doc updates.
   workflow_dispatch:
 
 permissions:

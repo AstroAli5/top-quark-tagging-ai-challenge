@@ -1,0 +1,9 @@
+{
+  "verified": true,
+  "scope": "Arithmetic and checkpoint identity only; not measured hardware validation",
+  "checkpoint_sha256": "a166fe022fcc1cd0c21be7628eaa6360ad67d75754a27db8084cc825371aa3fe",
+  "summed_layer_cycles": 90629,
+  "assumed_clock_MHz": 200,
+  "estimated_seconds": 0.000453145,
+  "reciprocal_estimated_frames_per_second": 2206.799148175529
+}

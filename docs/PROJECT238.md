@@ -26,8 +26,10 @@ retrievable checkpoints and a quick verification command, MATLAB summary figures
 and statistics, prediction execution settings, isolated random streams, documented
 JVM requirements, and two small compatibility/lint fixes.
 
-ResNet18 and FPGA/HDL are variations or advanced extensions in the brief. They
-must be labelled as such; the base workflow should be completed first. GPU and
+ResNet18 and FPGA/HDL are variations or advanced extensions in the brief. The
+[named ResNet18 pilot](../experiments/resnet18-pilot/) now has a verified run, and the
+[HDL assessment](../experiments/hdl-assessment/) provides an estimate without board
+deployment. Both remain labelled as extensions; the base workflow should be completed first. GPU and
 quantum-device experiments are not prerequisites for the base Project 238 steps.
 
 The earlier explanation and graph-control studies are scientifically useful,

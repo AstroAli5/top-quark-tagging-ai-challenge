@@ -122,3 +122,39 @@ You should be able to explain why the validation partition selects the model,
 why the final test partition cannot be used for tuning, what ROC AUC measures,
 and why our noise model is only a simplified sensitivity experiment. The
 [AI disclosure](AI_ASSISTANCE.md) records the assistance in these changes.
+
+## Prepare to explain the revision to a reviewer
+
+Use this as a practice route, not a script to memorize. If you cannot explain a
+step in your own words, return to that file before representing it as understood.
+
+| Show or explain | What you should be able to demonstrate |
+| --- | --- |
+| Start with `run_submission` | Explain that it restores three saved models on 256 jets and regenerates recorded study summaries. It does not retrain or recompute all 404,000 predictions. |
+| Open `buildJetImage` | Start from `(E, px, py, pz)`. Explain transverse momentum, relative angular coordinates, summed momentum per pixel, `log1p`, and why the TIFFs retain floating-point values. |
+| Trace `run_project238` | Point to `pyrun`, bounded HDF5 conversion, Parquet, the tall transform, labelled image files, `trainnet`, and `minibatchpredict`. Explain how minibatches bound RAM use. |
+| Follow one source row | Its official partition stays fixed and its ordinal appears in the image filename and prediction table. Show the coverage and label checks in `jetImageDatastore` and `verify_project238.py`. |
+| Explain model selection | Weights and input normalization use training data. Validation loss selects the checkpoint. Test labels are used only for final metrics; changing hyperparameters after seeing those scores would need a fresh evaluation plan. |
+| Distinguish the studies | The 1,211,000-jet CNN is one epoch and one seed. The original three-model study uses 50k training jets, three seeds and 12 epochs. Their scores answer different questions. |
+| Interpret uncertainty | A seed is a separate training run. Noise realizations within a trained model are averaged first. Seed intervals summarize modest observed training variation; they are not a guarantee for new detector data. |
+| Explain the optional ResNet18 pilot | It uses the named MathWorks residual architecture with random weights, adapted to grayscale images and two classes. Both CNNs share the selected data and training settings. This is not ImageNet transfer learning. |
+| State what you contributed and where AI helped | Use the disclosure accurately. Explain the code you submit, including fixes, choices, negative findings and limits; do not describe assistant-run work as unaided implementation. |
+
+Practice these questions without the notes, then check your answer:
+
+1. **Why can accuracy and AUC disagree?** Accuracy uses one threshold; AUC
+   measures ranking across thresholds. Neither establishes good calibration.
+2. **Why do 404k test jets not mean we trained on every available jet?** Training
+   and test sizes are independent choices. The repository reports both explicitly.
+3. **Why not call the reference a reproduction of the winner?** Its architecture,
+   inputs and budget differ. It is an attributed independent adaptation.
+4. **Does the strongest noise AUC make GraphSAGE universally better?** No. It
+   performs worse on clean jets in the original study; the perturbation is synthetic.
+5. **Does a processor latency estimate prove real-time FPGA performance?** No.
+   Synthesis, timing closure, board execution, transfers and end-to-end validation
+   would still be needed.
+
+A useful final exercise is to change only the small demonstration's output
+folder, run it, and locate its configuration, prediction rows, report and figure.
+Explain why existing fitted outputs are protected. This guide cannot certify
+the author's understanding; that requires the author's own work and discussion.
