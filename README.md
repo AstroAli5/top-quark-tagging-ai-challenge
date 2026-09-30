@@ -1,104 +1,134 @@
-# Top-quark detection with deep learning and big data
+# Top-Quark Tagging
 
-[![Tests](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml/badge.svg)](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml)
+**Deep learning, particle graphs, and reproducible evaluation in MATLAB.**
 
-A MATLAB project by **Ali Mohamed**, developed for [Challenge Project 238](docs/PROJECT238.md).
+[![Tests](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/workflows/tests.yml)
 
-**Status:** the author’s submitted version was not accepted. The review identified
-missing MATLAB big-data steps. The repaired route now completes a
-[verified one-epoch run](experiments/project238-full/) on **all 1,211,000 training
-and 404,000 test jets**: accuracy **90.23%**, AUC **0.97395**. Tests and independent
-prediction checks pass. This establishes full-data execution; a longer,
-multi-seed full-data study and reviewer acceptance remain unconfirmed.
+By **Ali Mohamed** · Developed for [MathWorks Challenge Project 238](docs/PROJECT238.md)
 
-**Question:** how do an image CNN and a particle GraphSAGE model respond when the
-same jets have their measured momenta perturbed?
+This project classifies simulated particle jets as top-quark signal or background
+and investigates how image and graph models respond to synthetic momentum noise.
+It combines a MATLAB pipeline that processes the entire official training set
+with repeated-seed experiments, model explanations, and independently checked results.
 
-The required workflow is the MATLAB datastore CNN. The CNN/GraphSAGE comparison
-is the main research extension. An optional, independently
-implemented [ResNeXt-SE reference](docs/WINNER_COMPARISON.md) explores ideas from
-Adit Shah's 2025 winning project, with attribution.
+[Results](#results) · [Quick start](#quick-start) · [Experiment portfolio](#experiment-portfolio) · [MATLAB figures](docs/FIGURES.md) · [Student walkthrough](docs/WALKTHROUGH.md)
 
-| What you want to do | Start here |
-| --- | --- |
-| See the MATLAB pictures and main findings | [Figure gallery](docs/FIGURES.md) · [Results](docs/RESULTS.md) |
-| Understand the project or present it | [Student walkthrough](docs/WALKTHROUGH.md) |
-| Check every reviewer request before resubmitting | [Submission checklist and remaining actions](docs/SUBMISSION_CHECKLIST.md) |
-| Run the required MATLAB data workflow | `run_project238` below · [Verified full-source run](experiments/project238-full/) · [Small demonstration](experiments/project238-demo/) |
-| Run the two core models | The short instructions below |
-| Reproduce or extend the research | [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) · [Next experiments](docs/NEXT_EXPERIMENTS.md) |
-| Inspect the optional quantum comparison or larger-data controls | [Measured Qiskit pilot](experiments/quantum-pilot/) · [Scaling](docs/SCALING.md) |
-| Check possible competition entry routes | [Current requirements and fit](docs/COMPETITIONS.md) |
+## Results
 
-## Verified result
+### Full training dataset, verified on CPU
 
-Mean scores across three training seeds, using 50,000 training jets and all
-404,000 official test jets:
+| Training jets | Test jets | ROC AUC | Accuracy |
+| ---: | ---: | ---: | ---: |
+| **1,211,000** | **404,000** | **0.97395** | **90.23%** |
 
-| Model | Clean accuracy | Clean AUC |
-| --- | ---: | ---: |
-| CNN | 91.06% | 0.96929 |
-| GraphSAGE | 86.58% | 0.92769 |
-| ResNeXt-SE reference | 91.59% | 0.97159 |
+The datastore CNN completed **one epoch, one seed and all 12,110 training
+iterations**, using 10,000 official validation jets. Training took **35.32 minutes**;
+MATLAB peaked at **4.76 GiB RAM**, with a separate **0.47 GiB Python peak**.
+These are measured CPU-runner results; preprocessing and evaluation add runtime.
 
-The reference has the highest clean score. GraphSAGE has the highest AUC under
-20% and 35% synthetic smearing in each training run. Read the
-[results and uncertainty](docs/RESULTS.md) or inspect the
-[saved evidence](experiments/official-study/).
+Every saved test prediction was checked against official source rows and labels.
+A separate calculation reproduced the accuracy and AUC.
+[Full report, resource measurements and reproduction](experiments/project238-full/).
 
-![MATLAB analysis of the three-model study](experiments/official-study/matlab_study_summary.png)
+<details>
+<summary>View the MATLAB ROC curve and confusion matrix</summary>
 
-MATLAB generated this accuracy/AUC/noise chart and its summary tables, including
-[paired seed comparisons](experiments/official-study/paired_summary_matlab.csv). Clean evaluation uses
-**404,000 test jets**; noise evaluation uses **10,000**; both use three training
-seeds. Noise repeats are averaged within each fitted seed. The [gallery](docs/FIGURES.md)
-labels the origin and experiment behind every available figure.
+![Full-training-data CNN: ROC AUC 0.97395 and accuracy 90.23% on 404,000 official test jets](experiments/project238-full/attempt2/matlab_evaluation.png)
 
-**Verified follow-ups:** the [five-seed core report](experiments/seed-extension/)
-supports the same clean/noise trade-off. With [100,000 training jets](experiments/scaling/),
-the same three original seed labels gave mean accuracy of **91.63% for CNN**
-and **87.40% for GraphSAGE**. That experiment also uses more training updates;
-its separate report includes uncertainty and measured memory use.
+</details>
 
-## Check the saved results first
+### Clean performance and noise sensitivity
 
-Requirements: **MATLAB R2024a+ and Deep Learning Toolbox**, with the JVM enabled
-(the normal desktop or batch session; do not use `-nojvm`).
-Statistics and Machine Learning Toolbox is optional for `rocmetrics`; the same
-tie-aware ROC calculation is available without it.
+A separate study compares **CNN, GraphSAGE and a ResNeXt-SE reference** across
+three training seeds. Each fit uses **50,000 training jets, 10,000 validation jets
+and 12 epochs**. Clean scores cover all 404,000 official test jets; noise scores
+use the same 10,000 test jets across models and perturbations.
 
-Clone or download this repository and run in MATLAB:
+| Model | Clean accuracy | Clean ROC AUC | ROC AUC at 35% smearing |
+| --- | ---: | ---: | ---: |
+| CNN | 91.06% | 0.96929 | 0.66130 |
+| GraphSAGE | 86.58% | 0.92769 | **0.73751** |
+| ResNeXt-SE reference | **91.59%** | **0.97159** | 0.60460 |
+
+Values are means across three trained seeds. Noise realizations are averaged
+within each seed. [Uncertainty and paired comparisons](docs/RESULTS.md).
+
+**The central finding:** the image models perform better on clean jets, while
+GraphSAGE has the highest AUC at 20% and 35% synthetic smearing in each training
+run. This reveals a trade-off between clean performance and sensitivity to the
+tested perturbations.
+
+![MATLAB study summary: clean accuracy, clean AUC, and noise sensitivity across three training seeds](experiments/official-study/matlab_study_summary.png)
+
+*Exported from MATLAB; error bars show training-seed standard deviation.
+[Measured tables and independent verification](experiments/official-study/).*
+
+## Quick start
+
+**Tested environment:** MATLAB R2024a with Deep Learning Toolbox and the standard
+JVM-enabled session. Statistics and Machine Learning Toolbox enables `rocmetrics`;
+a tested tie-aware fallback supports environments without it.
+
+Clone or download the repository, open its root folder in MATLAB, and run:
 
 ```matlab
 run_submission
 ```
 
-The [included seed-101 CNN, GraphSAGE, reference and 256-jet sample](checkpoints/) require no extra
-data download or retraining. This single reviewer command verifies their hashes,
-restores all three models' predictions, and exports MATLAB accuracy/AUC/noise figures,
-seed confidence intervals and paired model comparisons. The restored model scores
-describe the 256-jet sample; the separate study tables summarize the recorded
-full-test results across three training seeds. They are clearly labelled.
-Use `verify_results("all")` or `summarize_matlab` separately for either part.
-The command prints its elapsed time. Model files are included in normal clones;
-no Git LFS or Actions-artifact download is needed. See the
-[verification details](docs/SUBMISSION_CHECKLIST.md#quick-reviewer-route).
+The command verifies the checksums of **three included seed-101 models**, restores
+their predictions on **256 official test jets**, and generates MATLAB study tables
+and figures in `results/matlab-summary/`. The models and sample total **under 1 MB**;
+no Python, new data download or training is needed for this check.
 
-## Run the MATLAB big-data route
+The complete command ran in **14.19 seconds**, excluding MATLAB startup, with
+**zero prediction differences for all three models** on the
+[verified CPU runner](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36529745936/job/109280516402).
+Sample restoration covers 256 jets; the accompanying study report summarizes the
+recorded full-test measurements across three seeds.
 
-Install **Python 3.11** and the packages in `requirements.txt`, then configure
-MATLAB's `pyenv` to use that Python installation with
-`ExecutionMode="OutOfProcess"` (restart MATLAB first if Python is already loaded
-in-process). This isolates incompatible HDF5 libraries. MATLAB calls Python using
-`pyrun` to verify/download the official data and convert bounded blocks to Parquet.
-The pipeline then uses `parquetDatastore`, a tall image transform, and
-folder-labelled `imageDatastore` objects for CNN training and evaluation.
+[Checkpoint identities and provenance](checkpoints/) ·
+[Reviewer checklist](docs/SUBMISSION_CHECKLIST.md)
+
+## Experiment portfolio
+
+The project extends beyond a single classification score. Each study retains its
+protocol, measured results and verification evidence.
+
+| Study | Completed work | Evidence |
+| --- | --- | --- |
+| Repeated training | Five seeds per core model at 50k training jets; evaluates whether the clean/noise trade-off persists | [Five-seed study](experiments/seed-extension/) |
+| Larger training subset | Three core seeds at 100k jets; mean accuracy **91.63% CNN / 87.40% GraphSAGE**, evaluated on all 404k test jets | [Scaling study](experiments/scaling/) |
+| Model explanations | Feature shuffling and radial image occlusion for both the 50k and 100k core checkpoints; **51 independently checked perturbation measurements per study** | [50k explanations](experiments/explanations/) · [100k explanations](experiments/explanations-100k/) |
+| Graph-neighbor control | Matched three-seed comparison of six neighbors versus zero; edges improve clean AUC, while zero edges perform better at the strongest tested smearing | [Graph-edge study](experiments/graph-edges/) |
+| Quantum/classical pilot | Four-qubit Qiskit CPU simulation against matched linear/RBF baselines; the classical RBF model performs better | [Kernel comparison](experiments/quantum-pilot/) |
+
+## Data pipeline and reproduction
+
+The required MATLAB workflow preserves the official train/validation/test
+partitions throughout:
+
+1. MATLAB calls Python through `pyrun` to verify HDF5 sources and convert bounded
+   blocks to Parquet.
+2. `parquetDatastore` and tall arrays transform jets into floating-point images.
+3. Folder-labelled `imageDatastore` objects feed `trainnet` and `minibatchpredict`.
+4. Evaluation saves probabilities, source row IDs, labels, configuration and hashes
+   for independent checks.
+
+[Seven-step Project 238 map](docs/PROJECT238.md) ·
+[MATLAB, Colab and Qiskit setup](docs/PLATFORMS.md)
+
+<details>
+<summary><strong>Run a small real-data training demonstration</strong></summary>
+
+Install Python 3.11 and the preparation dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-A short real-data demonstration (already [executed and independently checked](experiments/project238-demo/)):
+Configure MATLAB's `pyenv` to use that Python installation with
+`ExecutionMode="OutOfProcess"`. Restart MATLAB first if Python is already loaded
+in-process; out-of-process execution isolates the HDF5 libraries.
 
 ```matlab
 cfg = project238Config;
@@ -111,36 +141,28 @@ cfg.outputDir = fullfile(cfg.rootDir,'runs','project238_demo');
 run_project238(cfg)
 ```
 
-The unmodified `project238Config` selects all 1,211,000 training rows, 10,000
-validation rows and all 404,000 test rows for 12 epochs. The verified full-source
-run used **one epoch and batch size 100**; the 12-epoch default remains unrun.
-Its CPU measurements were 20.61 minutes for image preparation, 35.32 minutes for
-training, and 4.76 GiB MATLAB-process peak memory, with a separate 0.47 GiB Python
-peak. These are measured conditions, not minimum hardware requirements.
-See the [full result and reproduction command](experiments/project238-full/) and
-[requirements map](docs/PROJECT238.md). The route writes many image files and
-needs substantial disk/time.
-Existing fitted output folders are protected from accidental overwriting.
+[Verified demonstration](experiments/project238-demo/). Use new data/output folders
+for another run. The source files total about 1.73 GB; prepared data require
+additional disk space.
 
-The [original CNN/GraphSAGE stages](docs/WALKTHROUGH.md) remain available through
-`run_all`. Their in-memory MAT input is an educational/reproduction option.
-The optional reference and quantum studies are separate research extensions.
+The unmodified `project238Config` selects all 1,211,000 training jets, 10,000
+validation jets and all 404,000 test jets for **12 epochs**. The verified full-data
+run used **one epoch and batch size 100**; follow its
+[exact reproduction command](experiments/project238-full/#reproduce-the-one-epoch-run).
+The 12-epoch full-data default remains unrun.
 
-## Reproduce the larger study
+</details>
 
 <details>
-<summary>Advanced: training budget, commands, and computing requirements</summary>
+<summary><strong>Reproduce the three-model research study</strong></summary>
 
-The [frozen protocol](docs/EXPERIMENT_PROTOCOL.md) uses **50,000 official training
-jets, 10,000 official validation jets, the full official test partition, and
-three training seeds**. Each of the three models trains for 12 epochs.
-This remains a training-subset study; it does not train on all 1.2 million jets.
+After the Python/MATLAB setup above, prepare the official partitions:
 
 ```bash
 python scripts/prepare_official.py
 ```
 
-Then in MATLAB:
+Train and evaluate the three predefined seeds in MATLAB:
 
 ```matlab
 run_experiment(101)
@@ -148,64 +170,62 @@ run_experiment(202)
 run_experiment(303)
 ```
 
-Finally:
+Recalculate the combined report:
 
 ```bash
 python -m pip install matplotlib
 python scripts/summarize_experiment.py --input runs --output results/official-study
 ```
 
-The downloader verifies all three source files (about 1.73 GB total). Allow
-additional disk for prepared data and models. The larger reference model caches
-about 4 GB of input images; use a machine with at least 16 GB RAM.
-Existing experiment models are preserved: choose a new output folder to rerun.
-The [research workflow](.github/workflows/research.yml) runs the same study in MATLAB
-on GitHub Actions. It defaults to **CNN and GraphSAGE only**. Select
-**include_reference** to also train the reference and produce the combined summary.
-The recorded reference took about 149 CPU minutes per seed, versus roughly
-9.4 minutes for CNN and 5.7 minutes for GraphSAGE; runner conditions vary.
-The MATLAB commands above explicitly reproduce the original three-model study.
+The [frozen protocol](docs/EXPERIMENT_PROTOCOL.md) defines the 50k/10k training and
+validation selections, full test evaluation and 12-epoch budget. The reference
+caches about 4 GB of images; allow at least 16 GB system RAM. Its recorded training
+cost was approximately 149 CPU minutes per seed, compared with 9.4 for CNN and
+5.7 for GraphSAGE; runner conditions and timing methods vary.
+
+The [research workflow](.github/workflows/research.yml) defaults to CNN and
+GraphSAGE; select `include_reference` to run the third model. The MATLAB commands
+above reproduce all three. Existing fitted outputs are protected from overwriting.
 
 </details>
 
-## Find your way around
+## Verification and research scope
 
-| Location | Purpose |
+The [verified implementation](https://github.com/AstroAli5/top-quark-tagging-ai-challenge/actions/runs/36529745938)
+passed **19 MATLAB tests and 20 Python tests**, including the optional quantum
+checks. Tests cover data boundaries, probability mapping, tied-score AUC, graph
+batching, random-state preservation and execution of the data pipeline.
+Saved research predictions receive separate metric, source-row and checksum checks.
+
+Interpret the results within their measured scope:
+
+- The full-training-data CNN has **one epoch and one seed**. Longer full-data fits
+  and convergence studies remain future work.
+- The repeated-seed studies use 50k or 100k training subsets. Different input
+  representations and preprocessing make these comparisons of complete pipelines.
+- Synthetic smearing is a controlled stress test; explanation plots measure model
+  sensitivity. Neither establishes a calibrated detector response or causal physics.
+- GPU, FPGA and quantum-hardware experiments remain unrun. The Qiskit result is a
+  CPU simulation with a stronger classical baseline.
+
+The original Project 238 submission was not accepted. The
+[submission checklist](docs/SUBMISSION_CHECKLIST.md) records the completed
+technical revisions, review history and remaining submission steps.
+
+## Documentation and attribution
+
+| Resource | Purpose |
 | --- | --- |
-| Root commands | `run_all`, `run_experiment`, `run_small_benchmark`, `run_winner_comparison`, `projectConfig` |
-| `src/pipeline/`, `src/core/` | Seven stages and shared image/graph helpers |
-| `src/reference/` | Optional ResNeXt-SE comparison |
-| `src/experiment/` | Official test evaluation in bounded chunks |
-| `scripts/`, `notebooks/` | Download, conversion, summaries, and Colab preparation |
-| `docs/FIGURES.md` | One gallery for final-study, small-run, and historical figures |
-| `docs/` | Walkthrough, results, protocol, and attribution |
-| `experiments/official-study/` | Verified metric tables, uncertainty summaries, figures, and run provenance |
-| `archive/original-results/` | Unchanged historical outputs, separated from current evidence |
+| [Student walkthrough](docs/WALKTHROUGH.md) | Understand the models, code and research decisions |
+| [Results and uncertainty](docs/RESULTS.md) | Interpret the measurements and confidence intervals |
+| [Figure gallery](docs/FIGURES.md) | Browse MATLAB exports and other labelled research plots |
+| [Experiment protocol](docs/EXPERIMENT_PROTOCOL.md) | Reproduce the data selections, seeds and evaluation |
+| [Project status](docs/PROJECT_STATUS.md) | Distinguish completed work from future experiments |
 
-Root commands call `setupProject` automatically. Call it first when exploring
-implementation functions directly.
+Dataset: [Top Quark Tagging Reference Dataset](https://doi.org/10.5281/zenodo.2603256)
+by Kasieczka, Plehn, Thompson and Russel, **CC BY 4.0**.
+Methods and references: [GraphSAGE](https://arxiv.org/abs/1706.02216),
+[Colin Crovella's MATLAB example](https://www.mathworks.com/matlabcentral/fileexchange/181442-graphsage-classifier-for-top-quark-tagging),
+and the [independently implemented ResNeXt-SE adaptation and its attribution](docs/WINNER_COMPARISON.md).
 
-## Checks and interpretation
-
-```bash
-python -m unittest discover -s tests -p "test_*.py" -v
-```
-
-```matlab
-results = runtests('tests');
-assertSuccess(results);
-```
-
-Tests check data boundaries, score mapping, tied-score AUC, graph batching,
-noise pairing, and small end-to-end runs. Their synthetic scores are not
-physics results. Synthetic momentum smearing measures sensitivity to one
-perturbation; it is not a calibrated detector simulation. Read the
-[results discussion](docs/RESULTS.md) before making architecture comparisons.
-
-Data: [Top Quark Tagging Reference Dataset](https://doi.org/10.5281/zenodo.2603256)
-(CC BY 4.0). Background: [GraphSAGE](https://arxiv.org/abs/1706.02216) and
-[Colin Crovella's MATLAB reference demo](https://www.mathworks.com/matlabcentral/fileexchange/181442-graphsage-classifier-for-top-quark-tagging).
-See [concepts](docs/CONCEPTS.md), [reference-model attribution](docs/WINNER_COMPARISON.md),
-[AI assistance](docs/AI_ASSISTANCE.md), and [MATLAB / Colab / Qiskit](docs/PLATFORMS.md).
-
-[MIT license](LICENSE) · [Citation metadata](CITATION.cff)
+[MIT code license](LICENSE) · [Citation metadata](CITATION.cff) · [AI-assistance disclosure](docs/AI_ASSISTANCE.md)
