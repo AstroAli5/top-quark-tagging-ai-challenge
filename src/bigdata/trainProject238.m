@@ -12,22 +12,7 @@ function report = trainProject238(cfg,manifest)
     [test,sourceRows] = jetImageDatastore(fullfile(root,'test'),manifest.partitions.test,cfg.batchSize);
     classNames = categories(train.Labels);
     assert(isequal(string(classNames),["background";"signal"]),'Unexpected class order.');
-    layers = [
-        imageInputLayer([cfg.imageSize cfg.imageSize 1],Normalization='zscore')
-        convolution2dLayer(3,16,Padding='same')
-        batchNormalizationLayer
-        reluLayer
-        maxPooling2dLayer(2,Stride=2)
-        convolution2dLayer(3,32,Padding='same')
-        batchNormalizationLayer
-        reluLayer
-        maxPooling2dLayer(2,Stride=2)
-        convolution2dLayer(3,64,Padding='same')
-        batchNormalizationLayer
-        reluLayer
-        globalAveragePooling2dLayer
-        fullyConnectedLayer(2)
-        softmaxLayer];
+    [layers,architectureDescription] = project238Network(cfg);
     checkpointDir = fullfile(cfg.outputDir,'epoch-checkpoints'); mkdir(checkpointDir);
     options = trainingOptions('adam',MaxEpochs=cfg.epochs,MiniBatchSize=cfg.batchSize, ...
         InitialLearnRate=1e-3,Shuffle='every-epoch',ValidationData=val, ...
@@ -63,6 +48,7 @@ function report = trainProject238(cfg,manifest)
         'evaluationSeconds',evaluationSeconds, ...
         'fullOfficialTraining',manifest.verified_official_source && numel(train.Files)==1211000, ...
         'fullOfficialTest',manifest.verified_official_source && numel(test.Files)==404000, ...
+        'architecture',architectureDescription, ...
         'normalization','imageInputLayer zscore fitted from training datastore only', ...
         'shuffle','all training image filenames shuffled every epoch by trainnet', ...
         'checkpointSHA256',projectFileSHA256(fullfile(cfg.outputDir,'cnn_model.mat')));

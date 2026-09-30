@@ -114,7 +114,19 @@ partitions throughout:
 4. Evaluation saves probabilities, source row IDs, labels, configuration and hashes
    for independent checks.
 
-[Seven-step Project 238 map](docs/PROJECT238.md) ·
+### Seven-step Project 238 implementation
+
+| Project step | Implementation and evidence |
+| --- | --- |
+| 1. Learn MATLAB deep learning | [Student walkthrough](docs/WALKTHROUGH.md), model explanations and runnable examples; the author must be able to explain the code |
+| 2. Study the real-time top-quark example | [Official project brief and example](docs/PROJECT238.md); this CPU study does not claim real-time hardware deployment |
+| 3. Obtain the public dataset | [Official downloader](scripts/prepare_parquet.py), verified source checksums and separate train/validation/test manifests |
+| 4. Call Python from MATLAB to convert HDF5 to Parquet | [`run_project238`](run_project238.m) uses `pyrun` with bounded row blocks |
+| 5. Use Parquet datastore and tall preprocessing | [`parquetJetsToImages`](src/bigdata/parquetJetsToImages.m) writes lossless floating-point jet images in bounded blocks |
+| 6. Train a CNN in MATLAB | [`trainProject238`](src/bigdata/trainProject238.m) uses `trainnet`; [one complete epoch on 1,211,000 jets](experiments/project238-full/) is verified |
+| 7. Test using labelled image datastores | [`jetImageDatastore`](src/bigdata/jetImageDatastore.m) and `minibatchpredict`; saved scores cover all 404,000 official test rows and pass [independent checks](scripts/verify_project238.py) |
+
+[Project 238 requirements and review](docs/PROJECT238.md) ·
 [MATLAB, Colab and Qiskit setup](docs/PLATFORMS.md)
 
 <details>
