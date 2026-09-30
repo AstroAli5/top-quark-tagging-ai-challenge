@@ -32,10 +32,12 @@ mechanism, which is what a referee wants.
 Every test prediction was checked against official source rows. For a
 reproducibility or tooling venue this carries a paper on its own.
 
-**The negative quantum result is worth reporting.** Four-qubit fidelity-kernel SVM
-at AUC 0.880 against a matched classical RBF SVM at 0.945 on identical features and
-splits. Matched-baseline negative results in quantum machine learning are
-under-published and easy to referee.
+**The negative quantum result is worth reporting.** A four-qubit fidelity-kernel SVM
+at AUC 0.880 against a matched classical RBF SVM at 0.945, on identical features and
+splits over 2,000 balanced test jets (Qiskit statevector on CPU, no shot noise).
+Matched-baseline negative results in quantum machine learning are under-published
+and easy to referee — but report the 2,000-jet denominator and the absence of a
+shot-noise model, or the first referee will find both.
 
 ## 2. What a referee will push on first
 
@@ -165,10 +167,10 @@ confounding stated, or leave it out.
 ## 7. The single highest-value experiment left
 
 Run the k=0 / k=6 ablation at the 35% working point with more seeds. At sigma = 0.35
-the seed SD is 0.0103 across three seeds — an order of magnitude larger than at
-sigma = 0, and the interval [+0.0060, +0.0572] only just clears zero. That one
-interval carries the paper's central claim. Ten seeds would cost roughly three times
-the current run and would turn the strongest sentence in the paper from suggestive
-into solid.
+the seed SD is 0.0103 across three seeds — about six times the 0.0016 at sigma = 0 —
+and the interval [+0.0060, +0.0572] clears zero by a margin roughly a fifth of the
+mean. That one interval carries the paper's central claim. Ten seeds would cost
+roughly three times the current run and would turn the strongest sentence in the
+paper from suggestive into solid.
 
 Everything else on this list is writing. That one is measurement.
